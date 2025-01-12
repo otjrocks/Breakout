@@ -80,6 +80,10 @@ public class Ball extends Circle {
         this.getCenterY() + this.getRadius() >= windowHeight);
   }
 
+  public boolean isIntersectingFloor(int windowHeight) {
+    return (this.getCenterY() + this.getRadius() >= windowHeight);
+  }
+
   public boolean isIntersectingBlock(Block block) {
     return this.getBoundsInParent().intersects(block.getBoundsInParent());
   }

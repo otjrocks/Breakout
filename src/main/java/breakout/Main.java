@@ -8,6 +8,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,11 +31,23 @@ public class Main extends Application {
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final int WIDTH = 600;
     public static final int HEIGHT = 800;
+    public static final int MIDDLE_WIDTH = WIDTH / 2;
 
     public Group root = new Group();
     public ArrayList<Ball> gameBalls = new ArrayList<>();
+    public int gameBallCount = 10;
+    public int ballsInPlay = 0;
     public ArrayList<Block> gameBlocks = new ArrayList<>();
     public Paddle gamePaddle;
+    public double ballStartAngle = Math.PI / 2;
+    public int line_length = 100;
+    public Line gameAimLine = new Line(
+        MIDDLE_WIDTH,
+        HEIGHT - 10,
+        MIDDLE_WIDTH + line_length * Math.cos(ballStartAngle),
+        HEIGHT - 10 - line_length * Math.sin(ballStartAngle)
+    );
+    boolean line_shown = false;
 
     /**
      * Initialize what will be displayed.
@@ -53,9 +68,7 @@ public class Main extends Application {
     // Create the game's "scene": what shapes will be in the game and their starting properties
     public Scene setupScene(int width, int height, Color backgroundColor) {
         for (int i = 0; i < 10; i++) {
-            Ball ball = new Ball((i + 1) * 20, (i + 1) * 20 + 200, BALL_COLOR, 5, 200, 1, 1);
-            gameBalls.add(ball);
-            Block block = new Block(i * 60, 100, "square", 50, 50, BLOCK_COLOR, BALL_COLOR);
+            Block block = new Block(i * 60, 100, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
             gameBlocks.add(block);
         }
 
@@ -75,7 +88,25 @@ public class Main extends Application {
     }
 
     private void step(double elapsedTime) {
-        for (Ball ball : gameBalls) {
+        if (ballsInPlay == 0) {
+            if (!line_shown) {
+                root.getChildren().add(gameAimLine);
+                gameAimLine.setStroke(BALL_COLOR);
+                line_shown = true;
+            }
+            for (int i = 0; i < gameBallCount; i++) {
+                Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT-10, BALL_COLOR, 5, 400, 0, 0);
+                gameBalls.add(ball);
+                root.getChildren().add(ball);
+            }
+        }
+        for (int j = 0; j < gameBalls.size(); j++) {
+            Ball ball = gameBalls.get(j);
+            if (ball.isIntersectingFloor(HEIGHT)) {
+                gameBalls.remove(ball);
+                root.getChildren().remove(ball);
+                ballsInPlay --;
+            }
             for (int i = 0; i < gameBlocks.size(); i++) {
                 Block block = gameBlocks.get(i);
                 if (ball.isIntersectingBlock(block)) {
@@ -102,13 +133,26 @@ public class Main extends Application {
     private void handleKeyInput(KeyCode code) {
         // NOTE new Java syntax that some prefer (but watch out for the many special cases!)
         //   https://blog.jetbrains.com/idea/2019/02/java-12-and-intellij-idea/
-        switch (code) {
-            case RIGHT -> {
+        if (ballsInPlay == 0) {
+            if (code == KeyCode.SPACE) {
+                startPlay();
+            }
+            if (code == KeyCode.RIGHT) {
+                ballStartAngle -= Math.PI / 30;
+                gameAimLine.setEndX(MIDDLE_WIDTH + line_length * Math.cos(ballStartAngle));
+                gameAimLine.setEndY(HEIGHT - 10 - line_length * Math.sin(ballStartAngle));
+            }
+            if (code == KeyCode.LEFT) {
+                ballStartAngle += Math.PI / 30;
+                gameAimLine.setEndX(MIDDLE_WIDTH + line_length * Math.cos(ballStartAngle));
+                gameAimLine.setEndY(HEIGHT - 10 - line_length * Math.sin(ballStartAngle));
+            }
+        } else {
+            if (code == KeyCode.RIGHT) {
                 if (gamePaddle.canMoveRight(WIDTH)) {
                     gamePaddle.move(1);
                 }
-            }
-            case LEFT -> {
+            } else if (code == KeyCode.LEFT) {
                 if (gamePaddle.canMoveLeft()) {
                     gamePaddle.move(-1);
                 }
@@ -116,8 +160,16 @@ public class Main extends Application {
         }
     }
 
+    private void startPlay() {
+        for (Ball ball: gameBalls) {
+            ballsInPlay ++;
+            ball.updateDirectionX(Math.cos(ballStartAngle));
+            ball.updateDirectionY(-Math.sin(ballStartAngle));
+        }
+    }
 
-        /**
+
+    /**
          * Start the program, give complete control to JavaFX.
          */
     public static void main(String[] args) {

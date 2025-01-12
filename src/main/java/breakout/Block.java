@@ -34,14 +34,6 @@ public class Block extends Group {
     }
   }
 
-  public double getX() {
-    return this.getLayoutX();
-  }
-
-  public double getY() {
-    return this.getLayoutY();
-  }
-
   public int getHealth() {
     return HEALTH;
   }
