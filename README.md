@@ -1,5 +1,5 @@
 # breakout
-## NAME
+## By: Owen Jennings
 
 
 DO NO FORK THIS REPOSITORY, clone it directly to your computer.
@@ -9,7 +9,7 @@ This project implements the game of Breakout with multiple levels.
 
 ### Timeline
 
- * Start Date: 
+ * Start Date: January 12th, 2025
 
  * Finish Date: 
 
