@@ -10,15 +10,17 @@ import javafx.scene.shape.Circle;
 
 
 /**
- * Feel free to completely change this code or delete it entirely.
+ * Main file for running game
  *
- * @author YOUR NAME HERE
+ * @author Owen Jennings
  */
 public class Main extends Application {
-    // useful names for constant values used
-    public static final String TITLE = "Example JavaFX Animation";
-    public static final Color DUKE_BLUE = new Color(0, 0.188, 0.529, 1);
-    public static final int SIZE = 400;
+    public static final String TITLE = "Breakout Game";
+    public static final Color BACKGROUND_COLOR = new Color(0.1328, 0.1563, 0.1914, 1);
+
+    public static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
+    public static final int WIDTH = 600;
+    public static final int HEIGHT = 800;
 
 
     /**
@@ -26,13 +28,14 @@ public class Main extends Application {
      */
     @Override
     public void start (Stage stage) {
-        Circle shape = new Circle(200, 200, 40);
-        shape.setFill(Color.LIGHTSTEELBLUE);
+
+        Circle shape = new Circle(200, 200, 5);
+        shape.setFill(BALL_COLOR);
 
         Group root = new Group();
         root.getChildren().add(shape);
 
-        Scene scene = new Scene(root, SIZE, SIZE, DUKE_BLUE);
+        Scene scene = new Scene(root, WIDTH, HEIGHT, BACKGROUND_COLOR);
         stage.setScene(scene);
 
         stage.setTitle(TITLE);
