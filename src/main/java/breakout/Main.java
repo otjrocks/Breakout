@@ -29,13 +29,14 @@ public class Main extends Application {
     public static final Color PADDLE_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
     public static final int FRAMES_PER_SECOND = 60;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+    public static final double BALL_RELEASE_DELAY = 1.0 / 10;
     public static final int WIDTH = 600;
     public static final int HEIGHT = 800;
     public static final int MIDDLE_WIDTH = WIDTH / 2;
 
     public Group root = new Group();
     public ArrayList<Ball> gameBalls = new ArrayList<>();
-    public int gameBallCount = 10;
+    public int gameBallCount = 30;
     public int ballsInPlay = 0;
     public ArrayList<Block> gameBlocks = new ArrayList<>();
     public Paddle gamePaddle;
@@ -94,11 +95,9 @@ public class Main extends Application {
                 gameAimLine.setStroke(BALL_COLOR);
                 line_shown = true;
             }
-            for (int i = 0; i < gameBallCount; i++) {
-                Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT-10, BALL_COLOR, 5, 400, 0, 0);
-                gameBalls.add(ball);
-                root.getChildren().add(ball);
-            }
+            Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT-10, BALL_COLOR, 5, 400, 0, 0);
+            gameBalls.add(ball);
+            root.getChildren().add(ball);
         }
         for (int j = 0; j < gameBalls.size(); j++) {
             Ball ball = gameBalls.get(j);
@@ -135,6 +134,9 @@ public class Main extends Application {
         //   https://blog.jetbrains.com/idea/2019/02/java-12-and-intellij-idea/
         if (ballsInPlay == 0) {
             if (code == KeyCode.SPACE) {
+                // remove placeholder ball and then start play.
+                root.getChildren().remove(gameBalls.getFirst());
+                gameBalls.removeFirst();
                 startPlay();
             }
             if (code == KeyCode.RIGHT) {
@@ -161,11 +163,17 @@ public class Main extends Application {
     }
 
     private void startPlay() {
-        for (Ball ball: gameBalls) {
-            ballsInPlay ++;
-            ball.updateDirectionX(Math.cos(ballStartAngle));
-            ball.updateDirectionY(-Math.sin(ballStartAngle));
-        }
+        Timeline addBallsTimeline = new Timeline();
+        addBallsTimeline.setCycleCount(gameBallCount);
+        addBallsTimeline.getKeyFrames().add(new KeyFrame(Duration.seconds(BALL_RELEASE_DELAY), e -> addBall()));
+        addBallsTimeline.play();
+    }
+
+    private void addBall() {
+        Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT-10, BALL_COLOR, 5, 400, Math.cos(ballStartAngle), -Math.sin(ballStartAngle));
+        gameBalls.add(ball);
+        ballsInPlay++;
+        root.getChildren().add(ball);
     }
 
 
