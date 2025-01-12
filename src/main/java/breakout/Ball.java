@@ -29,6 +29,14 @@ public class Ball extends Circle {
     return BOUNCER_SIZE;
   }
 
+  public double getDirectionX() {
+    return BOUNCER_DIRECTION_X;
+  }
+
+  public double getDirectionY() {
+    return BOUNCER_DIRECTION_Y;
+  }
+
   public void updateDirectionX(double directionX) {
     BOUNCER_DIRECTION_X = directionX;
   }
@@ -57,6 +65,23 @@ public class Ball extends Circle {
   public void move(double elapsedTime) {
     this.moveX(elapsedTime);
     this.moveY(elapsedTime);
+  }
+
+  /*
+  Returns whether the Ball is current intersecting over past the game window boundary
+   */
+  public boolean isIntersectingBoundaryX(int windowWidth) {
+    return (this.getCenterX() - this.getRadius() <= 0 ||
+        this.getCenterX() + this.getRadius() >= windowWidth);
+  }
+
+  public boolean isIntersectingBoundaryY(int windowHeight) {
+    return (this.getCenterY() - this.getRadius() <= 0 ||
+        this.getCenterY() + this.getRadius() >= windowHeight);
+  }
+
+  public boolean isIntersectingBlock(Block block) {
+    return block.getBoundsInParent().intersects(this.getBoundsInParent());
   }
 
 }
