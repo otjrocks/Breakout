@@ -9,57 +9,54 @@ import javafx.scene.shape.Circle;
  * @author Owen Jennings
  */
 public class Ball extends Circle {
-  public double BOUNCER_SIZE;
-  public double BOUNCER_SPEED;
-  public double BOUNCER_DIRECTION_X;
-  public double BOUNCER_DIRECTION_Y;
-  public Color BOUNCER_COLOR;
 
-  public Ball(double x, double y, Color color, double radius, double speed, double directionX, double directionY) {
+  public double BALL_SIZE;
+  public double BALL_SPEED;
+  public double BALL_DIRECTION_X;
+  public double BALL_DIRECTION_Y;
+  public Color BALL_COLOR;
+
+  public Ball(double x, double y, Color color, double radius, double speed, double directionX,
+      double directionY) {
     super(x, y, radius);
-    BOUNCER_SIZE = radius;
-    BOUNCER_SPEED = speed;
-    BOUNCER_DIRECTION_X = directionX;
-    BOUNCER_DIRECTION_Y = directionY;
-    BOUNCER_COLOR = color;
-    this.setFill(BOUNCER_COLOR);
+    BALL_SIZE = radius;
+    BALL_SPEED = speed;
+    BALL_DIRECTION_X = directionX;
+    BALL_DIRECTION_Y = directionY;
+    BALL_COLOR = color;
+    this.setFill(BALL_COLOR);
   }
 
   public double getSize() {
-    return BOUNCER_SIZE;
+    return BALL_SIZE;
   }
 
   public double getDirectionX() {
-    return BOUNCER_DIRECTION_X;
+    return BALL_DIRECTION_X;
   }
 
   public double getDirectionY() {
-    return BOUNCER_DIRECTION_Y;
+    return BALL_DIRECTION_Y;
   }
 
   public void updateDirectionX(double directionX) {
-    BOUNCER_DIRECTION_X = directionX;
+    BALL_DIRECTION_X = directionX;
   }
 
   public void updateDirectionY(double directionY) {
-    BOUNCER_DIRECTION_Y = directionY;
-  }
-
-  public void updateDirection(double directionX, double directionY) {
-    updateDirectionX(directionX);
-    updateDirectionY(directionY);
+    BALL_DIRECTION_Y = directionY;
   }
 
   public void updateSpeed(double speed) {
-    BOUNCER_SPEED = speed;
+    BALL_SPEED = speed;
   }
 
   private void moveX(double elapsedTime) {
-    this.setCenterX(this.getCenterX() + BOUNCER_DIRECTION_X * BOUNCER_SPEED * elapsedTime);
+    this.setCenterX(this.getCenterX() + BALL_DIRECTION_X * BALL_SPEED * elapsedTime);
   }
 
   private void moveY(double elapsedTime) {
-    this.setCenterY(this.getCenterY() + BOUNCER_DIRECTION_Y * BOUNCER_SPEED * elapsedTime);
+    this.setCenterY(this.getCenterY() + BALL_DIRECTION_Y * BALL_SPEED * elapsedTime);
   }
 
   public void move(double elapsedTime) {

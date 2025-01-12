@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Rectangle {
+
   public double PADDLE_SPEED;
 
   public Paddle(double x, double y, double width, double height, double speed, Color color) {
@@ -11,6 +12,7 @@ public class Paddle extends Rectangle {
     PADDLE_SPEED = speed;
     this.setFill(color);
   }
+
   public void move(double direction) {
     this.setX(this.getX() + PADDLE_SPEED * direction);
   }
