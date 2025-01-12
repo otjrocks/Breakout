@@ -115,16 +115,9 @@ public class Main extends Application {
             gameBlocks.remove(block);
             root.getChildren().remove(block);
           }
-          double ballMinX = ball.getBoundsInParent().getMinX();
-          double ballWidth = ball.getBoundsInParent().getWidth();
-          double ballHeight = ball.getBoundsInParent().getHeight();
-          double ballTop = ball.getBoundsInParent().getMinY();
-
-            if (ballMinX + ballWidth >) {
-                ball.updateDirectionX(ball.getDirectionX() * -1);
-            }
+          ball.updateDirectionX(ball.getDirectionX() * -1);
           ball.updateDirectionY(ball.getDirectionY() * -1);
-          // only should update y value when you hit top or bottom of block
+          // TODO: only should update y value when you hit top or bottom of block
         }
       }
       if (ball.isIntersectingBoundaryX(WIDTH)) {
