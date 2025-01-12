@@ -9,8 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -36,7 +34,7 @@ public class Main extends Application {
 
   public Group root = new Group();
   public ArrayList<Ball> gameBalls = new ArrayList<>();
-  public int gameBallCount = 30;
+  public int gameBallCount = 100;
   public int ballsInPlay = 0;
   public ArrayList<Block> gameBlocks = new ArrayList<>();
   public Paddle gamePaddle;
@@ -70,7 +68,15 @@ public class Main extends Application {
   // Create the game's "scene": what shapes will be in the game and their starting properties
   public Scene setupScene(int width, int height, Color backgroundColor) {
     for (int i = 0; i < 10; i++) {
-      Block block = new Block(i * 60, 100, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
+      Block block = new Block(i * 50, 100, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
+      gameBlocks.add(block);
+    }
+    for (int i = 0; i < 10; i++) {
+      Block block = new Block(i * 50, 200, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
+      gameBlocks.add(block);
+    }
+    for (int i = 0; i < 10; i++) {
+      Block block = new Block(i * 50, 300, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
       gameBlocks.add(block);
     }
 
@@ -96,7 +102,7 @@ public class Main extends Application {
         gameAimLine.setStroke(BALL_COLOR);
         line_shown = true;
       }
-      Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 400, 0, 0);
+      Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 100, 0, 0);
       gameBalls.add(ball);
       root.getChildren().add(ball);
     }
@@ -115,8 +121,13 @@ public class Main extends Application {
             gameBlocks.remove(block);
             root.getChildren().remove(block);
           }
-          ball.updateDirectionX(ball.getDirectionX() * -1);
-          ball.updateDirectionY(ball.getDirectionY() * -1);
+          if (ball.isIntersectingLeftOrRight(block)) {
+            ball.updateDirectionX(ball.getDirectionX() * -1);
+          }
+          if (ball.isIntersectingTopOrBottom(block)) {
+            ball.updateDirectionY(ball.getDirectionY() * -1);
+          }
+          break; // break so that ball can't hit two blocks at once
           // TODO: only should update y value when you hit top or bottom of block
         }
       }
@@ -173,7 +184,7 @@ public class Main extends Application {
   }
 
   private void addBall() {
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 800, Math.cos(ballStartAngle),
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 1000, Math.cos(ballStartAngle),
         -Math.sin(ballStartAngle));
     gameBalls.add(ball);
     ballsInPlay++;

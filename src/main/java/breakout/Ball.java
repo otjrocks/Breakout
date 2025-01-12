@@ -85,4 +85,26 @@ public class Ball extends Circle {
     return this.getBoundsInParent().intersects(block.getBoundsInParent());
   }
 
+  // I used ChatGPT to assist with writing the logic for the intersecting TopOrBottom and LeftorRight methods
+  public boolean isIntersectingTopOrBottom(Block block) {
+    double ballMinY = this.getBoundsInParent().getMinY();
+    double ballMaxY = this.getBoundsInParent().getMaxY();
+    double blockMinY = block.getBoundsInParent().getMinY();
+    double blockMaxY = block.getBoundsInParent().getMaxY();
+
+    boolean intersectsTop = ballMaxY > blockMinY && ballMinY < blockMinY;
+    boolean intersectsBottom = ballMinY < blockMaxY && ballMaxY > blockMaxY;
+    return intersectsTop || intersectsBottom;
+  }
+  public boolean isIntersectingLeftOrRight(Block block) {
+    double ballMinX = this.getBoundsInParent().getMinX();
+    double ballMaxX = this.getBoundsInParent().getMaxX();
+    double blockMinX = block.getBoundsInParent().getMinX();
+    double blockMaxX = block.getBoundsInParent().getMaxX();
+
+    boolean intersectsLeft = ballMinX < blockMaxX && ballMaxX > blockMaxX;
+    boolean intersectsRight = ballMaxX > blockMinX && ballMinX < blockMinX;
+    return intersectsLeft || intersectsRight;
+  }
+
 }
