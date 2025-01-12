@@ -67,17 +67,11 @@ public class Main extends Application {
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
   public Scene setupScene(int width, int height, Color backgroundColor) {
-    for (int i = 0; i < 10; i++) {
-      Block block = new Block(i * 50, 100, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
-      gameBlocks.add(block);
-    }
-    for (int i = 0; i < 10; i++) {
-      Block block = new Block(i * 50, 200, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
-      gameBlocks.add(block);
-    }
-    for (int i = 0; i < 10; i++) {
-      Block block = new Block(i * 50, 300, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
-      gameBlocks.add(block);
+    for (int j = 0; j < 15; j++) {
+      for (int i = 0; i < 12; i++) {
+        Block block = new Block(i * 50, j * 50, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
+        gameBlocks.add(block);
+      }
     }
 
     gamePaddle = new Paddle(200, 750, 100, 10, 50, PADDLE_COLOR);
@@ -128,7 +122,7 @@ public class Main extends Application {
             ball.updateDirectionY(ball.getDirectionY() * -1);
           }
           break; // break so that ball can't hit two blocks at once
-          // TODO: only should update y value when you hit top or bottom of block
+          // TODO: fix interaction logic
         }
       }
       if (ball.isIntersectingBoundaryX(WIDTH)) {
