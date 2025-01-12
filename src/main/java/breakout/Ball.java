@@ -81,7 +81,7 @@ public class Ball extends Circle {
   }
 
   public boolean isIntersectingBlock(Block block) {
-    return block.getBoundsInParent().intersects(this.getBoundsInParent());
+    return this.getBoundsInParent().intersects(block.getBoundsInParent());
   }
 
 }
