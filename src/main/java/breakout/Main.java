@@ -52,7 +52,13 @@ public class Main extends Application {
     Timeline animation = new Timeline();
     animation.setCycleCount(Timeline.INDEFINITE);
     animation.getKeyFrames()
-        .add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step(SECOND_DELAY)));
+        .add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> {
+          try {
+            step(SECOND_DELAY);
+          } catch (Exception ex) {
+            throw new RuntimeException(ex);
+          }
+        }));
     animation.play();
   }
 
@@ -65,7 +71,11 @@ public class Main extends Application {
     root.getChildren().add(gameShooter);
 
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
-    currentLevel.startLevel();
+    try {
+      currentLevel.startLevel(1);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage());
+    }
     root.getChildren().add(currentLevel);
 
     Scene scene = new Scene(root, width, height, backgroundColor);
@@ -73,11 +83,11 @@ public class Main extends Application {
     return scene;
   }
 
-  private void step(double elapsedTime) {
+  private void step(double elapsedTime) throws Exception {
     if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
       gameShooter.enable();
       if (currentLevel.isComplete()) {
-        currentLevel.startLevel();
+        currentLevel.startLevel(2);
       }
     }
     for (int j = 0; j < gameBalls.size(); j++) {
@@ -126,10 +136,10 @@ public class Main extends Application {
         gameShooter.disable();
       }
       if (code == KeyCode.RIGHT) {
-        gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 20);
+        gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 40);
       }
       if (code == KeyCode.LEFT) {
-        gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 20);
+        gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 40);
       }
     } else {
       if (code == KeyCode.RIGHT) {
