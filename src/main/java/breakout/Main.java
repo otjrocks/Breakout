@@ -74,7 +74,7 @@ public class Main extends Application {
       }
     }
 
-    gamePaddle = new Paddle(200, 750, 100, 10, 50, PADDLE_COLOR);
+    gamePaddle = new Paddle(0, 750, 100, 10, 20, PADDLE_COLOR);
     root.getChildren().add(gamePaddle);
 
     for (Ball ball : gameBalls) {
@@ -102,6 +102,9 @@ public class Main extends Application {
     }
     for (int j = 0; j < gameBalls.size(); j++) {
       Ball ball = gameBalls.get(j);
+      if (gamePaddle.isIntersecting(ball)) {
+        ball.updateDirectionY(ball.getDirectionY() * -1);
+      }
       if (ball.isIntersectingFloor(HEIGHT)) {
         gameBalls.remove(ball);
         root.getChildren().remove(ball);
@@ -178,7 +181,7 @@ public class Main extends Application {
   }
 
   private void addBall() {
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 1000, Math.cos(ballStartAngle),
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 500, Math.cos(ballStartAngle),
         -Math.sin(ballStartAngle));
     gameBalls.add(ball);
     ballsInPlay++;

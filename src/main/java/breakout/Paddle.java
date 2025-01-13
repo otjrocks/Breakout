@@ -25,4 +25,8 @@ public class Paddle extends Rectangle {
     return (this.getX() + this.getWidth() + PADDLE_SPEED <= width);
   }
 
+  public boolean isIntersecting(Ball ball) {
+    return this.getBoundsInParent().intersects(ball.getBoundsInParent());
+  }
+
 }
