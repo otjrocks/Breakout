@@ -22,9 +22,9 @@ public class Level extends Group {
   }
 
   private void initialize() {
-    for (int j = 0; j < 15; j++) {
-      for (int i = 0; i < 12; i++) {
-        Block block = new Block(i * 50, j * 50, "square", 50, 20, BLOCK_COLOR, TEXT_COLOR);
+    for (int i = 0; i < SCREEN_WIDTH / BLOCK_SIZE; i++) {
+      for (int j = 0; j < SCREEN_HEIGHT / BLOCK_SIZE - 1; j++) {
+        Block block = new Block(i * BLOCK_SIZE, j * BLOCK_SIZE, "square", BLOCK_SIZE, 1, BLOCK_COLOR, TEXT_COLOR);
         this.getChildren().add(block);
         blocks.add(block);
       }

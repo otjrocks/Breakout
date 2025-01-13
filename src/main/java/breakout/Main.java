@@ -76,6 +76,9 @@ public class Main extends Application {
   private void step(double elapsedTime) {
     if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
       gameShooter.enable();
+      if (currentLevel.isComplete()) {
+        currentLevel.startLevel();
+      }
     }
     for (int j = 0; j < gameBalls.size(); j++) {
       Ball ball = gameBalls.get(j);
