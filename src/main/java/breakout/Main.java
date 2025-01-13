@@ -8,7 +8,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -38,15 +37,7 @@ public class Main extends Application {
   public int ballsInPlay = 0;
   public ArrayList<Block> gameBlocks = new ArrayList<>();
   public Paddle gamePaddle;
-  public double ballStartAngle = Math.PI / 2;
-  public int line_length = 100;
-  public Line gameAimLine = new Line(
-      MIDDLE_WIDTH,
-      HEIGHT - 10,
-      MIDDLE_WIDTH + line_length * Math.cos(ballStartAngle),
-      HEIGHT - 10 - line_length * Math.sin(ballStartAngle)
-  );
-  boolean line_shown = false;
+  public Shooter gameShooter;
 
   /**
    * Initialize what will be displayed.
@@ -77,6 +68,9 @@ public class Main extends Application {
     gamePaddle = new Paddle(0, 750, 100, 10, 20, PADDLE_COLOR);
     root.getChildren().add(gamePaddle);
 
+    gameShooter = new Shooter(WIDTH, HEIGHT, 100, Math.PI / 2, BALL_COLOR);
+    root.getChildren().add(gameShooter);
+
     for (Ball ball : gameBalls) {
       root.getChildren().add(ball);
     }
@@ -90,15 +84,8 @@ public class Main extends Application {
   }
 
   private void step(double elapsedTime) {
-    if (ballsInPlay == 0) {
-      if (!line_shown) {
-        root.getChildren().add(gameAimLine);
-        gameAimLine.setStroke(BALL_COLOR);
-        line_shown = true;
-      }
-      Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 100, 0, 0);
-      gameBalls.add(ball);
-      root.getChildren().add(ball);
+    if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
+        gameShooter.enable();
     }
     for (int j = 0; j < gameBalls.size(); j++) {
       Ball ball = gameBalls.get(j);
@@ -144,20 +131,15 @@ public class Main extends Application {
     //   https://blog.jetbrains.com/idea/2019/02/java-12-and-intellij-idea/
     if (ballsInPlay == 0) {
       if (code == KeyCode.SPACE) {
-        // remove placeholder ball and then start play.
-        root.getChildren().remove(gameBalls.getFirst());
-        gameBalls.removeFirst();
         startPlay();
+        ballsInPlay = gameBallCount;
+        gameShooter.disable();
       }
       if (code == KeyCode.RIGHT) {
-        ballStartAngle -= Math.PI / 30;
-        gameAimLine.setEndX(MIDDLE_WIDTH + line_length * Math.cos(ballStartAngle));
-        gameAimLine.setEndY(HEIGHT - 10 - line_length * Math.sin(ballStartAngle));
+        gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 20);
       }
       if (code == KeyCode.LEFT) {
-        ballStartAngle += Math.PI / 30;
-        gameAimLine.setEndX(MIDDLE_WIDTH + line_length * Math.cos(ballStartAngle));
-        gameAimLine.setEndY(HEIGHT - 10 - line_length * Math.sin(ballStartAngle));
+        gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 20);
       }
     } else {
       if (code == KeyCode.RIGHT) {
@@ -181,10 +163,10 @@ public class Main extends Application {
   }
 
   private void addBall() {
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 500, Math.cos(ballStartAngle),
-        -Math.sin(ballStartAngle));
+    double startAngle = gameShooter.getAngle();
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 500, Math.cos(startAngle),
+        -Math.sin(startAngle));
     gameBalls.add(ball);
-    ballsInPlay++;
     root.getChildren().add(ball);
   }
 
