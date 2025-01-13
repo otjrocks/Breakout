@@ -35,9 +35,9 @@ public class Main extends Application {
   public ArrayList<Ball> gameBalls = new ArrayList<>();
   public int gameBallCount = 100;
   public int ballsInPlay = 0;
-  public ArrayList<Block> gameBlocks = new ArrayList<>();
   public Paddle gamePaddle;
   public Shooter gameShooter;
+  public Level currentLevel;
 
   /**
    * Initialize what will be displayed.
@@ -58,25 +58,15 @@ public class Main extends Application {
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
   public Scene setupScene(int width, int height, Color backgroundColor) {
-    for (int j = 0; j < 15; j++) {
-      for (int i = 0; i < 12; i++) {
-        Block block = new Block(i * 50, j * 50, "square", 50, 20, BLOCK_COLOR, BALL_COLOR);
-        gameBlocks.add(block);
-      }
-    }
-
     gamePaddle = new Paddle(0, 750, 100, 10, 20, PADDLE_COLOR);
     root.getChildren().add(gamePaddle);
 
     gameShooter = new Shooter(WIDTH, HEIGHT, 100, Math.PI / 2, BALL_COLOR);
     root.getChildren().add(gameShooter);
 
-    for (Ball ball : gameBalls) {
-      root.getChildren().add(ball);
-    }
-    for (Block block : gameBlocks) {
-      root.getChildren().add(block);
-    }
+    currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
+    currentLevel.startLevel();
+    root.getChildren().add(currentLevel);
 
     Scene scene = new Scene(root, width, height, backgroundColor);
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -85,7 +75,7 @@ public class Main extends Application {
 
   private void step(double elapsedTime) {
     if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
-        gameShooter.enable();
+      gameShooter.enable();
     }
     for (int j = 0; j < gameBalls.size(); j++) {
       Ball ball = gameBalls.get(j);
@@ -97,13 +87,12 @@ public class Main extends Application {
         root.getChildren().remove(ball);
         ballsInPlay--;
       }
-      for (int i = 0; i < gameBlocks.size(); i++) {
-        Block block = gameBlocks.get(i);
+      ArrayList<Block> gameBlocks = currentLevel.getBlocks();
+      for (Block block : gameBlocks) {
         if (ball.isIntersectingBlock(block)) {
           block.updateHealth(block.getHealth() - 1);
           if (block.getHealth() <= 0) {
-            gameBlocks.remove(block);
-            root.getChildren().remove(block);
+            currentLevel.removeBlock(block);
           }
           if (ball.isIntersectingLeftOrRight(block)) {
             ball.updateDirectionX(ball.getDirectionX() * -1);
@@ -127,8 +116,6 @@ public class Main extends Application {
 
   // What to do each time a key is pressed
   private void handleKeyInput(KeyCode code) {
-    // NOTE new Java syntax that some prefer (but watch out for the many special cases!)
-    //   https://blog.jetbrains.com/idea/2019/02/java-12-and-intellij-idea/
     if (ballsInPlay == 0) {
       if (code == KeyCode.SPACE) {
         startPlay();
@@ -169,7 +156,6 @@ public class Main extends Application {
     gameBalls.add(ball);
     root.getChildren().add(ball);
   }
-
 
   /**
    * Start the program, give complete control to JavaFX.
