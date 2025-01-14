@@ -54,4 +54,16 @@ public class TextElement extends StackPane {
     setMargin(text, new javafx.geometry.Insets(0, 0, BOTTOM_MARGIN, 0));
     texts[2] = text;
   }
+
+  public void clearText() {
+    if (texts[0] != null) {
+      this.getChildren().remove(texts[0]);
+    }
+    if (texts[1] != null) {
+      this.getChildren().remove(texts[1]);
+    }
+    if (texts[2] != null) {
+      this.getChildren().remove(texts[2]);
+    }
+  }
 }

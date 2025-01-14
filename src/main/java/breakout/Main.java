@@ -40,9 +40,10 @@ public class Main extends Application {
   public Paddle gamePaddle;
   public Shooter gameShooter;
   public Level currentLevel;
-  public int currentLevelNumber = 1;
+  public int currentLevelNumber = 0;
   public int livesLeft = 5;
   public boolean isPlaying = true;
+  public boolean isStarted = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
 
   /**
@@ -71,21 +72,31 @@ public class Main extends Application {
   // Create the game's "scene": what shapes will be in the game and their starting properties
   public Scene setupScene(int width, int height, Color backgroundColor) throws Exception {
     initializeGame();
+    displayStartScreen();
     Scene scene = new Scene(root, width, height, backgroundColor);
-    scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+    scene.setOnKeyPressed(e -> {
+      try {
+        handleKeyInput(e.getCode());
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    });
     return scene;
   }
 
-  private void initializeGame() throws Exception {
+  private void initializeGame() {
     gamePaddle = new Paddle(0, 750, 100, 5, 20, PADDLE_COLOR);
     gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
+    root.getChildren().add(gameText);
+  }
 
+  private void startGame() throws Exception {
+    gameText.clearText();
     root.getChildren().add(gamePaddle);
     root.getChildren().add(gameShooter);
-    currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(currentLevel);
-    root.getChildren().add(gameText);
+    isStarted = true;
   }
 
   private void step(double elapsedTime) throws Exception {
@@ -100,7 +111,7 @@ public class Main extends Application {
       }
     }
 
-    if (isPlaying) {
+    if (isStarted && isPlaying) {
       handleIntersections(elapsedTime);
       gameText.setBottomText("Level " + currentLevelNumber + "\nBalls: " + gameBallCount + " - Lives: " + livesLeft, 14, TEXT_COLOR);
       if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
@@ -149,8 +160,10 @@ public class Main extends Application {
   }
 
   // What to do each time a key is pressed
-  private void handleKeyInput(KeyCode code) {
-    if (ballsInPlay == 0) {
+  private void handleKeyInput(KeyCode code) throws Exception {
+    if (!isStarted && code == KeyCode.SPACE) {
+      startGame();
+    } else if (isStarted && ballsInPlay == 0) {
       if (code == KeyCode.SPACE) {
         startPlay();
         ballsInPlay = gameBallCount;
@@ -191,6 +204,11 @@ public class Main extends Application {
     root.getChildren().add(ball);
   }
 
+  private void displayStartScreen() {
+    gameText.setTopText("Brick Breaker", 40, TEXT_COLOR);
+    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR);
+    gameText.setBottomText("Press SPACE to START", 20, TEXT_COLOR);
+  }
   private void displayEndScreen() {
     gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
     gameText.setCenterText("You have won the game!\nThanks for playing!", 20, BALL_COLOR);
