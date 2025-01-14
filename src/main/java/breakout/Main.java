@@ -179,6 +179,7 @@ public class Main extends Application {
 
   // What to do each time a key is pressed
   private void handleKeyInput(KeyCode code) throws Exception {
+    handleCheatCodes(code);
     if (!isPlaying && code == KeyCode.SPACE || !isPlaying && code == KeyCode.R) {
       startGame();
     } else if (isPlaying && ballsInPlay == 0) {
@@ -204,6 +205,12 @@ public class Main extends Application {
           gamePaddle.move(-1);
         }
       }
+    }
+  }
+
+  private void handleCheatCodes(KeyCode code) {
+    if (code == KeyCode.L) {
+      livesLeft++;
     }
   }
 
