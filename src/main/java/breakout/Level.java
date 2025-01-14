@@ -96,5 +96,10 @@ public class Level extends Group {
     blocks.remove(block);
   }
 
+  public void removeAllBlocks() {
+    this.getChildren().clear();
+    blocks.clear();
+  }
+
 
 }

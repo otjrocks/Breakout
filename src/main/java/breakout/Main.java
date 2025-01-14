@@ -101,7 +101,12 @@ public class Main extends Application {
   }
 
   private void step(double elapsedTime) throws Exception {
-    if (ballsInPlay == 0 && currentLevel.isComplete()) {
+    if (ballsInPlay == 0 && livesLeft <= 0) {
+      currentLevel.removeAllBlocks();
+      displayEndScreen();
+      isPlaying = false;
+    } else if (ballsInPlay == 0 && currentLevel.isComplete()) {
+      livesLeft = 5;
       if (currentLevelNumber > 1) {
         score += 1000;
       }
@@ -120,7 +125,7 @@ public class Main extends Application {
       gameText.setBottomText(
           "Level " + currentLevelNumber +
               "\nBalls: " + gameBallCount +
-              " - Lives: " + livesLeft +
+              " - Lives Remaining: " + livesLeft +
               " - Score: " + score, 14, TEXT_COLOR);
       if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
@@ -174,6 +179,7 @@ public class Main extends Application {
       startGame();
     } else if (isStarted && ballsInPlay == 0) {
       if (code == KeyCode.SPACE) {
+        livesLeft--;
         startPlay();
         ballsInPlay = gameBallCount;
         gameShooter.disable();
@@ -207,7 +213,7 @@ public class Main extends Application {
 
   private void addBall() {
     double startAngle = gameShooter.getAngle();
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 50, BALL_COLOR, 5, 500, Math.cos(startAngle),
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, 5, 500, Math.cos(startAngle),
         -Math.sin(startAngle));
     gameBalls.add(ball);
     root.getChildren().add(ball);
