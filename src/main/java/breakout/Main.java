@@ -51,7 +51,7 @@ public class Main extends Application {
    * Initialize what will be displayed.
    */
   @Override
-  public void start(Stage stage) throws Exception {
+  public void start(Stage stage) {
     Scene scene = setupScene(WIDTH, HEIGHT, BACKGROUND_COLOR);
     stage.setScene(scene);
     stage.setTitle(TITLE);
@@ -62,7 +62,7 @@ public class Main extends Application {
     animation.getKeyFrames()
         .add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> {
           try {
-            step(SECOND_DELAY);
+            step();
           } catch (Exception ex) {
             throw new RuntimeException(ex);
           }
@@ -71,7 +71,7 @@ public class Main extends Application {
   }
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
-  public Scene setupScene(int width, int height, Color backgroundColor) throws Exception {
+  public Scene setupScene(int width, int height, Color backgroundColor) {
     initializeGame();
     displayStartScreen();
     Scene scene = new Scene(root, width, height, backgroundColor);
@@ -92,7 +92,7 @@ public class Main extends Application {
     root.getChildren().add(gameText);
   }
 
-  private void startGame() throws Exception {
+  private void startGame() {
     gameText.clearText();
     root.getChildren().add(gamePaddle);
     root.getChildren().add(gameShooter);
@@ -100,7 +100,7 @@ public class Main extends Application {
     isStarted = true;
   }
 
-  private void step(double elapsedTime) throws Exception {
+  private void step() throws Exception {
     if (ballsInPlay == 0 && livesLeft <= 0) {
       currentLevel.removeAllBlocks();
       displayEndScreen(false);
@@ -121,7 +121,7 @@ public class Main extends Application {
     }
 
     if (isStarted && isPlaying) {
-      handleIntersections(elapsedTime);
+      handleIntersections();
       gameText.setBottomText(
           "Level " + currentLevelNumber +
               "\nBalls: " + gameBallCount +
@@ -134,7 +134,7 @@ public class Main extends Application {
   }
 
   // Handle all intersection logic
-  private void handleIntersections(double elapsedTime) {
+  private void handleIntersections() {
     for (int j = 0; j < gameBalls.size(); j++) {
       Ball ball = gameBalls.get(j);
       if (gamePaddle.isIntersecting(ball)) {
@@ -169,12 +169,12 @@ public class Main extends Application {
       if (ball.isIntersectingBoundaryY(HEIGHT)) {
         ball.updateDirectionY(ball.getDirectionY() * -1);
       }
-      ball.move(elapsedTime);
+      ball.move(Main.SECOND_DELAY);
     }
   }
 
   // What to do each time a key is pressed
-  private void handleKeyInput(KeyCode code) throws Exception {
+  private void handleKeyInput(KeyCode code) {
     if (!isStarted && code == KeyCode.SPACE) {
       startGame();
     } else if (isStarted && ballsInPlay == 0) {
