@@ -104,11 +104,6 @@ public class Main extends Application {
   }
 
   private void step() throws Exception {
-    if (ballsInPlay == 0 && livesLeft <= 0) {
-      currentLevel.removeAllBlocks();
-      displayEndScreen(false);
-      isPlaying = false;
-    }
     if (ballsInPlay == 0 && currentLevel.isComplete()) {
       livesLeft = 5;
       currentLevelNumber++;
@@ -122,6 +117,11 @@ public class Main extends Application {
       if (currentLevelNumber <= NUM_LEVELS) {
         currentLevel.startLevel(currentLevelNumber);
       }
+    }
+    if (ballsInPlay == 0 && livesLeft <= 0) {
+      currentLevel.removeAllBlocks();
+      displayEndScreen(false);
+      isPlaying = false;
     }
 
     if (isPlaying) {
