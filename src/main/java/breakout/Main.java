@@ -45,6 +45,7 @@ public class Main extends Application {
   public boolean isPlaying = true;
   public boolean isStarted = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
+  public int score = 0;
 
   /**
    * Initialize what will be displayed.
@@ -101,6 +102,9 @@ public class Main extends Application {
 
   private void step(double elapsedTime) throws Exception {
     if (ballsInPlay == 0 && currentLevel.isComplete()) {
+      if (currentLevelNumber > 1) {
+        score += 1000;
+      }
       currentLevelNumber++;
       if (currentLevelNumber > NUM_LEVELS && isPlaying) {
         displayEndScreen();
@@ -113,7 +117,11 @@ public class Main extends Application {
 
     if (isStarted && isPlaying) {
       handleIntersections(elapsedTime);
-      gameText.setBottomText("Level " + currentLevelNumber + "\nBalls: " + gameBallCount + " - Lives: " + livesLeft, 14, TEXT_COLOR);
+      gameText.setBottomText(
+          "Level " + currentLevelNumber +
+              "\nBalls: " + gameBallCount +
+              " - Lives: " + livesLeft +
+              " - Score: " + score, 14, TEXT_COLOR);
       if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
       }
@@ -136,6 +144,7 @@ public class Main extends Application {
       for (Block block : gameBlocks) {
         if (ball.isIntersectingBlock(block)) {
           block.updateHealth(block.getHealth() - 1);
+          score += 10;
           if (block.getHealth() <= 0) {
             currentLevel.removeBlock(block);
           }
@@ -209,6 +218,7 @@ public class Main extends Application {
     gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR);
     gameText.setBottomText("Press SPACE to START", 20, TEXT_COLOR);
   }
+
   private void displayEndScreen() {
     gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
     gameText.setCenterText("You have won the game!\nThanks for playing!", 20, BALL_COLOR);
