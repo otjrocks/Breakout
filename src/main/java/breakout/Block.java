@@ -10,7 +10,7 @@ public class Block extends Group {
 
   private int HEALTH;
   private Text HEALTH_TEXT;
-  private double TEXT_SIZE;
+  private final double TEXT_SIZE;
 
   public Block(int x, int y, String type, double size, int health, Color color, Color textColor) {
     TEXT_SIZE = size;
