@@ -52,6 +52,25 @@ The user only receives the power-ups if one of the balls first hits the power-up
 ## Level Descriptions
 
  * A game where the blocks are aligned in a spiral. The inside of the spiral has -1 ball power-downs, so the user must avoid them to not lose all of their balls.
+Example level diagram:
+
+```
+10 10 10 10 10 10 10 10 10 10 10 10
+10 0 0 0 0 0 0 0 0 0 0 10
+10 0 10 10 10 10 10 10 10 10 0 10
+10 0 10 0 0 0 0 0 0 10 0 10
+10 0 10 0 10 10 10 10 0 10 0 10
+10 0 10 0 10 00 0 10 0 10 0 10
+10 0 10 0 10 100 0 10 0 10 0 10
+10 0 10 0 10 10 0 10 0 10 0 10
+10 0 10 0 0 0 0 10 0 10 0 10
+10 0 10 10 10 10 10 10 0 10 0 10
+10 0 0 0 0 0 0 0 0 10 0 10
+10 10 10 10 10 10 10 10 10 10 0 10
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+```
 
  * A level with high hit-point blocks at the bottom, that need to be destroyed quickly to beat the level. All the power-ups are higher up, so the user must balance between getting power ups early or breaking the high value blocks before they reach the bottom. 
  
