@@ -24,6 +24,7 @@ public class Main extends Application {
   public static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
   public static final Color BLOCK_COLOR = new Color(0.2151, 0.2422, 0.2734, 1);
   public static final Color PADDLE_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
+  public static final Color TEXT_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
   public static final int FRAMES_PER_SECOND = 60;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final double BALL_RELEASE_DELAY = 1.0 / 10;
@@ -40,6 +41,9 @@ public class Main extends Application {
   public Shooter gameShooter;
   public Level currentLevel;
   public int currentLevelNumber = 1;
+  public boolean isPlaying = true;
+  private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
+
   /**
    * Initialize what will be displayed.
    */
@@ -66,14 +70,14 @@ public class Main extends Application {
   // Create the game's "scene": what shapes will be in the game and their starting properties
   public Scene setupScene(int width, int height, Color backgroundColor) throws Exception {
     gamePaddle = new Paddle(0, 750, 100, 10, 20, PADDLE_COLOR);
-    root.getChildren().add(gamePaddle);
-
     gameShooter = new Shooter(WIDTH, HEIGHT, 100, Math.PI / 2, BALL_COLOR);
-    root.getChildren().add(gameShooter);
-
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
+
+    root.getChildren().add(gamePaddle);
+    root.getChildren().add(gameShooter);
     currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(currentLevel);
+    root.getChildren().add(gameText);
 
     Scene scene = new Scene(root, width, height, backgroundColor);
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -83,9 +87,15 @@ public class Main extends Application {
   private void step(double elapsedTime) throws Exception {
     if (ballsInPlay == 0 && currentLevel.isComplete()) {
       currentLevelNumber++;
-      if (currentLevelNumber > NUM_LEVELS) {
-        System.out.println("You have reached the maximum number of levels!");
-      } else {
+      if (currentLevelNumber > NUM_LEVELS && isPlaying) {
+        root.getChildren().remove(gamePaddle);
+        root.getChildren().remove(gameShooter);
+        gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
+        gameText.setCenterText("You have won the game!\nThanks for playing!", 20, BALL_COLOR);
+        gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
+        isPlaying = false;
+      }
+      if (currentLevelNumber == NUM_LEVELS) {
         currentLevel.startLevel(currentLevelNumber);
       }
     }
