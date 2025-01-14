@@ -10,7 +10,7 @@ import javafx.scene.text.TextAlignment;
 public class TextElement extends StackPane {
   private static final double WRAPPING_WIDTH = 300;
   private static final int TOP_MARGIN = 20;
-  private static final int BOTTOM_MARGIN = 20;
+  private static final int BOTTOM_MARGIN = 5;
   private final Text[] texts = new Text[3];  // Store text for top, middle, and bottom
 
   public TextElement(double screenWidth, double screenHeight) {
@@ -26,6 +26,9 @@ public class TextElement extends StackPane {
     return text;
   }
   public void setTopText(String message, int size, Color color) {
+    if (texts[0] != null) {
+      this.getChildren().remove(texts[0]);
+    }
     Text text = createText(message, size, color);
     this.getChildren().add(text);
     setAlignment(text, Pos.TOP_CENTER);
@@ -33,22 +36,22 @@ public class TextElement extends StackPane {
     texts[0] = text;
   }
   public void setCenterText(String message, int size, Color color) {
+    if (texts[1] != null) {
+      this.getChildren().remove(texts[1]);
+    }
     Text text = createText(message, size, color);
     this.getChildren().add(text);
     setAlignment(text, Pos.CENTER);
     texts[1] = text;
   }
   public void setBottomText(String message, int size, Color color) {
+    if (texts[2] != null) {
+      this.getChildren().remove(texts[2]);
+    }
     Text text = createText(message, size, color);
     this.getChildren().add(text);
     setAlignment(text, Pos.BOTTOM_CENTER);
     setMargin(text, new javafx.geometry.Insets(0, 0, BOTTOM_MARGIN, 0));
     texts[2] = text;
-  }
-  public void clearText() {
-    for (int i = 0; i < texts.length; i++) {
-      this.getChildren().remove(texts[i]);
-      texts[i] = null;
-    }
   }
 }

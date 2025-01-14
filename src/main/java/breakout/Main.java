@@ -40,7 +40,8 @@ public class Main extends Application {
   public Paddle gamePaddle;
   public Shooter gameShooter;
   public Level currentLevel;
-  public int currentLevelNumber = 1;
+  public int currentLevelNumber = 2;
+  public int livesLeft = 5;
   public boolean isPlaying = true;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
 
@@ -69,8 +70,8 @@ public class Main extends Application {
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
   public Scene setupScene(int width, int height, Color backgroundColor) throws Exception {
-    gamePaddle = new Paddle(0, 750, 100, 10, 20, PADDLE_COLOR);
-    gameShooter = new Shooter(WIDTH, HEIGHT, 100, Math.PI / 2, BALL_COLOR);
+    gamePaddle = new Paddle(0, 750, 100, 5, 20, PADDLE_COLOR);
+    gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
 
     root.getChildren().add(gamePaddle);
@@ -78,7 +79,6 @@ public class Main extends Application {
     currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(currentLevel);
     root.getChildren().add(gameText);
-
     Scene scene = new Scene(root, width, height, backgroundColor);
     scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     return scene;
@@ -95,47 +95,50 @@ public class Main extends Application {
         gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
         isPlaying = false;
       }
-      if (currentLevelNumber == NUM_LEVELS) {
+      if (currentLevelNumber <= NUM_LEVELS) {
         currentLevel.startLevel(currentLevelNumber);
       }
     }
-    if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
-      gameShooter.enable();
-    }
-    for (int j = 0; j < gameBalls.size(); j++) {
-      Ball ball = gameBalls.get(j);
-      if (gamePaddle.isIntersecting(ball)) {
-        ball.updateDirectionY(ball.getDirectionY() * -1);
+    if (isPlaying) {
+      gameText.setBottomText("Level " + currentLevelNumber + "\nBalls: " + gameBallCount + " - Lives: " + livesLeft, 14, TEXT_COLOR);
+      if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
+        gameShooter.enable();
       }
-      if (ball.isIntersectingFloor(HEIGHT)) {
-        gameBalls.remove(ball);
-        root.getChildren().remove(ball);
-        ballsInPlay--;
-      }
-      ArrayList<Block> gameBlocks = currentLevel.getBlocks();
-      for (Block block : gameBlocks) {
-        if (ball.isIntersectingBlock(block)) {
-          block.updateHealth(block.getHealth() - 1);
-          if (block.getHealth() <= 0) {
-            currentLevel.removeBlock(block);
-          }
-          if (ball.isIntersectingLeftOrRight(block)) {
-            ball.updateDirectionX(ball.getDirectionX() * -1);
-          }
-          if (ball.isIntersectingTopOrBottom(block)) {
-            ball.updateDirectionY(ball.getDirectionY() * -1);
-          }
-          break; // break so that ball can't hit two blocks at once
-          // TODO: fix interaction logic
+      for (int j = 0; j < gameBalls.size(); j++) {
+        Ball ball = gameBalls.get(j);
+        if (gamePaddle.isIntersecting(ball)) {
+          ball.updateDirectionY(ball.getDirectionY() * -1);
         }
+        if (ball.isIntersectingFloor(HEIGHT)) {
+          gameBalls.remove(ball);
+          root.getChildren().remove(ball);
+          ballsInPlay--;
+        }
+        ArrayList<Block> gameBlocks = currentLevel.getBlocks();
+        for (Block block : gameBlocks) {
+          if (ball.isIntersectingBlock(block)) {
+            block.updateHealth(block.getHealth() - 1);
+            if (block.getHealth() <= 0) {
+              currentLevel.removeBlock(block);
+            }
+            if (ball.isIntersectingLeftOrRight(block)) {
+              ball.updateDirectionX(ball.getDirectionX() * -1);
+            }
+            if (ball.isIntersectingTopOrBottom(block)) {
+              ball.updateDirectionY(ball.getDirectionY() * -1);
+            }
+            break; // break so that ball can't hit two blocks at once
+            // TODO: fix interaction logic
+          }
+        }
+        if (ball.isIntersectingBoundaryX(WIDTH)) {
+          ball.updateDirectionX(ball.getDirectionX() * -1);
+        }
+        if (ball.isIntersectingBoundaryY(HEIGHT)) {
+          ball.updateDirectionY(ball.getDirectionY() * -1);
+        }
+        ball.move(elapsedTime);
       }
-      if (ball.isIntersectingBoundaryX(WIDTH)) {
-        ball.updateDirectionX(ball.getDirectionX() * -1);
-      }
-      if (ball.isIntersectingBoundaryY(HEIGHT)) {
-        ball.updateDirectionY(ball.getDirectionY() * -1);
-      }
-      ball.move(elapsedTime);
     }
   }
 
@@ -176,7 +179,7 @@ public class Main extends Application {
 
   private void addBall() {
     double startAngle = gameShooter.getAngle();
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 10, BALL_COLOR, 5, 500, Math.cos(startAngle),
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 50, BALL_COLOR, 5, 500, Math.cos(startAngle),
         -Math.sin(startAngle));
     gameBalls.add(ball);
     root.getChildren().add(ball);
