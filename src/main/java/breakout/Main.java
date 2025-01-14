@@ -40,12 +40,12 @@ public class Main extends Application {
   public Paddle gamePaddle;
   public Shooter gameShooter;
   public Level currentLevel;
-  public int currentLevelNumber = 0;
+  public int currentLevelNumber;
   public int livesLeft = 5;
   public boolean isPlaying = true;
   public boolean isStarted = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
-  public int score = 0;
+  public int score;
 
   /**
    * Initialize what will be displayed.
@@ -92,12 +92,17 @@ public class Main extends Application {
     root.getChildren().add(gameText);
   }
 
-  private void startGame() {
+  private void startGame() throws Exception {
+    currentLevelNumber = 1;
+    livesLeft = 5;
+    score = 0;
     gameText.clearText();
+    currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(gamePaddle);
     root.getChildren().add(gameShooter);
     root.getChildren().add(currentLevel);
     isStarted = true;
+    isPlaying = true;
   }
 
   private void step() throws Exception {
@@ -105,7 +110,8 @@ public class Main extends Application {
       currentLevel.removeAllBlocks();
       displayEndScreen(false);
       isPlaying = false;
-    } else if (ballsInPlay == 0 && currentLevel.isComplete()) {
+    }
+    if (ballsInPlay == 0 && currentLevel.isComplete()) {
       livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
@@ -174,10 +180,10 @@ public class Main extends Application {
   }
 
   // What to do each time a key is pressed
-  private void handleKeyInput(KeyCode code) {
-    if (!isStarted && code == KeyCode.SPACE) {
+  private void handleKeyInput(KeyCode code) throws Exception {
+    if (!isStarted && code == KeyCode.SPACE || !isPlaying && code == KeyCode.R) {
       startGame();
-    } else if (isStarted && ballsInPlay == 0) {
+    } else if (isStarted && isPlaying && ballsInPlay == 0) {
       if (code == KeyCode.SPACE) {
         livesLeft--;
         startPlay();
@@ -231,11 +237,12 @@ public class Main extends Application {
       gameText.setCenterText("You have won the game!\nYour final score was: " + score + "\nThanks for playing!", 20, BALL_COLOR);
     } else {
       gameText.setTopText("Oh No!", 40, TEXT_COLOR);
-      gameText.setCenterText("You ran out of lives!\nYour final score was: " + score, 20, BALL_COLOR);
+      gameText.setCenterText("You ran out of lives and lost!\nYour final score was: " + score, 20, BALL_COLOR);
     }
     gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
     root.getChildren().remove(gamePaddle);
     root.getChildren().remove(gameShooter);
+    root.getChildren().remove(currentLevel);
   }
 
   /**

@@ -55,6 +55,7 @@ public class Level extends Group {
   }
 
   private void createLevel(int levelNumber) throws Exception {
+    blocks.clear();
     Scanner scanner = getScanner(levelNumber);
     for (int j = 0; j < SCREEN_HEIGHT / BLOCK_SIZE - 1; j++) {
       for (int i = 0; i < SCREEN_WIDTH / BLOCK_SIZE; i++) {
@@ -73,6 +74,7 @@ public class Level extends Group {
   }
 
   private void initialize() {
+    this.getChildren().clear();
     for (Block block : blocks) {
       this.getChildren().add(block);
     }
