@@ -19,32 +19,32 @@ import javafx.util.Duration;
  */
 public class Main extends Application {
 
-  public static final String TITLE = "Breakout Game";
-  public static final Color BACKGROUND_COLOR = new Color(0.1328, 0.1563, 0.1914, 1);
-  public static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
-  public static final Color BLOCK_COLOR = new Color(0.2151, 0.2422, 0.2734, 1);
-  public static final Color PADDLE_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
-  public static final Color TEXT_COLOR = new Color(0, 0.6758, 0.7070, 1);
-  public static final int FRAMES_PER_SECOND = 60;
-  public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-  public static final double BALL_RELEASE_DELAY = 1.0 / 10;
-  public static final int WIDTH = 600;
-  public static final int HEIGHT = 800;
-  public static final int MIDDLE_WIDTH = WIDTH / 2;
-  public static final int NUM_LEVELS = 2;
+  private static final String TITLE = "Breakout Game";
+  private static final Color BACKGROUND_COLOR = new Color(0.1328, 0.1563, 0.1914, 1);
+  private static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
+  private static final Color BLOCK_COLOR = new Color(0.2151, 0.2422, 0.2734, 1);
+  private static final Color PADDLE_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
+  private static final Color TEXT_COLOR = new Color(0, 0.6758, 0.7070, 1);
+  private static final int FRAMES_PER_SECOND = 60;
+  private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+  private static final double BALL_RELEASE_DELAY = 1.0 / 10;
+  private static final int WIDTH = 600;
+  private static final int HEIGHT = 800;
+  private static final int MIDDLE_WIDTH = WIDTH / 2;
+  private static final int NUM_LEVELS = 2;
 
-  public Group root = new Group();
-  public ArrayList<Ball> gameBalls = new ArrayList<>();
-  public int gameBallCount = 100;
-  public int ballsInPlay = 0;
-  public Paddle gamePaddle;
-  public Shooter gameShooter;
-  public Level currentLevel;
-  public int currentLevelNumber;
-  public int livesLeft = 5;
-  public boolean isPlaying = false;
+  private final Group root = new Group();
+  private final ArrayList<Ball> gameBalls = new ArrayList<>();
+  private int gameBallCount = 100;  // this will be updated in future features
+  private int ballsInPlay = 0;
+  private Paddle gamePaddle;
+  private Shooter gameShooter;
+  private Level currentLevel;
+  private int currentLevelNumber;
+  private int livesLeft = 5;
+  private boolean isPlaying = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
-  public int score;
+  private int score;
 
   /**
    * Initialize what will be displayed.
@@ -70,7 +70,7 @@ public class Main extends Application {
   }
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
-  public Scene setupScene(int width, int height, Color backgroundColor) {
+  private Scene setupScene(int width, int height, Color backgroundColor) {
     initializeGame();
     displayStartScreen();
     Scene scene = new Scene(root, width, height, backgroundColor);
