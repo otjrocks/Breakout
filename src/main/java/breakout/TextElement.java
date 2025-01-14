@@ -18,7 +18,7 @@ public class TextElement extends StackPane {
     this.setPrefSize(screenWidth, screenHeight);
   }
 
-  public Text createText(String message, int size, Color color) {
+  private Text createText(String message, int size, Color color) {
     Text text = new Text();
     text.setText(message);
     text.setFont(new Font(size));

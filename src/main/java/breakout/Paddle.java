@@ -5,7 +5,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Rectangle {
 
-  public double PADDLE_SPEED;
+  private final double PADDLE_SPEED;
 
   public Paddle(double x, double y, double width, double height, double speed, Color color) {
     super(x, y, width, height);

@@ -8,8 +8,8 @@ public class Shooter extends Group {
   private final double SCREEN_WIDTH;
   private final double SCREEN_HEIGHT;
   private final double SHOOTER_LENGTH;
-  private double SHOOTER_ANGLE;
   private final Color SHOOTER_COLOR;
+  private double shooterAngle;
   private Ball displayBall;
   private Line shooterAim;
   private boolean isEnabled;
@@ -19,7 +19,7 @@ public class Shooter extends Group {
     SCREEN_WIDTH = screenWidth;
     SCREEN_HEIGHT = screenHeight;
     SHOOTER_LENGTH = shooterLength;
-    SHOOTER_ANGLE = startingAngle;
+    shooterAngle = startingAngle;
     SHOOTER_COLOR = shooterColor;
     isEnabled = false;
   }
@@ -29,8 +29,8 @@ public class Shooter extends Group {
     shooterAim = new Line(
         SCREEN_WIDTH / 2,
         SCREEN_HEIGHT - 10,
-        SCREEN_WIDTH / 2 + SHOOTER_LENGTH * Math.cos(SHOOTER_ANGLE),
-        SCREEN_HEIGHT - 10 - SHOOTER_LENGTH * Math.sin(SHOOTER_ANGLE)
+        SCREEN_WIDTH / 2 + SHOOTER_LENGTH * Math.cos(shooterAngle),
+        SCREEN_HEIGHT - 10 - SHOOTER_LENGTH * Math.sin(shooterAngle)
     );
     displayBall.setFill(SHOOTER_COLOR);
     shooterAim.setStroke(SHOOTER_COLOR);
@@ -52,13 +52,13 @@ public class Shooter extends Group {
   }
 
   public double getAngle() {
-    return SHOOTER_ANGLE;
+    return shooterAngle;
   }
 
   public void setAngle(double angle) {
-    SHOOTER_ANGLE = angle;
-    shooterAim.setEndX(SCREEN_WIDTH / 2 + SHOOTER_LENGTH * Math.cos(SHOOTER_ANGLE));
-    shooterAim.setEndY(SCREEN_HEIGHT - 10 - SHOOTER_LENGTH * Math.sin(SHOOTER_ANGLE));
+    shooterAngle = angle;
+    shooterAim.setEndX(SCREEN_WIDTH / 2 + SHOOTER_LENGTH * Math.cos(shooterAngle));
+    shooterAim.setEndY(SCREEN_HEIGHT - 10 - SHOOTER_LENGTH * Math.sin(shooterAngle));
   }
 
 }

@@ -13,13 +13,13 @@ import javafx.scene.paint.Color;
 
 public class Level extends Group {
 
+  private static final String LEVEL_FILE_PATH = "levels/";
   private final int SCREEN_WIDTH;
   private final int SCREEN_HEIGHT;
   private final int BLOCK_SIZE;
   private final Color BLOCK_COLOR;
   private final Color TEXT_COLOR;
   private final ArrayList<Block> blocks;
-  public static final String LEVEL_FILE_PATH = "levels/";
 
   public Level(int screenWidth, int screenHeight, int blockSize, Color blockColor,
       Color textColor) {

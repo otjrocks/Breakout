@@ -8,7 +8,7 @@ import javafx.scene.text.Text;
 
 public class Block extends Group {
 
-  private int HEALTH;
+  private int health;
   private Text HEALTH_TEXT;
   private final double TEXT_SIZE;
 
@@ -18,7 +18,7 @@ public class Block extends Group {
       Rectangle rectangle = new Rectangle(size, size);
       rectangle.setFill(color);
 
-      HEALTH = health;
+      this.health = health;
       HEALTH_TEXT = new Text(String.valueOf(health));
       HEALTH_TEXT.setFill(textColor);
       HEALTH_TEXT.setFont(new Font((size / 5)));
@@ -37,11 +37,11 @@ public class Block extends Group {
   }
 
   public int getHealth() {
-    return HEALTH;
+    return health;
   }
 
   public void updateHealth(int health) {
-    HEALTH = health;
+    this.health = health;
     HEALTH_TEXT.setText(String.valueOf(health));
     double textWidth = HEALTH_TEXT.getBoundsInLocal().getWidth();
     double textHeight = HEALTH_TEXT.getBoundsInLocal().getHeight();

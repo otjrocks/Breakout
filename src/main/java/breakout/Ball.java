@@ -10,21 +10,20 @@ import javafx.scene.shape.Circle;
  */
 public class Ball extends Circle {
 
-  public double BALL_SIZE;
-  public double BALL_SPEED;
-  public double BALL_DIRECTION_X;
-  public double BALL_DIRECTION_Y;
-  public Color BALL_COLOR;
+  private final double BALL_SIZE;
+  private double BALL_SPEED;
+
+  private double ballDirectionX;
+  private double ballDirectionY;
 
   public Ball(double x, double y, Color color, double radius, double speed, double directionX,
       double directionY) {
     super(x, y, radius);
     BALL_SIZE = radius;
     BALL_SPEED = speed;
-    BALL_DIRECTION_X = directionX;
-    BALL_DIRECTION_Y = directionY;
-    BALL_COLOR = color;
-    this.setFill(BALL_COLOR);
+    ballDirectionX = directionX;
+    ballDirectionY = directionY;
+    this.setFill(color);
   }
 
   public double getSize() {
@@ -32,19 +31,19 @@ public class Ball extends Circle {
   }
 
   public double getDirectionX() {
-    return BALL_DIRECTION_X;
+    return ballDirectionX;
   }
 
   public double getDirectionY() {
-    return BALL_DIRECTION_Y;
+    return ballDirectionY;
   }
 
   public void updateDirectionX(double directionX) {
-    BALL_DIRECTION_X = directionX;
+    ballDirectionX = directionX;
   }
 
   public void updateDirectionY(double directionY) {
-    BALL_DIRECTION_Y = directionY;
+    ballDirectionY = directionY;
   }
 
   public void updateSpeed(double speed) {
@@ -52,11 +51,11 @@ public class Ball extends Circle {
   }
 
   private void moveX(double elapsedTime) {
-    this.setCenterX(this.getCenterX() + BALL_DIRECTION_X * BALL_SPEED * elapsedTime);
+    this.setCenterX(this.getCenterX() + ballDirectionX * BALL_SPEED * elapsedTime);
   }
 
   private void moveY(double elapsedTime) {
-    this.setCenterY(this.getCenterY() + BALL_DIRECTION_Y * BALL_SPEED * elapsedTime);
+    this.setCenterY(this.getCenterY() + ballDirectionY * BALL_SPEED * elapsedTime);
   }
 
   public void move(double elapsedTime) {
