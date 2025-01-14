@@ -65,14 +65,23 @@ public class Ball extends Circle {
   /*
   Returns whether the Ball is current intersecting over past the game window boundary
    */
-  public boolean isIntersectingBoundaryX(int windowWidth) {
+  private boolean isIntersectingBoundaryX(int windowWidth) {
     return (this.getCenterX() - this.getRadius() <= 0 ||
         this.getCenterX() + this.getRadius() >= windowWidth);
   }
 
-  public boolean isIntersectingBoundaryY(int windowHeight) {
+  private boolean isIntersectingBoundaryY(int windowHeight) {
     return (this.getCenterY() - this.getRadius() <= 0 ||
         this.getCenterY() + this.getRadius() >= windowHeight);
+  }
+
+  public void bounceOffWall(int windowWidth, int windowHeight) {
+    if (isIntersectingBoundaryX(windowWidth)) {
+      updateDirectionX(getDirectionX() * -1);
+    }
+    if (isIntersectingBoundaryY(windowHeight)) {
+      updateDirectionY(getDirectionY() * -1);
+    }
   }
 
   public boolean isIntersectingFloor(int windowHeight) {

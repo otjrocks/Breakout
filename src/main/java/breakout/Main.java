@@ -125,7 +125,7 @@ public class Main extends Application {
     }
 
     if (isPlaying) {
-      handleIntersections();
+      handleInteractions();
       gameText.setBottomText(
           "Level " + currentLevelNumber +
               "\nBalls: " + gameBallCount +
@@ -137,18 +137,22 @@ public class Main extends Application {
     }
   }
 
-  // Handle all intersection logic
-  private void handleIntersections() {
-    for (int j = 0; j < gameBalls.size(); j++) {
-      Ball ball = gameBalls.get(j);
-      if (gamePaddle.isIntersecting(ball)) {
-        ball.updateDirectionY(ball.getDirectionY() * -1);
-      }
-      if (ball.isIntersectingFloor(HEIGHT)) {
-        gameBalls.remove(ball);
-        root.getChildren().remove(ball);
-        ballsInPlay--;
-      }
+  private void handleInteractions() {
+    handleBallsHittingFloor();
+    handleBallsMovement();
+    handlePaddleInteractions();
+    handleBlockCollisions();
+  }
+
+  private void handleBallsMovement() {
+    for (Ball ball: gameBalls) {
+      ball.bounceOffWall(WIDTH, HEIGHT);
+      ball.move(Main.SECOND_DELAY);
+    }
+  }
+
+  private void handleBlockCollisions() {
+    for (Ball ball: gameBalls) {
       ArrayList<Block> gameBlocks = currentLevel.getBlocks();
       for (Block block : gameBlocks) {
         if (ball.isIntersectingBlock(block)) {
@@ -167,13 +171,25 @@ public class Main extends Application {
           // TODO: fix interaction logic
         }
       }
-      if (ball.isIntersectingBoundaryX(WIDTH)) {
-        ball.updateDirectionX(ball.getDirectionX() * -1);
-      }
-      if (ball.isIntersectingBoundaryY(HEIGHT)) {
+    }
+  }
+
+  private void handlePaddleInteractions() {
+    for (Ball ball : gameBalls) {
+      if (gamePaddle.isIntersecting(ball)) {
         ball.updateDirectionY(ball.getDirectionY() * -1);
       }
-      ball.move(Main.SECOND_DELAY);
+    }
+  }
+
+  private void handleBallsHittingFloor() {
+    for (int i = 0; i < gameBalls.size(); i++) {
+      Ball ball = gameBalls.get(i);
+      if (ball.isIntersectingFloor(HEIGHT)) {
+        gameBalls.remove(ball);
+        root.getChildren().remove(ball);
+        ballsInPlay--;
+      }
     }
   }
 
