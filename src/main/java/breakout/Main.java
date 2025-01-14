@@ -183,34 +183,42 @@ public class Main extends Application {
     if (!isPlaying && code == KeyCode.SPACE || !isPlaying && code == KeyCode.R) {
       startGame();
     } else if (isPlaying && ballsInPlay == 0) {
-      if (code == KeyCode.SPACE) {
-        livesLeft--;
-        startPlay();
-        ballsInPlay = gameBallCount;
-        gameShooter.disable();
-      }
-      if (code == KeyCode.RIGHT) {
-        gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 40);
-      }
-      if (code == KeyCode.LEFT) {
-        gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 40);
-      }
+      handleShooterActions(code);
     } else {
-      if (code == KeyCode.RIGHT) {
-        if (gamePaddle.canMoveRight(WIDTH)) {
-          gamePaddle.move(1);
-        }
-      } else if (code == KeyCode.LEFT) {
-        if (gamePaddle.canMoveLeft()) {
-          gamePaddle.move(-1);
-        }
-      }
+      handlePaddleMovement(code);
     }
   }
 
   private void handleCheatCodes(KeyCode code) {
     if (code == KeyCode.L) {
       livesLeft++;
+    }
+  }
+
+  private void handleShooterActions(KeyCode code) {
+    if (code == KeyCode.SPACE) {
+      livesLeft--;
+      startPlay();
+      ballsInPlay = gameBallCount;
+      gameShooter.disable();
+    }
+    if (code == KeyCode.RIGHT) {
+      gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 40);
+    }
+    if (code == KeyCode.LEFT) {
+      gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 40);
+    }
+  }
+
+  private void handlePaddleMovement(KeyCode code) {
+    if (code == KeyCode.RIGHT) {
+      if (gamePaddle.canMoveRight(WIDTH)) {
+        gamePaddle.move(1);
+      }
+    } else if (code == KeyCode.LEFT) {
+      if (gamePaddle.canMoveLeft()) {
+        gamePaddle.move(-1);
+      }
     }
   }
 
@@ -239,10 +247,13 @@ public class Main extends Application {
   private void displayEndScreen(boolean isWinner) {
     if (isWinner) {
       gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
-      gameText.setCenterText("You have won the game!\nYour final score was: " + score + "\nThanks for playing!", 20, BALL_COLOR);
+      gameText.setCenterText(
+          "You have won the game!\nYour final score was: " + score + "\nThanks for playing!", 20,
+          BALL_COLOR);
     } else {
       gameText.setTopText("Oh No!", 40, TEXT_COLOR);
-      gameText.setCenterText("You ran out of lives and lost!\nYour final score was: " + score, 20, BALL_COLOR);
+      gameText.setCenterText("You ran out of lives and lost!\nYour final score was: " + score, 20,
+          BALL_COLOR);
     }
     gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
     root.getChildren().remove(gamePaddle);
