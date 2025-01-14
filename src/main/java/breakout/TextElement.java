@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class TextElement extends StackPane {
+
   private static final double WRAPPING_WIDTH = 300;
   private static final int TOP_MARGIN = 20;
   private static final int BOTTOM_MARGIN = 5;
@@ -16,6 +17,7 @@ public class TextElement extends StackPane {
   public TextElement(double screenWidth, double screenHeight) {
     this.setPrefSize(screenWidth, screenHeight);
   }
+
   public Text createText(String message, int size, Color color) {
     Text text = new Text();
     text.setText(message);
@@ -25,6 +27,7 @@ public class TextElement extends StackPane {
     text.setTextAlignment(TextAlignment.CENTER);
     return text;
   }
+
   public void setTopText(String message, int size, Color color) {
     if (texts[0] != null) {
       this.getChildren().remove(texts[0]);
@@ -35,6 +38,7 @@ public class TextElement extends StackPane {
     setMargin(text, new javafx.geometry.Insets(TOP_MARGIN, 0, 0, 0));
     texts[0] = text;
   }
+
   public void setCenterText(String message, int size, Color color) {
     if (texts[1] != null) {
       this.getChildren().remove(texts[1]);
@@ -44,6 +48,7 @@ public class TextElement extends StackPane {
     setAlignment(text, Pos.CENTER);
     texts[1] = text;
   }
+
   public void setBottomText(String message, int size, Color color) {
     if (texts[2] != null) {
       this.getChildren().remove(texts[2]);

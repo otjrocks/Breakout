@@ -61,8 +61,4 @@ public class Shooter extends Group {
     shooterAim.setEndY(SCREEN_HEIGHT - 10 - SHOOTER_LENGTH * Math.sin(SHOOTER_ANGLE));
   }
 
-
-
-
-
 }

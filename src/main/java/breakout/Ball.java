@@ -96,6 +96,7 @@ public class Ball extends Circle {
     boolean intersectsBottom = ballMinY < blockMaxY && ballMaxY > blockMaxY;
     return intersectsTop || intersectsBottom;
   }
+
   public boolean isIntersectingLeftOrRight(Block block) {
     double ballMinX = this.getBoundsInParent().getMinX();
     double ballMaxX = this.getBoundsInParent().getMaxX();
