@@ -12,7 +12,6 @@ public class Ball extends Circle {
 
   private final double BALL_SIZE;
   private double BALL_SPEED;
-
   private double ballDirectionX;
   private double ballDirectionY;
 

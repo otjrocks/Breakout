@@ -9,9 +9,9 @@ import javafx.scene.text.TextAlignment;
 
 public class TextElement extends StackPane {
 
-  private static final double WRAPPING_WIDTH = 300;
-  private static final int TOP_MARGIN = 20;
-  private static final int BOTTOM_MARGIN = 5;
+  public static final double WRAPPING_WIDTH = 300;
+  public static final int TOP_MARGIN = 20;
+  public static final int BOTTOM_MARGIN = 5;
   private final Text[] texts = new Text[3];  // Store text for top, middle, and bottom
 
   public TextElement(double screenWidth, double screenHeight) {

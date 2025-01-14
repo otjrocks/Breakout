@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 
 public class Level extends Group {
 
-  private static final String LEVEL_FILE_PATH = "levels/";
+  public static final String LEVEL_FILE_PATH = "levels/";
   private final int SCREEN_WIDTH;
   private final int SCREEN_HEIGHT;
   private final int BLOCK_SIZE;
