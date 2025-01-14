@@ -72,7 +72,7 @@ public class Main extends Application {
   // Create the game's "scene": what shapes will be in the game and their starting properties
   private Scene setupScene() {
     initializeGame();
-    displayStartScreen();
+    showStartScreen();
     Scene scene = new Scene(root, WIDTH, HEIGHT, BACKGROUND_COLOR);
     scene.setOnKeyPressed(e -> {
       try {
@@ -104,26 +104,35 @@ public class Main extends Application {
   }
 
   private void step() throws Exception {
-    if (ballsInPlay == 0 && currentLevel.isComplete()) {
+    handleLevelTransitions();
+    handleGameLogic();
+  }
+
+  private void handleLevelTransitions() throws Exception {
+    if (ballsInPlay == 0
+        && currentLevel.isComplete()) {  // Current level completed with lives remaining
       livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
         score += 1000;
       }
       if (currentLevelNumber > NUM_LEVELS && isPlaying) {
-        displayEndScreen(true);
+        showEndScreen(true);
         isPlaying = false;
       }
       if (currentLevelNumber <= NUM_LEVELS) {
         currentLevel.startLevel(currentLevelNumber);
       }
     }
-    if (ballsInPlay == 0 && livesLeft <= 0) {
+
+    if (ballsInPlay == 0 && livesLeft <= 0) {  // Player ran out of lives and all balls have fallen
       currentLevel.removeAllBlocks();
-      displayEndScreen(false);
+      showEndScreen(false);
       isPlaying = false;
     }
+  }
 
+  private void handleGameLogic() {
     if (isPlaying) {
       handleInteractions();
       gameText.setBottomText(
@@ -138,21 +147,21 @@ public class Main extends Application {
   }
 
   private void handleInteractions() {
-    handleBallsHittingFloor();
-    handleBallsMovement();
+    removeFallenBalls();
+    updateBallPositions();
     handlePaddleInteractions();
     handleBlockCollisions();
   }
 
-  private void handleBallsMovement() {
-    for (Ball ball: gameBalls) {
+  private void updateBallPositions() {
+    for (Ball ball : gameBalls) {
       ball.bounceOffWall(WIDTH, HEIGHT);
       ball.move(Main.SECOND_DELAY);
     }
   }
 
   private void handleBlockCollisions() {
-    for (Ball ball: gameBalls) {
+    for (Ball ball : gameBalls) {
       ArrayList<Block> gameBlocks = currentLevel.getBlocks();
       for (Block block : gameBlocks) {
         if (ball.isIntersectingBlock(block)) {
@@ -182,7 +191,7 @@ public class Main extends Application {
     }
   }
 
-  private void handleBallsHittingFloor() {
+  private void removeFallenBalls() {
     for (int i = 0; i < gameBalls.size(); i++) {
       Ball ball = gameBalls.get(i);
       if (ball.isIntersectingFloor(HEIGHT)) {
@@ -214,7 +223,7 @@ public class Main extends Application {
   private void handleShooterActions(KeyCode code) {
     if (code == KeyCode.SPACE) {
       livesLeft--;
-      startPlay();
+      launchBalls();
       ballsInPlay = gameBallCount;
       gameShooter.disable();
     }
@@ -238,15 +247,15 @@ public class Main extends Application {
     }
   }
 
-  private void startPlay() {
+  private void launchBalls() {
     Timeline addBallsTimeline = new Timeline();
     addBallsTimeline.setCycleCount(gameBallCount);
     addBallsTimeline.getKeyFrames()
-        .add(new KeyFrame(Duration.seconds(BALL_RELEASE_DELAY), e -> addBall()));
+        .add(new KeyFrame(Duration.seconds(BALL_RELEASE_DELAY), e -> spawnBall()));
     addBallsTimeline.play();
   }
 
-  private void addBall() {
+  private void spawnBall() {
     double startAngle = gameShooter.getAngle();
     Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, 5, 500, Math.cos(startAngle),
         -Math.sin(startAngle));
@@ -254,13 +263,13 @@ public class Main extends Application {
     root.getChildren().add(ball);
   }
 
-  private void displayStartScreen() {
+  private void showStartScreen() {
     gameText.setTopText("Brick Breaker", 40, TEXT_COLOR);
     gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR);
     gameText.setBottomText("Press SPACE to START", 20, TEXT_COLOR);
   }
 
-  private void displayEndScreen(boolean isWinner) {
+  private void showEndScreen(boolean isWinner) {
     if (isWinner) {
       gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
       gameText.setCenterText(
