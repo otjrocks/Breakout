@@ -51,7 +51,7 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage stage) {
-    Scene scene = setupScene(WIDTH, HEIGHT, BACKGROUND_COLOR);
+    Scene scene = setupScene();
     stage.setScene(scene);
     stage.setTitle(TITLE);
     stage.show();
@@ -70,10 +70,10 @@ public class Main extends Application {
   }
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
-  private Scene setupScene(int width, int height, Color backgroundColor) {
+  private Scene setupScene() {
     initializeGame();
     displayStartScreen();
-    Scene scene = new Scene(root, width, height, backgroundColor);
+    Scene scene = new Scene(root, WIDTH, HEIGHT, BACKGROUND_COLOR);
     scene.setOnKeyPressed(e -> {
       try {
         handleKeyInput(e.getCode());
