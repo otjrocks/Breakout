@@ -30,6 +30,7 @@ public class Main extends Application {
   public static final int WIDTH = 600;
   public static final int HEIGHT = 800;
   public static final int MIDDLE_WIDTH = WIDTH / 2;
+  public static final int NUM_LEVELS = 2;
 
   public Group root = new Group();
   public ArrayList<Ball> gameBalls = new ArrayList<>();
@@ -38,12 +39,12 @@ public class Main extends Application {
   public Paddle gamePaddle;
   public Shooter gameShooter;
   public Level currentLevel;
-
+  public int currentLevelNumber = 1;
   /**
    * Initialize what will be displayed.
    */
   @Override
-  public void start(Stage stage) {
+  public void start(Stage stage) throws Exception {
     Scene scene = setupScene(WIDTH, HEIGHT, BACKGROUND_COLOR);
     stage.setScene(scene);
     stage.setTitle(TITLE);
@@ -63,7 +64,7 @@ public class Main extends Application {
   }
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
-  public Scene setupScene(int width, int height, Color backgroundColor) {
+  public Scene setupScene(int width, int height, Color backgroundColor) throws Exception {
     gamePaddle = new Paddle(0, 750, 100, 10, 20, PADDLE_COLOR);
     root.getChildren().add(gamePaddle);
 
@@ -71,11 +72,7 @@ public class Main extends Application {
     root.getChildren().add(gameShooter);
 
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
-    try {
-      currentLevel.startLevel(1);
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage());
-    }
+    currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(currentLevel);
 
     Scene scene = new Scene(root, width, height, backgroundColor);
@@ -84,11 +81,16 @@ public class Main extends Application {
   }
 
   private void step(double elapsedTime) throws Exception {
+    if (ballsInPlay == 0 && currentLevel.isComplete()) {
+      currentLevelNumber++;
+      if (currentLevelNumber > NUM_LEVELS) {
+        System.out.println("You have reached the maximum number of levels!");
+      } else {
+        currentLevel.startLevel(currentLevelNumber);
+      }
+    }
     if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
       gameShooter.enable();
-      if (currentLevel.isComplete()) {
-        currentLevel.startLevel(2);
-      }
     }
     for (int j = 0; j < gameBalls.size(); j++) {
       Ball ball = gameBalls.get(j);
