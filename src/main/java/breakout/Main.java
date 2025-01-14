@@ -103,16 +103,16 @@ public class Main extends Application {
   private void step(double elapsedTime) throws Exception {
     if (ballsInPlay == 0 && livesLeft <= 0) {
       currentLevel.removeAllBlocks();
-      displayEndScreen();
+      displayEndScreen(false);
       isPlaying = false;
     } else if (ballsInPlay == 0 && currentLevel.isComplete()) {
       livesLeft = 5;
+      currentLevelNumber++;
       if (currentLevelNumber > 1) {
         score += 1000;
       }
-      currentLevelNumber++;
       if (currentLevelNumber > NUM_LEVELS && isPlaying) {
-        displayEndScreen();
+        displayEndScreen(true);
         isPlaying = false;
       }
       if (currentLevelNumber <= NUM_LEVELS) {
@@ -225,9 +225,14 @@ public class Main extends Application {
     gameText.setBottomText("Press SPACE to START", 20, TEXT_COLOR);
   }
 
-  private void displayEndScreen() {
-    gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
-    gameText.setCenterText("You have won the game!\nThanks for playing!", 20, BALL_COLOR);
+  private void displayEndScreen(boolean isWinner) {
+    if (isWinner) {
+      gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
+      gameText.setCenterText("You have won the game!\nYour final score was: " + score + "\nThanks for playing!", 20, BALL_COLOR);
+    } else {
+      gameText.setTopText("Oh No!", 40, TEXT_COLOR);
+      gameText.setCenterText("You ran out of lives!\nYour final score was: " + score, 20, BALL_COLOR);
+    }
     gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
     root.getChildren().remove(gamePaddle);
     root.getChildren().remove(gameShooter);
@@ -239,5 +244,4 @@ public class Main extends Application {
   public static void main(String[] args) {
     launch(args);
   }
-
 }
