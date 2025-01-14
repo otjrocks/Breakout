@@ -10,8 +10,10 @@ public class Block extends Group {
 
   private int HEALTH;
   private Text HEALTH_TEXT;
+  private double TEXT_SIZE;
 
   public Block(int x, int y, String type, double size, int health, Color color, Color textColor) {
+    TEXT_SIZE = size;
     if (type.equals("square")) {
       Rectangle rectangle = new Rectangle(size, size);
       rectangle.setFill(color);
@@ -41,6 +43,10 @@ public class Block extends Group {
   public void updateHealth(int health) {
     HEALTH = health;
     HEALTH_TEXT.setText(String.valueOf(health));
+    double textWidth = HEALTH_TEXT.getBoundsInLocal().getWidth();
+    double textHeight = HEALTH_TEXT.getBoundsInLocal().getHeight();
+    HEALTH_TEXT.setX((TEXT_SIZE - textWidth) / 2);
+    HEALTH_TEXT.setY((TEXT_SIZE + textHeight) / 2);
   }
 
 
