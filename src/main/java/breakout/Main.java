@@ -24,7 +24,7 @@ public class Main extends Application {
   public static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
   public static final Color BLOCK_COLOR = new Color(0.2151, 0.2422, 0.2734, 1);
   public static final Color PADDLE_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
-  public static final Color TEXT_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
+  public static final Color TEXT_COLOR = new Color(0, 0.6758, 0.7070, 1);
   public static final int FRAMES_PER_SECOND = 60;
   public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   public static final double BALL_RELEASE_DELAY = 1.0 / 10;
@@ -40,7 +40,7 @@ public class Main extends Application {
   public Paddle gamePaddle;
   public Shooter gameShooter;
   public Level currentLevel;
-  public int currentLevelNumber = 2;
+  public int currentLevelNumber = 1;
   public int livesLeft = 5;
   public boolean isPlaying = true;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
@@ -70,6 +70,13 @@ public class Main extends Application {
 
   // Create the game's "scene": what shapes will be in the game and their starting properties
   public Scene setupScene(int width, int height, Color backgroundColor) throws Exception {
+    initializeGame();
+    Scene scene = new Scene(root, width, height, backgroundColor);
+    scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+    return scene;
+  }
+
+  private void initializeGame() throws Exception {
     gamePaddle = new Paddle(0, 750, 100, 5, 20, PADDLE_COLOR);
     gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
@@ -79,66 +86,65 @@ public class Main extends Application {
     currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(currentLevel);
     root.getChildren().add(gameText);
-    Scene scene = new Scene(root, width, height, backgroundColor);
-    scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-    return scene;
   }
 
   private void step(double elapsedTime) throws Exception {
     if (ballsInPlay == 0 && currentLevel.isComplete()) {
       currentLevelNumber++;
       if (currentLevelNumber > NUM_LEVELS && isPlaying) {
-        root.getChildren().remove(gamePaddle);
-        root.getChildren().remove(gameShooter);
-        gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
-        gameText.setCenterText("You have won the game!\nThanks for playing!", 20, BALL_COLOR);
-        gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
+        displayEndScreen();
         isPlaying = false;
       }
       if (currentLevelNumber <= NUM_LEVELS) {
         currentLevel.startLevel(currentLevelNumber);
       }
     }
+
     if (isPlaying) {
+      handleIntersections(elapsedTime);
       gameText.setBottomText("Level " + currentLevelNumber + "\nBalls: " + gameBallCount + " - Lives: " + livesLeft, 14, TEXT_COLOR);
       if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
       }
-      for (int j = 0; j < gameBalls.size(); j++) {
-        Ball ball = gameBalls.get(j);
-        if (gamePaddle.isIntersecting(ball)) {
-          ball.updateDirectionY(ball.getDirectionY() * -1);
-        }
-        if (ball.isIntersectingFloor(HEIGHT)) {
-          gameBalls.remove(ball);
-          root.getChildren().remove(ball);
-          ballsInPlay--;
-        }
-        ArrayList<Block> gameBlocks = currentLevel.getBlocks();
-        for (Block block : gameBlocks) {
-          if (ball.isIntersectingBlock(block)) {
-            block.updateHealth(block.getHealth() - 1);
-            if (block.getHealth() <= 0) {
-              currentLevel.removeBlock(block);
-            }
-            if (ball.isIntersectingLeftOrRight(block)) {
-              ball.updateDirectionX(ball.getDirectionX() * -1);
-            }
-            if (ball.isIntersectingTopOrBottom(block)) {
-              ball.updateDirectionY(ball.getDirectionY() * -1);
-            }
-            break; // break so that ball can't hit two blocks at once
-            // TODO: fix interaction logic
-          }
-        }
-        if (ball.isIntersectingBoundaryX(WIDTH)) {
-          ball.updateDirectionX(ball.getDirectionX() * -1);
-        }
-        if (ball.isIntersectingBoundaryY(HEIGHT)) {
-          ball.updateDirectionY(ball.getDirectionY() * -1);
-        }
-        ball.move(elapsedTime);
+    }
+  }
+
+  // Handle all intersection logic
+  private void handleIntersections(double elapsedTime) {
+    for (int j = 0; j < gameBalls.size(); j++) {
+      Ball ball = gameBalls.get(j);
+      if (gamePaddle.isIntersecting(ball)) {
+        ball.updateDirectionY(ball.getDirectionY() * -1);
       }
+      if (ball.isIntersectingFloor(HEIGHT)) {
+        gameBalls.remove(ball);
+        root.getChildren().remove(ball);
+        ballsInPlay--;
+      }
+      ArrayList<Block> gameBlocks = currentLevel.getBlocks();
+      for (Block block : gameBlocks) {
+        if (ball.isIntersectingBlock(block)) {
+          block.updateHealth(block.getHealth() - 1);
+          if (block.getHealth() <= 0) {
+            currentLevel.removeBlock(block);
+          }
+          if (ball.isIntersectingLeftOrRight(block)) {
+            ball.updateDirectionX(ball.getDirectionX() * -1);
+          }
+          if (ball.isIntersectingTopOrBottom(block)) {
+            ball.updateDirectionY(ball.getDirectionY() * -1);
+          }
+          break; // break so that ball can't hit two blocks at once
+          // TODO: fix interaction logic
+        }
+      }
+      if (ball.isIntersectingBoundaryX(WIDTH)) {
+        ball.updateDirectionX(ball.getDirectionX() * -1);
+      }
+      if (ball.isIntersectingBoundaryY(HEIGHT)) {
+        ball.updateDirectionY(ball.getDirectionY() * -1);
+      }
+      ball.move(elapsedTime);
     }
   }
 
@@ -183,6 +189,14 @@ public class Main extends Application {
         -Math.sin(startAngle));
     gameBalls.add(ball);
     root.getChildren().add(ball);
+  }
+
+  private void displayEndScreen() {
+    gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
+    gameText.setCenterText("You have won the game!\nThanks for playing!", 20, BALL_COLOR);
+    gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
+    root.getChildren().remove(gamePaddle);
+    root.getChildren().remove(gameShooter);
   }
 
   /**
