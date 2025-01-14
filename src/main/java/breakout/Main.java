@@ -42,8 +42,7 @@ public class Main extends Application {
   public Level currentLevel;
   public int currentLevelNumber;
   public int livesLeft = 5;
-  public boolean isPlaying = true;
-  public boolean isStarted = false;
+  public boolean isPlaying = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
   public int score;
 
@@ -101,7 +100,6 @@ public class Main extends Application {
     root.getChildren().add(gamePaddle);
     root.getChildren().add(gameShooter);
     root.getChildren().add(currentLevel);
-    isStarted = true;
     isPlaying = true;
   }
 
@@ -126,7 +124,7 @@ public class Main extends Application {
       }
     }
 
-    if (isStarted && isPlaying) {
+    if (isPlaying) {
       handleIntersections();
       gameText.setBottomText(
           "Level " + currentLevelNumber +
@@ -181,9 +179,9 @@ public class Main extends Application {
 
   // What to do each time a key is pressed
   private void handleKeyInput(KeyCode code) throws Exception {
-    if (!isStarted && code == KeyCode.SPACE || !isPlaying && code == KeyCode.R) {
+    if (!isPlaying && code == KeyCode.SPACE || !isPlaying && code == KeyCode.R) {
       startGame();
-    } else if (isStarted && isPlaying && ballsInPlay == 0) {
+    } else if (isPlaying && ballsInPlay == 0) {
       if (code == KeyCode.SPACE) {
         livesLeft--;
         startPlay();
