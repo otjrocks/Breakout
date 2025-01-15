@@ -36,6 +36,8 @@ public class Main extends Application {
   public static final int SCORE_MULTIPLIER_TIMEOUT = 5;
   public static final int BLOCK_SCORE = 10;
   public static final int POWERUP_SCORE = 50;
+  public static final int BALL_RADIUS = 5;
+  public static final int BALL_SPEED = 300;
 
   private final Group root = new Group();
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
@@ -43,7 +45,7 @@ public class Main extends Application {
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
   private Shooter gameShooter;
-  private Level currentLevel;
+  private Level  currentLevel;
   private int currentLevelNumber;
   private int livesLeft = 5;
   private boolean isPlaying = false;
@@ -145,9 +147,10 @@ public class Main extends Application {
     if (isPlaying) {
       handleInteractions();
       gameText.setBottomText(
-          "Level " + currentLevelNumber +
-              "\nBalls: " + gameBallCount +
+          "Level: " + currentLevelNumber +
+              "- Balls: " + gameBallCount +
               " - Lives Remaining: " + livesLeft +
+              "\nScore Multiplier: " + scoreMultiplier +
               " - Score: " + score +
               " - High Score: " + highScore, 14, TEXT_COLOR);
       if (gameBallCount > 0 && ballsInPlay == 0 && !gameShooter.isEnabled()) {
@@ -224,7 +227,6 @@ public class Main extends Application {
   private void handleScoreMultiplier() {
     scoreMultiplier *= 2;
     Timeline removeScoreMultiplierEffect = new Timeline();
-    removeScoreMultiplierEffect.setCycleCount(SCORE_MULTIPLIER_TIMEOUT);
     removeScoreMultiplierEffect.getKeyFrames()
         .add(new KeyFrame(Duration.seconds(SCORE_MULTIPLIER_TIMEOUT), e -> scoreMultiplier /= 2));
     removeScoreMultiplierEffect.play();
@@ -319,7 +321,7 @@ public class Main extends Application {
 
   private void spawnBall() {
     double startAngle = gameShooter.getAngle();
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, 5, 500, Math.cos(startAngle),
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, BALL_RADIUS, BALL_SPEED, Math.cos(startAngle),
         -Math.sin(startAngle));
     gameBalls.add(ball);
     root.getChildren().add(ball);
