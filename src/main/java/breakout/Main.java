@@ -39,14 +39,14 @@ public class Main extends Application {
   public static final int POWERUP_SCORE = 50;
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
-  public static final int INITAL_NUM_BALLS = 1;
+  public static final int INITIAL_NUM_BALLS = 1;
   public static final String GAME_FONT_PATH = "/fonts/";
   public static final InputStream GAME_FONT_REGULAR = Main.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf");
   public static final InputStream GAME_FONT_BOLD = Main.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf");
 
   private final Group root = new Group();
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
-  private int gameBallCount = INITAL_NUM_BALLS;
+  private int gameBallCount = INITIAL_NUM_BALLS;
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
   private Shooter gameShooter;
@@ -108,7 +108,7 @@ public class Main extends Application {
   private void startGame() throws Exception {
     currentLevelNumber = 1;
     livesLeft = 5;
-    gameBallCount = INITAL_NUM_BALLS;
+    gameBallCount = INITIAL_NUM_BALLS;
     score = 0;
     scoreMultiplier = 1;
     gameText.clearText();
@@ -336,7 +336,7 @@ public class Main extends Application {
   private void showStartScreen() {
     gameText.setTopText("Brick Breaker", 50, TEXT_COLOR, true);
     gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR, false);
-    gameText.setBottomText("Press SPACE to START", 20, TEXT_COLOR, true);
+    gameText.setBottomText("Press SPACE to START", 40, TEXT_COLOR, true);
   }
 
   private void showEndScreen(boolean isWinner) {

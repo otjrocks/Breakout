@@ -18,42 +18,48 @@ public class TextElement extends StackPane {
     this.setPrefSize(screenWidth, screenHeight);
   }
 
-  private Text createText(String message, int size, Color color) {
+  private Text createText(String message, int size, Color color, boolean bold) {
     Text text = new Text();
+    Font customFont;
+    if (bold) {
+      customFont = Font.loadFont(Main.GAME_FONT_BOLD, size);
+    } else {
+      customFont = Font.loadFont(Main.GAME_FONT_REGULAR, size);
+    }
+    text.setFont(customFont);
     text.setText(message);
-    text.setFont(new Font(size));
     text.setFill(color);
     text.setWrappingWidth(WRAPPING_WIDTH);
     text.setTextAlignment(TextAlignment.CENTER);
     return text;
   }
 
-  public void setTopText(String message, int size, Color color) {
+  public void setTopText(String message, int size, Color color, boolean bold) {
     if (texts[0] != null) {
       this.getChildren().remove(texts[0]);
     }
-    Text text = createText(message, size, color);
+    Text text = createText(message, size, color, bold);
     this.getChildren().add(text);
     setAlignment(text, Pos.TOP_CENTER);
     setMargin(text, new javafx.geometry.Insets(TOP_MARGIN, 0, 0, 0));
     texts[0] = text;
   }
 
-  public void setCenterText(String message, int size, Color color) {
+  public void setCenterText(String message, int size, Color color, boolean bold) {
     if (texts[1] != null) {
       this.getChildren().remove(texts[1]);
     }
-    Text text = createText(message, size, color);
+    Text text = createText(message, size, color, bold);
     this.getChildren().add(text);
     setAlignment(text, Pos.CENTER);
     texts[1] = text;
   }
 
-  public void setBottomText(String message, int size, Color color) {
+  public void setBottomText(String message, int size, Color color, boolean bold) {
     if (texts[2] != null) {
       this.getChildren().remove(texts[2]);
     }
-    Text text = createText(message, size, color);
+    Text text = createText(message, size, color, bold);
     this.getChildren().add(text);
     setAlignment(text, Pos.BOTTOM_CENTER);
     setMargin(text, new javafx.geometry.Insets(0, 0, BOTTOM_MARGIN, 0));

@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 public class Block extends Group {
 
   private int health;
-  private Text HEALTH_TEXT;
+  private final Text HEALTH_TEXT;
   private final double TEXT_SIZE;
   private final String BLOCK_TYPE;
 
@@ -22,7 +22,8 @@ public class Block extends Group {
     this.health = health;
     HEALTH_TEXT = new Text(String.valueOf(health));
     HEALTH_TEXT.setFill(textColor);
-    HEALTH_TEXT.setFont(new Font((size / 5)));
+    Font customFont = Font.loadFont(Main.GAME_FONT_BOLD, size / 10);
+    HEALTH_TEXT.setFont(customFont);
 
     // I asked ChatGPT to help center text within a JavaFX rectangle
     double textWidth = HEALTH_TEXT.getBoundsInLocal().getWidth();
