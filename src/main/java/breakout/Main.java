@@ -1,5 +1,6 @@
 package breakout;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javafx.animation.KeyFrame;
@@ -38,10 +39,14 @@ public class Main extends Application {
   public static final int POWERUP_SCORE = 50;
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
+  public static final int INITAL_NUM_BALLS = 1;
+  public static final String GAME_FONT_PATH = "/fonts/";
+  public static final InputStream GAME_FONT_REGULAR = Main.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf");
+  public static final InputStream GAME_FONT_BOLD = Main.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf");
 
   private final Group root = new Group();
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
-  private int gameBallCount = 5;
+  private int gameBallCount = INITAL_NUM_BALLS;
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
   private Shooter gameShooter;
@@ -103,6 +108,7 @@ public class Main extends Application {
   private void startGame() throws Exception {
     currentLevelNumber = 1;
     livesLeft = 5;
+    gameBallCount = INITAL_NUM_BALLS;
     score = 0;
     scoreMultiplier = 1;
     gameText.clearText();
@@ -119,7 +125,7 @@ public class Main extends Application {
   }
 
   private void handleLevelTransitions() throws Exception {
-    if (ballsInPlay == 0
+    if (isPlaying && ballsInPlay == 0
         && currentLevel.isComplete()) {  // Current level completed with lives remaining
       livesLeft = 5;
       currentLevelNumber++;
@@ -135,7 +141,7 @@ public class Main extends Application {
       }
     }
 
-    if (ballsInPlay == 0 && livesLeft <= 0 || gameBallCount
+    if (ballsInPlay == 0 && livesLeft <= 0 || ballsInPlay == 0 && gameBallCount
         == 0) {  // Player ran out of lives and all balls have fallen or player has run out of balls
       currentLevel.removeAllBlocks();
       showEndScreen(false);
@@ -148,11 +154,11 @@ public class Main extends Application {
       handleInteractions();
       gameText.setBottomText(
           "Level: " + currentLevelNumber +
-              "- Balls: " + gameBallCount +
+              " - Balls: " + gameBallCount +
               " - Lives Remaining: " + livesLeft +
               "\nScore Multiplier: " + scoreMultiplier +
               " - Score: " + score +
-              " - High Score: " + highScore, 14, TEXT_COLOR);
+              " - High Score: " + highScore, 16, TEXT_COLOR, false);
       if (gameBallCount > 0 && ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
       }
@@ -328,26 +334,26 @@ public class Main extends Application {
   }
 
   private void showStartScreen() {
-    gameText.setTopText("Brick Breaker", 40, TEXT_COLOR);
-    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR);
-    gameText.setBottomText("Press SPACE to START", 20, TEXT_COLOR);
+    gameText.setTopText("Brick Breaker", 50, TEXT_COLOR, true);
+    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR, false);
+    gameText.setBottomText("Press SPACE to START", 20, TEXT_COLOR, true);
   }
 
   private void showEndScreen(boolean isWinner) {
     if (isWinner) {
-      gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
+      gameText.setTopText("Congratulations!", 50, TEXT_COLOR, true);
       gameText.setCenterText(
           "You have won the game!\nYour final score was: " + score + "\nGame's High Score: "
               + highScore + "\nThanks for playing!", 20,
-          BALL_COLOR);
+          BALL_COLOR, false);
     } else {
-      gameText.setTopText("Oh No!", 40, TEXT_COLOR);
+      gameText.setTopText("Oh No!", 5, TEXT_COLOR, true);
       gameText.setCenterText(
-          "You ran out of lives and lost!\nYour final score was: " + score + "\nHigh Score: "
+          "You ran out of lives or balls and lost!\nYour final score was: " + score + "\nHigh Score: "
               + highScore, 20,
-          BALL_COLOR);
+          BALL_COLOR, false);
     }
-    gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
+    gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR, false);
     root.getChildren().remove(gamePaddle);
     root.getChildren().remove(gameShooter);
     root.getChildren().remove(currentLevel);
