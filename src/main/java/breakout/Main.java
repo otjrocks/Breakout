@@ -1,6 +1,7 @@
 package breakout;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -32,10 +33,13 @@ public class Main extends Application {
   public static final int HEIGHT = 800;
   public static final int MIDDLE_WIDTH = WIDTH / 2;
   public static final int NUM_LEVELS = 2;
+  public static final int SCORE_MULTIPLIER_TIMEOUT = 5;
+  public static final int BLOCK_SCORE = 10;
+  public static final int POWERUP_SCORE = 50;
 
   private final Group root = new Group();
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
-  private int gameBallCount = 100;  // this will be updated in future features
+  private int gameBallCount = 5;
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
   private Shooter gameShooter;
@@ -45,6 +49,7 @@ public class Main extends Application {
   private boolean isPlaying = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
   private int score;
+  private int scoreMultiplier;
   private int highScore;
 
   /**
@@ -97,6 +102,7 @@ public class Main extends Application {
     currentLevelNumber = 1;
     livesLeft = 5;
     score = 0;
+    scoreMultiplier = 1;
     gameText.clearText();
     currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(gamePaddle);
@@ -127,7 +133,8 @@ public class Main extends Application {
       }
     }
 
-    if (ballsInPlay == 0 && livesLeft <= 0) {  // Player ran out of lives and all balls have fallen
+    if (ballsInPlay == 0 && livesLeft <= 0 || gameBallCount
+        == 0) {  // Player ran out of lives and all balls have fallen or player has run out of balls
       currentLevel.removeAllBlocks();
       showEndScreen(false);
       isPlaying = false;
@@ -143,7 +150,7 @@ public class Main extends Application {
               " - Lives Remaining: " + livesLeft +
               " - Score: " + score +
               " - High Score: " + highScore, 14, TEXT_COLOR);
-      if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
+      if (gameBallCount > 0 && ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
       }
       if (score > highScore) {
@@ -156,6 +163,7 @@ public class Main extends Application {
     removeFallenBalls();
     updateBallPositions();
     handlePaddleInteractions();
+    handlePowerupEffects();
     handleBlockCollisions();
   }
 
@@ -172,7 +180,7 @@ public class Main extends Application {
       for (Block block : gameBlocks) {
         if (ball.isIntersectingBlock(block)) {
           block.updateHealth(block.getHealth() - 1);
-          score += 10;
+          score += BLOCK_SCORE * scoreMultiplier;
           if (block.getHealth() <= 0) {
             currentLevel.removeBlock(block);
           }
@@ -184,6 +192,54 @@ public class Main extends Application {
           }
           break; // break so that ball can't hit two blocks at once
           // TODO: fix interaction logic
+        }
+      }
+    }
+  }
+
+  private void handlePowerupEffects() {
+    for (Ball ball : gameBalls) {
+      ArrayList<Block> gameBlocks = currentLevel.getBlocks();
+      for (Block block : gameBlocks) {
+        if (ball.isIntersectingBlock(block)) {
+          String blockType = block.getBlockType();
+          if (!blockType.equals("default")) {
+            switch (blockType) {
+              case "addBall" -> gameBallCount++;
+              case "subtractBall" -> gameBallCount--;
+              case "scoreMultiplier" -> handleScoreMultiplier();
+              case "blockDestroyer" -> handleBlockDestroyer();
+            }
+            score += POWERUP_SCORE * scoreMultiplier;
+            currentLevel.removeBlock(block);
+            break;
+          }
+        }
+      }
+    }
+  }
+  /*
+  The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
+   */
+  private void handleScoreMultiplier() {
+    scoreMultiplier *= 2;
+    Timeline removeScoreMultiplierEffect = new Timeline();
+    removeScoreMultiplierEffect.setCycleCount(SCORE_MULTIPLIER_TIMEOUT);
+    removeScoreMultiplierEffect.getKeyFrames()
+        .add(new KeyFrame(Duration.seconds(SCORE_MULTIPLIER_TIMEOUT), e -> scoreMultiplier /= 2));
+    removeScoreMultiplierEffect.play();
+  }
+
+  private void handleBlockDestroyer() {
+    Iterator<Block> iterator = currentLevel.getBlocks().iterator();
+    while (iterator.hasNext()) {
+      Block block = iterator.next();
+      if (block.getBlockType().equals("default")) {
+        block.updateHealth(block.getHealth() - 1);
+        score += BLOCK_SCORE * scoreMultiplier;
+        if (block.getHealth() <= 0) {
+          iterator.remove();
+          currentLevel.removeBlock(block);
         }
       }
     }
@@ -279,11 +335,14 @@ public class Main extends Application {
     if (isWinner) {
       gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
       gameText.setCenterText(
-          "You have won the game!\nYour final score was: " + score + "\nGame's High Score: " + highScore + "\nThanks for playing!", 20,
+          "You have won the game!\nYour final score was: " + score + "\nGame's High Score: "
+              + highScore + "\nThanks for playing!", 20,
           BALL_COLOR);
     } else {
       gameText.setTopText("Oh No!", 40, TEXT_COLOR);
-      gameText.setCenterText("You ran out of lives and lost!\nYour final score was: " + score + "\nHigh Score: " + highScore, 20,
+      gameText.setCenterText(
+          "You ran out of lives and lost!\nYour final score was: " + score + "\nHigh Score: "
+              + highScore, 20,
           BALL_COLOR);
     }
     gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
