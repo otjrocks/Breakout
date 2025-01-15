@@ -45,6 +45,7 @@ public class Main extends Application {
   private boolean isPlaying = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
   private int score;
+  private int highScore;
 
   /**
    * Initialize what will be displayed.
@@ -85,6 +86,7 @@ public class Main extends Application {
   }
 
   private void initializeGame() {
+    highScore = 0;
     gamePaddle = new Paddle(0, 750, 100, 5, 20, PADDLE_COLOR);
     gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
@@ -139,9 +141,13 @@ public class Main extends Application {
           "Level " + currentLevelNumber +
               "\nBalls: " + gameBallCount +
               " - Lives Remaining: " + livesLeft +
-              " - Score: " + score, 14, TEXT_COLOR);
+              " - Score: " + score +
+              " - High Score: " + highScore, 14, TEXT_COLOR);
       if (ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
+      }
+      if (score > highScore) {
+        highScore = score;
       }
     }
   }
@@ -273,11 +279,11 @@ public class Main extends Application {
     if (isWinner) {
       gameText.setTopText("Congratulations!", 40, TEXT_COLOR);
       gameText.setCenterText(
-          "You have won the game!\nYour final score was: " + score + "\nThanks for playing!", 20,
+          "You have won the game!\nYour final score was: " + score + "\nGame's High Score: " + highScore + "\nThanks for playing!", 20,
           BALL_COLOR);
     } else {
       gameText.setTopText("Oh No!", 40, TEXT_COLOR);
-      gameText.setCenterText("You ran out of lives and lost!\nYour final score was: " + score, 20,
+      gameText.setCenterText("You ran out of lives and lost!\nYour final score was: " + score + "\nHigh Score: " + highScore, 20,
           BALL_COLOR);
     }
     gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR);
