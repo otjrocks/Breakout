@@ -40,7 +40,7 @@ public class Main extends Application {
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
   public static final int INITIAL_NUM_BALLS = 1;
-  public static final int PADDLE_SPEED = 2000;
+  public static final int PADDLE_SPEED = 50;
   public static final double PADDLE_WIDTH = 100;
   public static final String GAME_FONT_PATH = "/fonts/";
   public static final InputStream GAME_FONT_REGULAR = Main.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf");
@@ -282,7 +282,7 @@ public class Main extends Application {
     } else if (isPlaying && ballsInPlay == 0) {
       handleShooterActions(code);
     } else {
-      handlePaddleMovement(code);
+      gamePaddle.move(code);
     }
   }
 
@@ -304,18 +304,6 @@ public class Main extends Application {
     }
     if (code == KeyCode.LEFT) {
       gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 40);
-    }
-  }
-
-  private void handlePaddleMovement(KeyCode code) {
-    if (code == KeyCode.RIGHT) {
-      if (gamePaddle.canMoveRight(WIDTH, Main.SECOND_DELAY)) {
-        gamePaddle.move(1, Main.SECOND_DELAY);
-      }
-    } else if (code == KeyCode.LEFT) {
-      if (gamePaddle.canMoveLeft(Main.SECOND_DELAY)) {
-        gamePaddle.move(-1, Main.SECOND_DELAY);
-      }
     }
   }
 

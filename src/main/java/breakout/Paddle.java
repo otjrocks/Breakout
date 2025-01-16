@@ -1,5 +1,6 @@
 package breakout;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -13,16 +14,28 @@ public class Paddle extends Rectangle {
     this.setFill(color);
   }
 
-  public void move(double direction, double elapsedTime) {
-    this.setX(this.getX() + PADDLE_SPEED * direction * elapsedTime);
+  public void move(KeyCode code) {
+    if (code == KeyCode.RIGHT) {
+      if (canMoveRight(Main.WIDTH)) {
+        move(1);
+      }
+    } else if (code == KeyCode.LEFT) {
+      if (canMoveLeft()) {
+        move(-1);
+      }
+    }
   }
 
-  public boolean canMoveLeft(double elapsedTime) {
-    return (this.getX() - PADDLE_SPEED * elapsedTime >= 0);
+  public void move(double direction) {
+    this.setX(this.getX() + PADDLE_SPEED * direction);
   }
 
-  public boolean canMoveRight(double width, double elapsedTime) {
-    return (this.getX() + this.getWidth() + PADDLE_SPEED * elapsedTime <= width);
+  public boolean canMoveLeft() {
+    return (this.getX() - PADDLE_SPEED >= 0);
+  }
+
+  public boolean canMoveRight(double width) {
+    return (this.getX() + this.getWidth() + PADDLE_SPEED <= width);
   }
 
   public boolean isIntersecting(Ball ball) {
