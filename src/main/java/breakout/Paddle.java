@@ -1,5 +1,6 @@
 package breakout;
 
+import java.util.Set;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -17,12 +18,13 @@ public class Paddle extends Rectangle {
     this.setArcWidth(height);
   }
 
-  public void move(KeyCode code) {
-    if (code == KeyCode.RIGHT) {
+  public void move(Set<KeyCode> activeKeys) {
+    if (activeKeys.contains(KeyCode.RIGHT)) {
       if (canMoveRight(Main.WIDTH)) {
         move(1);
       }
-    } else if (code == KeyCode.LEFT) {
+    }
+    if (activeKeys.contains(KeyCode.LEFT)) {
       if (canMoveLeft()) {
         move(-1);
       }

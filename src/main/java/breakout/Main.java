@@ -1,6 +1,7 @@
 package breakout;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -39,7 +40,7 @@ public class Main extends Application {
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
   public static final int INITIAL_NUM_BALLS = 1;
-  public static final int PADDLE_SPEED = 50;
+  public static final int PADDLE_SPEED = 5;
 
   private final Group root = new Group();
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
@@ -56,6 +57,7 @@ public class Main extends Application {
   private int score;
   private int scoreMultiplier;
   private int highScore;
+  private final HashSet<KeyCode> activeKeys = new HashSet<>();
 
   /**
    * Initialize what will be displayed.
@@ -87,11 +89,13 @@ public class Main extends Application {
     Scene scene = new Scene(root, WIDTH, HEIGHT, BACKGROUND_COLOR);
     scene.setOnKeyPressed(e -> {
       try {
+        activeKeys.add(e.getCode());
         handleKeyInput(e.getCode());
       } catch (Exception ex) {
         throw new RuntimeException(ex);
       }
     });
+    scene.setOnKeyReleased(e -> activeKeys.remove(e.getCode()));
     return scene;
   }
 
@@ -151,6 +155,7 @@ public class Main extends Application {
   private void handleGameLogic() {
     if (isPlaying) {
       handleInteractions();
+      handlePaddleMovement();
       gameText.setBottomText(
           "Level: " + currentLevelNumber +
               " - Balls: " + gameBallCount +
@@ -164,6 +169,12 @@ public class Main extends Application {
       if (score > highScore) {
         highScore = score;
       }
+    }
+  }
+
+  private void handlePaddleMovement() {
+    if (ballsInPlay > 0) {
+      gamePaddle.move(activeKeys);
     }
   }
 
@@ -279,8 +290,6 @@ public class Main extends Application {
       startGame();
     } else if (isPlaying && ballsInPlay == 0) {
       handleShooterActions(code);
-    } else {
-      gamePaddle.move(code);
     }
   }
 
@@ -341,7 +350,7 @@ public class Main extends Application {
 
   private void showEndScreen(boolean isWinner) {
     if (isWinner) {
-      gameText.setTopText("Congratulations!", 30, TEXT_COLOR, true);
+      gameText.setTopText("Congratrs!", 30, TEXT_COLOR, true);
       gameText.setCenterText(
           "You have won the game!\nYour final score was: " + score + "\nGame's High Score: "
               + highScore + "\nThanks for playing!", 20,
