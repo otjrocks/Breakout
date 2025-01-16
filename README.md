@@ -21,6 +21,7 @@ This project implements the game of Breakout with multiple levels.
 
  * Color Scheme from [ColorHunt.](https://colorhunt.co/palettes/pastel)
  * Font via https://fonts.google.com/specimen/Play
+ * Icons via https://flaticon.com/
  
  * Resources used directly (including AI assistance)
    * El Capitan spinning beachball GIF by madebyjw.com -- https://gfycat.com/rapidathleticilladopsis

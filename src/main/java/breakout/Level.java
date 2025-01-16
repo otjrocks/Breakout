@@ -6,9 +6,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 
@@ -16,7 +18,8 @@ public class Level extends Group {
 
   public static final String LEVEL_FILE_PATH = "levels/";
   public static final String[] POWER_UP_TYPES = new String[]{"addBall", "subtractBall", "scoreMultiplier", "blockDestroyer"};
-  public static final Color[] POWER_UP_COLORS = new Color[]{Color.LIGHTBLUE, Color.RED, Color.LIGHTGREEN, Color.LIGHTYELLOW};
+  public static final String IMAGE_PATH = "/images/";
+  public static Image[] POWER_UP_IMAGES;
   public static final int POWER_UP_PROBABILITY = 10;  // with probability 1/X place a power-up in an empty space
   private final int SCREEN_WIDTH;
   private final int SCREEN_HEIGHT;
@@ -36,6 +39,12 @@ public class Level extends Group {
     TEXT_COLOR = textColor;
     blocks = new ArrayList<>();
     random = new Random();
+    POWER_UP_IMAGES = new Image[]{
+        new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "plus.png"))),
+        new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "minus.png"))),
+        new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "star.png"))),
+        new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "tnt.png"))),
+    };
   }
 
   private Scanner getScanner(int levelNumber) throws Exception {
@@ -87,7 +96,7 @@ public class Level extends Group {
     if (shouldAddPowerup) {
       int powerUpIndex = random.nextInt(POWER_UP_TYPES.length);
       String powerUpType = POWER_UP_TYPES[powerUpIndex];
-      Block block = new Block(i * BLOCK_SIZE, j * BLOCK_SIZE, powerUpType, BLOCK_SIZE, 1, POWER_UP_COLORS[powerUpIndex], TEXT_COLOR); // for now all powerups have 1 health
+      Block block = new Block(i * BLOCK_SIZE, j * BLOCK_SIZE, powerUpType, BLOCK_SIZE, 1, POWER_UP_IMAGES[powerUpIndex]); // for now all powerups have 1 health
       blocks.add(block);
     }
   }

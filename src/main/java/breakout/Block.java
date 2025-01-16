@@ -1,17 +1,30 @@
 package breakout;
 
 import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Block extends Group {
 
+  public static final double BLOCK_IMAGE_OFFSET = 20;
   private int health;
   private final Text HEALTH_TEXT;
   private final double TEXT_SIZE;
   private final String BLOCK_TYPE;
+
+  public Block(int x, int y, String type, double size, int health, Image blockImage) {
+    this(x, y, type, size, health, Color.rgb(0,0,0,0), Color.rgb(0,0,0,0));
+    ImageView imageView = new ImageView(blockImage);
+    imageView.setFitHeight(size - BLOCK_IMAGE_OFFSET);
+    imageView.setFitWidth(size - BLOCK_IMAGE_OFFSET);
+    imageView.setX(BLOCK_IMAGE_OFFSET / 2);
+    imageView.setY(BLOCK_IMAGE_OFFSET / 2);
+    this.getChildren().add(imageView);
+  }
 
   public Block(int x, int y, String type, double size, int health, Color color, Color textColor) {
     TEXT_SIZE = size;
@@ -22,7 +35,7 @@ public class Block extends Group {
     this.health = health;
     HEALTH_TEXT = new Text(String.valueOf(health));
     HEALTH_TEXT.setFill(textColor);
-    Font customFont = Font.loadFont(Main.GAME_FONT_BOLD, size / 10);
+    Font customFont = Font.loadFont(Main.GAME_FONT_BOLD, size / 5);
     HEALTH_TEXT.setFont(customFont);
 
     // I asked ChatGPT to help center text within a JavaFX rectangle
@@ -31,7 +44,11 @@ public class Block extends Group {
     HEALTH_TEXT.setX((size - textWidth) / 2);
     HEALTH_TEXT.setY((size + textHeight) / 2); // Adjust for baseline alignment
 
-    this.getChildren().addAll(rectangle, HEALTH_TEXT);
+    if (type.equals("default")) {
+      this.getChildren().addAll(rectangle, HEALTH_TEXT);
+    } else {
+      this.getChildren().addAll(rectangle);
+    }
     this.setLayoutX(x);
     this.setLayoutY(y);
 
