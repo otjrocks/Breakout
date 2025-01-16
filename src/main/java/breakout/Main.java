@@ -1,6 +1,5 @@
 package breakout;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javafx.animation.KeyFrame;
@@ -289,7 +288,7 @@ public class Main extends Application {
     if (code == KeyCode.L) {
       livesLeft++;
     }
-    if (code == KeyCode.R) {
+    if (code == KeyCode.B) {
       gameBallCount++;
     }
     if (code == KeyCode.X) {
