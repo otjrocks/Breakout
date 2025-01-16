@@ -47,6 +47,20 @@ public class Paddle extends Rectangle {
     return this.getBoundsInParent().intersects(ball.getBoundsInParent());
   }
 
+  public void handleBallCollision(Ball ball) {
+    if (isIntersecting(ball)) {
+      if (ball.getCenterX() - this.getX() > this.getWidth()*2 / 3) { // Right third of paddle
+        ball.updateDirectionY(ball.getDirectionY() * -1);
+        ball.updateDirectionX(Math.abs(ball.getDirectionX()));
+      } else if (ball.getCenterX() - this.getX() < this.getWidth() / 3) { // Left third of paddle
+        ball.updateDirectionY(ball.getDirectionY() * -1);
+        ball.updateDirectionX(Math.abs(ball.getDirectionX()) * -1);
+      } else {  // Center third of paddle
+        ball.updateDirectionY(ball.getDirectionY() * -1);
+      }
+    }
+  }
+
   public void expand(double x) {
     double expandAmount = Math.min(x, Main.WIDTH);
     this.setWidth(this.getWidth() + expandAmount);

@@ -105,7 +105,7 @@ public class Main extends Application {
     gamePaddle = new Paddle(MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
         PADDLE_SPEED, PADDLE_COLOR);
     gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
-    currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
+    currentLevel = new Level(WIDTH, HEIGHT, 50);
     root.getChildren().add(gameText);
   }
 
@@ -267,9 +267,7 @@ public class Main extends Application {
 
   private void handlePaddleInteractions() {
     for (Ball ball : gameBalls) {
-      if (gamePaddle.isIntersecting(ball)) {
-        ball.updateDirectionY(ball.getDirectionY() * -1);
-      }
+      gamePaddle.handleBallCollision(ball);
     }
   }
 
@@ -319,10 +317,10 @@ public class Main extends Application {
       gameShooter.disable();
     }
     if (code == KeyCode.RIGHT) {
-      gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 40);
+      gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 80);
     }
     if (code == KeyCode.LEFT) {
-      gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 40);
+      gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 80);
     }
   }
 
@@ -345,7 +343,7 @@ public class Main extends Application {
 
   private void showStartScreen() {
     gameText.setTopText("Brick Breaker", 30, TEXT_COLOR, true);
-    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR, false);
+    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, BALL_COLOR, false);
     gameText.setBottomText("Press SPACE to START", 25, TEXT_COLOR, false);
   }
 

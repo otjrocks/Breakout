@@ -11,8 +11,6 @@ import java.util.Random;
 import java.util.Scanner;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-
 
 public class Level extends Group {
 
@@ -20,23 +18,18 @@ public class Level extends Group {
   public static final String[] POWER_UP_TYPES = new String[]{"addBall", "subtractBall", "scoreMultiplier", "blockDestroyer"};
   public static final String IMAGE_PATH = "/images/";
   public static Image[] POWER_UP_IMAGES;
-  public static final int POWER_UP_PROBABILITY = 10;  // with probability 1/X place a power-up in an empty space
+  public static final int POWER_UP_PROBABILITY = 7;  // with probability 1/X place a power-up in an empty space
   private final int SCREEN_WIDTH;
   private final int SCREEN_HEIGHT;
   private final int BOTTOM_OFFSET = 2;
   private final int BLOCK_SIZE;
-  private final Color BLOCK_COLOR;
-  private final Color TEXT_COLOR;
   private final ArrayList<Block> blocks;
   private final Random random;
 
-  public Level(int screenWidth, int screenHeight, int blockSize, Color blockColor,
-      Color textColor) {
+  public Level(int screenWidth, int screenHeight, int blockSize) {
     SCREEN_WIDTH = screenWidth;
     SCREEN_HEIGHT = screenHeight;
     BLOCK_SIZE = blockSize;
-    BLOCK_COLOR = blockColor;
-    TEXT_COLOR = textColor;
     blocks = new ArrayList<>();
     random = new Random();
     POWER_UP_IMAGES = new Image[]{
