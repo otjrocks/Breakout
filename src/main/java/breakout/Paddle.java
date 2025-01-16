@@ -13,16 +13,16 @@ public class Paddle extends Rectangle {
     this.setFill(color);
   }
 
-  public void move(double direction) {
-    this.setX(this.getX() + PADDLE_SPEED * direction);
+  public void move(double direction, double elapsedTime) {
+    this.setX(this.getX() + PADDLE_SPEED * direction * elapsedTime);
   }
 
-  public boolean canMoveLeft() {
-    return (this.getX() - PADDLE_SPEED >= 0);
+  public boolean canMoveLeft(double elapsedTime) {
+    return (this.getX() - PADDLE_SPEED * elapsedTime >= 0);
   }
 
-  public boolean canMoveRight(double width) {
-    return (this.getX() + this.getWidth() + PADDLE_SPEED <= width);
+  public boolean canMoveRight(double width, double elapsedTime) {
+    return (this.getX() + this.getWidth() + PADDLE_SPEED * elapsedTime <= width);
   }
 
   public boolean isIntersecting(Ball ball) {

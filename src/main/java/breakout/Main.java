@@ -40,6 +40,8 @@ public class Main extends Application {
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
   public static final int INITIAL_NUM_BALLS = 1;
+  public static final int PADDLE_SPEED = 2000;
+  public static final double PADDLE_WIDTH = 100;
   public static final String GAME_FONT_PATH = "/fonts/";
   public static final InputStream GAME_FONT_REGULAR = Main.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf");
   public static final InputStream GAME_FONT_BOLD = Main.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf");
@@ -99,7 +101,7 @@ public class Main extends Application {
 
   private void initializeGame() {
     highScore = 0;
-    gamePaddle = new Paddle(0, 750, 100, 5, 20, PADDLE_COLOR);
+    gamePaddle = new Paddle(MIDDLE_WIDTH - PADDLE_WIDTH / 2, HEIGHT - 50, PADDLE_WIDTH, 5, PADDLE_SPEED, PADDLE_COLOR);
     gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
     root.getChildren().add(gameText);
@@ -307,12 +309,12 @@ public class Main extends Application {
 
   private void handlePaddleMovement(KeyCode code) {
     if (code == KeyCode.RIGHT) {
-      if (gamePaddle.canMoveRight(WIDTH)) {
-        gamePaddle.move(1);
+      if (gamePaddle.canMoveRight(WIDTH, Main.SECOND_DELAY)) {
+        gamePaddle.move(1, Main.SECOND_DELAY);
       }
     } else if (code == KeyCode.LEFT) {
-      if (gamePaddle.canMoveLeft()) {
-        gamePaddle.move(-1);
+      if (gamePaddle.canMoveLeft(Main.SECOND_DELAY)) {
+        gamePaddle.move(-1, Main.SECOND_DELAY);
       }
     }
   }
