@@ -7,11 +7,14 @@ import javafx.scene.shape.Rectangle;
 public class Paddle extends Rectangle {
 
   private final double PADDLE_SPEED;
+  private static final double MIN_PADDLE_WIDTH = 50;
 
   public Paddle(double x, double y, double width, double height, double speed, Color color) {
     super(x, y, width, height);
     PADDLE_SPEED = speed;
     this.setFill(color);
+    this.setArcHeight(height);
+    this.setArcWidth(height);
   }
 
   public void move(KeyCode code) {
@@ -40,6 +43,21 @@ public class Paddle extends Rectangle {
 
   public boolean isIntersecting(Ball ball) {
     return this.getBoundsInParent().intersects(ball.getBoundsInParent());
+  }
+
+  public void expand(double x) {
+    double expandAmount = Math.min(x, Main.WIDTH);
+    this.setWidth(this.getWidth() + expandAmount);
+    this.setX(this.getX() - expandAmount / 2);
+  }
+
+  public void collapse(double x) {
+    if (this.getWidth() - x < MIN_PADDLE_WIDTH) {
+      this.setWidth(MIN_PADDLE_WIDTH);
+    } else {
+      this.setX(this.getX() + x / 2);
+      this.setWidth(this.getWidth() - x);
+    }
   }
 
 }

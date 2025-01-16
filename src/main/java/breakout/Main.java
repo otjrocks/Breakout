@@ -41,15 +41,15 @@ public class Main extends Application {
   public static final int BALL_SPEED = 300;
   public static final int INITIAL_NUM_BALLS = 1;
   public static final int PADDLE_SPEED = 50;
-  public static final double PADDLE_WIDTH = 100;
 
   private final Group root = new Group();
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
   private int gameBallCount = INITIAL_NUM_BALLS;
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
+  private double paddleWidth = 100;
   private Shooter gameShooter;
-  private Level  currentLevel;
+  private Level currentLevel;
   private int currentLevelNumber;
   private int livesLeft = 5;
   private boolean isPlaying = false;
@@ -98,7 +98,8 @@ public class Main extends Application {
 
   private void initializeGame() {
     highScore = 0;
-    gamePaddle = new Paddle(MIDDLE_WIDTH - PADDLE_WIDTH / 2, HEIGHT - 50, PADDLE_WIDTH, 5, PADDLE_SPEED, PADDLE_COLOR);
+    gamePaddle = new Paddle(MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
+        PADDLE_SPEED, PADDLE_COLOR);
     gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(WIDTH, HEIGHT, 50, BLOCK_COLOR, BALL_COLOR);
     root.getChildren().add(gameText);
@@ -226,6 +227,7 @@ public class Main extends Application {
       }
     }
   }
+
   /*
   The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
    */
@@ -287,6 +289,17 @@ public class Main extends Application {
     if (code == KeyCode.L) {
       livesLeft++;
     }
+    if (code == KeyCode.R) {
+      gameBallCount++;
+    }
+    if (code == KeyCode.X) {
+      paddleWidth += 5;
+      gamePaddle.expand(5);
+    }
+    if (code == KeyCode.C) {
+      paddleWidth -= 5;
+      gamePaddle.collapse(5);
+    }
   }
 
   private void handleShooterActions(KeyCode code) {
@@ -314,7 +327,8 @@ public class Main extends Application {
 
   private void spawnBall() {
     double startAngle = gameShooter.getAngle();
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, BALL_RADIUS, BALL_SPEED, Math.cos(startAngle),
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, BALL_RADIUS, BALL_SPEED,
+        Math.cos(startAngle),
         -Math.sin(startAngle));
     gameBalls.add(ball);
     root.getChildren().add(ball);
@@ -336,7 +350,8 @@ public class Main extends Application {
     } else {
       gameText.setTopText("Oh No!", 30, TEXT_COLOR, true);
       gameText.setCenterText(
-          "You ran out of lives or balls and lost!\nYour final score was: " + score + "\nHigh Score: "
+          "You ran out of lives or balls and lost!\nYour final score was: " + score
+              + "\nHigh Score: "
               + highScore, 20,
           BALL_COLOR, false);
     }
