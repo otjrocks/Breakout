@@ -55,10 +55,8 @@ public class Main extends Application {
   private int livesLeft = 5;
   private boolean isPlaying = false;
   private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
-  private int score;
-  private int scoreMultiplier;
-  private int highScore;
   private final HashSet<KeyCode> activeKeys = new HashSet<>();
+  private ScoreManager scoreManager;
 
   /**
    * Initialize what will be displayed.
@@ -101,7 +99,7 @@ public class Main extends Application {
   }
 
   private void initializeGame() {
-    highScore = 0;
+    scoreManager = new ScoreManager();
     gamePaddle = new Paddle(MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
         PADDLE_SPEED, PADDLE_COLOR);
     gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
@@ -113,8 +111,7 @@ public class Main extends Application {
     currentLevelNumber = 1;
     livesLeft = 5;
     gameBallCount = INITIAL_NUM_BALLS;
-    score = 0;
-    scoreMultiplier = 1;
+    scoreManager.resetScore();
     gameText.clearText();
     currentLevel.startLevel(currentLevelNumber);
     root.getChildren().add(gamePaddle);
@@ -134,7 +131,7 @@ public class Main extends Application {
       livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
-        score += 1000;
+        scoreManager.incrementScore(1000);
       }
       if (currentLevelNumber > NUM_LEVELS && isPlaying) {
         showEndScreen(true);
@@ -161,14 +158,11 @@ public class Main extends Application {
           "Level: " + currentLevelNumber +
               " - Balls: " + gameBallCount +
               " - Lives Remaining: " + livesLeft +
-              "\nScore Multiplier: " + scoreMultiplier +
-              " - Score: " + score +
-              " - High Score: " + highScore, 16, TEXT_COLOR, false);
+              "\nScore Multiplier: " + scoreManager.getScoreMultiplier() +
+              " - Score: " + scoreManager.getScore() +
+              " - High Score: " + scoreManager.getHighScore(), 16, TEXT_COLOR, false);
       if (gameBallCount > 0 && ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
-      }
-      if (score > highScore) {
-        highScore = score;
       }
     }
   }
@@ -200,7 +194,7 @@ public class Main extends Application {
       for (Block block : gameBlocks) {
         if (ball.isIntersectingBlock(block)) {
           block.updateHealth(block.getHealth() - 1);
-          score += BLOCK_SCORE * scoreMultiplier;
+          scoreManager.incrementScore(BLOCK_SCORE);
           if (block.getHealth() <= 0) {
             currentLevel.removeBlock(block);
           }
@@ -230,7 +224,7 @@ public class Main extends Application {
               case "scoreMultiplier" -> handleScoreMultiplier();
               case "blockDestroyer" -> handleBlockDestroyer();
             }
-            score += POWERUP_SCORE * scoreMultiplier;
+            scoreManager.incrementScore(POWERUP_SCORE);
             currentLevel.removeBlock(block);
             break;
           }
@@ -243,10 +237,11 @@ public class Main extends Application {
   The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
    */
   private void handleScoreMultiplier() {
-    scoreMultiplier *= 2;
+    scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() * 2);
     Timeline removeScoreMultiplierEffect = new Timeline();
     removeScoreMultiplierEffect.getKeyFrames()
-        .add(new KeyFrame(Duration.seconds(SCORE_MULTIPLIER_TIMEOUT), e -> scoreMultiplier /= 2));
+        .add(new KeyFrame(Duration.seconds(SCORE_MULTIPLIER_TIMEOUT),
+            e -> scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() / 2)));
     removeScoreMultiplierEffect.play();
   }
 
@@ -256,7 +251,7 @@ public class Main extends Application {
       Block block = iterator.next();
       if (block.getBlockType().equals("default")) {
         block.updateHealth(block.getHealth() - 1);
-        score += BLOCK_SCORE * scoreMultiplier;
+        scoreManager.incrementScore(BLOCK_SCORE);
         if (block.getHealth() <= 0) {
           iterator.remove();
           currentLevel.removeBlock(block);
@@ -351,15 +346,17 @@ public class Main extends Application {
     if (isWinner) {
       gameText.setTopText("Congrats!", 30, TEXT_COLOR, true);
       gameText.setCenterText(
-          "You have won the game!\nYour final score was: " + score + "\nGame's High Score: "
-              + highScore + "\nThanks for playing!", 20,
+          "You have won the game!\nYour final score was: " + scoreManager.getScore()
+              + "\nGame's High Score: "
+              + scoreManager.getHighScore() + "\nThanks for playing!", 20,
           BALL_COLOR, false);
     } else {
       gameText.setTopText("Oh No!", 30, TEXT_COLOR, true);
       gameText.setCenterText(
-          "You ran out of lives or balls and lost!\nYour final score was: " + score
+          "You ran out of lives or balls and lost!\nYour final score was: "
+              + scoreManager.getScore()
               + "\nHigh Score: "
-              + highScore, 20,
+              + scoreManager.getHighScore(), 20,
           BALL_COLOR, false);
     }
     gameText.setBottomText("Press (R) to play again!", 25, TEXT_COLOR, false);
