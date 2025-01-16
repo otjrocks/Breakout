@@ -1,5 +1,6 @@
 package breakout;
 
+import java.io.InputStream;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -9,7 +10,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Block extends Group {
-
+  private final String GAME_FONT_PATH = "/fonts/";
   public static final double BLOCK_IMAGE_OFFSET = 20;
   private int health;
   private final Text HEALTH_TEXT;
@@ -34,9 +35,9 @@ public class Block extends Group {
 
     this.health = health;
     HEALTH_TEXT = new Text(String.valueOf(health));
-    HEALTH_TEXT.setFill(textColor);
-    Font customFont = Font.loadFont(Main.GAME_FONT_BOLD, size / 5);
+    Font customFont = Font.loadFont(Block.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), size / 5);
     HEALTH_TEXT.setFont(customFont);
+    HEALTH_TEXT.setFill(textColor);
 
     // I asked ChatGPT to help center text within a JavaFX rectangle
     double textWidth = HEALTH_TEXT.getBoundsInLocal().getWidth();

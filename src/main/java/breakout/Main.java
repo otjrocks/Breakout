@@ -42,9 +42,6 @@ public class Main extends Application {
   public static final int INITIAL_NUM_BALLS = 1;
   public static final int PADDLE_SPEED = 50;
   public static final double PADDLE_WIDTH = 100;
-  public static final String GAME_FONT_PATH = "/fonts/";
-  public static final InputStream GAME_FONT_REGULAR = Main.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf");
-  public static final InputStream GAME_FONT_BOLD = Main.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf");
 
   private final Group root = new Group();
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
@@ -324,26 +321,26 @@ public class Main extends Application {
   }
 
   private void showStartScreen() {
-    gameText.setTopText("Brick Breaker", 50, TEXT_COLOR, true);
+    gameText.setTopText("Brick Breaker", 30, TEXT_COLOR, true);
     gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, TEXT_COLOR, false);
-    gameText.setBottomText("Press SPACE to START", 40, TEXT_COLOR, true);
+    gameText.setBottomText("Press SPACE to START", 25, TEXT_COLOR, false);
   }
 
   private void showEndScreen(boolean isWinner) {
     if (isWinner) {
-      gameText.setTopText("Congratulations!", 50, TEXT_COLOR, true);
+      gameText.setTopText("Congratulations!", 30, TEXT_COLOR, true);
       gameText.setCenterText(
           "You have won the game!\nYour final score was: " + score + "\nGame's High Score: "
               + highScore + "\nThanks for playing!", 20,
           BALL_COLOR, false);
     } else {
-      gameText.setTopText("Oh No!", 5, TEXT_COLOR, true);
+      gameText.setTopText("Oh No!", 30, TEXT_COLOR, true);
       gameText.setCenterText(
           "You ran out of lives or balls and lost!\nYour final score was: " + score + "\nHigh Score: "
               + highScore, 20,
           BALL_COLOR, false);
     }
-    gameText.setBottomText("Press (R) to play again!", 20, TEXT_COLOR, false);
+    gameText.setBottomText("Press (R) to play again!", 25, TEXT_COLOR, false);
     root.getChildren().remove(gamePaddle);
     root.getChildren().remove(gameShooter);
     root.getChildren().remove(currentLevel);

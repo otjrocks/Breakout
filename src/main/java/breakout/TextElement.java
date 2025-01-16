@@ -1,5 +1,6 @@
 package breakout;
 
+import java.io.InputStream;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -8,7 +9,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class TextElement extends StackPane {
-
+  private static final String GAME_FONT_PATH = "/fonts/";
   public static final double WRAPPING_WIDTH = 400;
   public static final int TOP_MARGIN = 20;
   public static final int BOTTOM_MARGIN = 5;
@@ -22,9 +23,9 @@ public class TextElement extends StackPane {
     Text text = new Text();
     Font customFont;
     if (bold) {
-      customFont = Font.loadFont(Main.GAME_FONT_BOLD, size);
+      customFont = Font.loadFont(TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), size);
     } else {
-      customFont = Font.loadFont(Main.GAME_FONT_REGULAR, size);
+      customFont = Font.loadFont(TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf"), size);
     }
     text.setFont(customFont);
     text.setText(message);
