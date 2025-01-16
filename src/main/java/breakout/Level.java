@@ -78,8 +78,7 @@ public class Level extends Group {
         if (scanner.hasNextInt()) {
           int nextInt = scanner.nextInt();
           if (nextInt > 0) {
-            Block block = new Block(i * BLOCK_SIZE, j * BLOCK_SIZE, "default", BLOCK_SIZE, nextInt,
-                BLOCK_COLOR, TEXT_COLOR);
+            Block block = new Block(i * BLOCK_SIZE, j * BLOCK_SIZE, "default", BLOCK_SIZE, nextInt);
             blocks.add(block);
           } else {
             createPowerups(i, j);

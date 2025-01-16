@@ -25,6 +25,7 @@ public class Main extends Application {
   public static final Color BACKGROUND_COLOR = new Color(0.1328, 0.1563, 0.1914, 1);
   public static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
   public static final Color BLOCK_COLOR = new Color(0.2151, 0.2422, 0.2734, 1);
+  public static final Color BLOCK_BORDER_COLOR = new Color(0.1151, 0.1422, 0.1734, 1);
   public static final Color PADDLE_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
   public static final Color TEXT_COLOR = new Color(0, 0.6758, 0.7070, 1);
   public static final int FRAMES_PER_SECOND = 60;
@@ -39,7 +40,7 @@ public class Main extends Application {
   public static final int POWERUP_SCORE = 50;
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
-  public static final int INITIAL_NUM_BALLS = 1;
+  public static final int INITIAL_NUM_BALLS = 3;
   public static final int PADDLE_SPEED = 5;
 
   private final Group root = new Group();
@@ -47,7 +48,7 @@ public class Main extends Application {
   private int gameBallCount = INITIAL_NUM_BALLS;
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
-  private double paddleWidth = 100;
+  private double paddleWidth = 120;
   private Shooter gameShooter;
   private Level currentLevel;
   private int currentLevelNumber;
@@ -350,7 +351,7 @@ public class Main extends Application {
 
   private void showEndScreen(boolean isWinner) {
     if (isWinner) {
-      gameText.setTopText("Congratrs!", 30, TEXT_COLOR, true);
+      gameText.setTopText("Congrats!", 30, TEXT_COLOR, true);
       gameText.setCenterText(
           "You have won the game!\nYour final score was: " + score + "\nGame's High Score: "
               + highScore + "\nThanks for playing!", 20,
