@@ -68,10 +68,10 @@ public class Shooter extends Group {
   }
 
   public void setAngle(double angle) {
-    if (angle < Math.PI / 30) {
-      shooterAngle = Math.PI / 30;
-    } else if (angle > Math.PI - Math.PI / 30) {
-      shooterAngle = Math.PI - Math.PI / 30;
+    if (angle < Math.PI / 20) {
+      shooterAngle = Math.PI / 20;
+    } else if (angle > Math.PI - Math.PI / 20) {
+      shooterAngle = Math.PI - Math.PI / 20;
     } else {
       shooterAngle = angle;
     }

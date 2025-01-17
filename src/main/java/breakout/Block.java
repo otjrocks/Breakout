@@ -150,7 +150,7 @@ public class Block extends Group {
     gameManager.addChildToGameRoot(mysteryPowerUpText);
     Timeline removeMysteryBlockDisplayText = new Timeline();
     removeMysteryBlockDisplayText.getKeyFrames().add(
-        new KeyFrame(Duration.seconds(GameConfig.MYSTERY_BLOCK_DISPLAY_TIME),
+        new KeyFrame(Duration.seconds(GameConfig.MYSTERY_BLOCK_DISPLAY_TEXT_TIME),
             e -> gameManager.removeChildFromGameRoot(mysteryPowerUpText)));
     removeMysteryBlockDisplayText.play();
   }

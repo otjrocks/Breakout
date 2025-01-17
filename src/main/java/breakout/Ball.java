@@ -12,6 +12,7 @@ import javafx.scene.shape.Circle;
 public class Ball extends Circle {
 
   public static final double BALL_COLLISION_ENTROPY_STRENGTH = 0.01;
+  public static final double BALL_MAX_SPEED = GameConfig.BALL_SPEED * 3;
   private final double BALL_SIZE;
   private double BALL_SPEED;
   private double ballDirectionX;
@@ -50,7 +51,7 @@ public class Ball extends Circle {
   }
 
   public void increaseSpeed(double amount) {
-    BALL_SPEED += amount;
+    BALL_SPEED = Math.min(BALL_MAX_SPEED, BALL_SPEED + amount);
   }
 
   private void moveX(double elapsedTime) {

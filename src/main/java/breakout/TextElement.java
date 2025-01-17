@@ -40,9 +40,7 @@ public class TextElement extends StackPane {
   }
 
   public void setTopText(String message, int size, Color color, boolean bold) {
-    if (texts[0] != null) {
-      this.getChildren().remove(texts[0]);
-    }
+    removeText(texts[0]);
     Text text = createText(message, size, color, bold);
     this.getChildren().add(text);
     setAlignment(text, Pos.TOP_CENTER);
@@ -51,9 +49,7 @@ public class TextElement extends StackPane {
   }
 
   public void setCenterText(String message, int size, Color color, boolean bold) {
-    if (texts[1] != null) {
-      this.getChildren().remove(texts[1]);
-    }
+    removeText(texts[1]);
     Text text = createText(message, size, color, bold);
     this.getChildren().add(text);
     setAlignment(text, Pos.CENTER);
@@ -61,9 +57,7 @@ public class TextElement extends StackPane {
   }
 
   public void setBottomText(String message, int size, Color color, boolean bold) {
-    if (texts[2] != null) {
-      this.getChildren().remove(texts[2]);
-    }
+    removeText(texts[2]);
     Text text = createText(message, size, color, bold);
     this.getChildren().add(text);
     setAlignment(text, Pos.BOTTOM_CENTER);
@@ -72,14 +66,14 @@ public class TextElement extends StackPane {
   }
 
   public void clearText() {
-    if (texts[0] != null) {
-      this.getChildren().remove(texts[0]);
+    for (Text text : texts) {
+      removeText(text);
     }
-    if (texts[1] != null) {
-      this.getChildren().remove(texts[1]);
-    }
-    if (texts[2] != null) {
-      this.getChildren().remove(texts[2]);
+  }
+
+  private void removeText(Text text) {
+    if (text != null) {
+      this.getChildren().remove(text);
     }
   }
 }
