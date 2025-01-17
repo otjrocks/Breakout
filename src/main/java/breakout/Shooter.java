@@ -26,10 +26,12 @@ public class Shooter extends Group {
   private Ball displayBall;
   private Line shooterAim;
   private boolean isEnabled;
+  private final Level currentLevel;
 
 
-  public Shooter(GameManager gameManager, double shooterLength, double startingAngle, Color shooterColor) {
+  public Shooter(GameManager gameManager, double shooterLength, double startingAngle, Color shooterColor, Level currentLevel) {
     this.gameManager = gameManager;
+    this.currentLevel = currentLevel;
     SHOOTER_LENGTH = shooterLength;
     shooterAngle = startingAngle;
     SHOOTER_COLOR = shooterColor;
@@ -37,7 +39,7 @@ public class Shooter extends Group {
   }
 
   private void initialize() {
-    displayBall = new Ball((double) WIDTH / 2, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, SHOOTER_COLOR, BALL_RADIUS, 0, 0, 0);
+    displayBall = new Ball((double) WIDTH / 2, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, SHOOTER_COLOR, BALL_RADIUS, 0, 0, 0, currentLevel);
     shooterAim = new Line(
         (double) WIDTH / 2,
         HEIGHT - SHOOTER_HEIGHT_OFFSET - 10,
@@ -105,7 +107,7 @@ public class Shooter extends Group {
   private void spawnBall() {
     double startAngle = getAngle();
     Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, BALL_COLOR, BALL_RADIUS, BALL_SPEED,
-        Math.cos(startAngle), -Math.sin(startAngle));
+        Math.cos(startAngle), -Math.sin(startAngle), currentLevel);
     gameManager.addGameBall(ball);
     gameManager.addChildToGameRoot(ball);
   }

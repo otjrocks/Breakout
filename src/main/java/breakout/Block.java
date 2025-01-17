@@ -14,10 +14,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+/**
+ * The Block class is a Group that contains features such as an Image, Rectangle, and Text,
+ * depending on the block type. The Block class is used for all block types, including power ups and
+ * mystery blocks. The BLOCK_TYPE indicates the block type and its subsequent behaviors.
+ *
+ * @author Owen Jennings
+ */
 public class Block extends Group {
 
   private static final String GAME_FONT_PATH = "/fonts/";
-  private static final Font boldFont = Font.loadFont(TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), 12);
+  private static final Font boldFont = Font.loadFont(
+      TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), 12);
   public static final double BLOCK_IMAGE_OFFSET = 20;
   private final int INITIAL_HEALTH;
   private final double TEXT_SIZE;
@@ -29,7 +37,24 @@ public class Block extends Group {
   private final Level currentLevel;
   private final Random random;
 
-  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health, Image blockImage) {
+  /**
+   * A constructor to create a block object. This constructor will create a block and display it
+   * based on the image file provided in the constructor.
+   *
+   * @param gameManager:  The game manager object, which is used to control game variables
+   * @param scoreManager: The score manager object, which is used to update the score on block hits
+   * @param currentLevel: The current level that the block is part of
+   * @param x:            The blocks x coordinate location
+   * @param y:            The blocks y coordinate location
+   * @param type:         The block type string. For example: a normal block would have type
+   *                      "default"
+   * @param size:         The size (width and height) of a block. All blocks are represented as size
+   *                      X size.
+   * @param health:       The blocks health or number of hit-points
+   * @param blockImage:   An Image which is used when block is displayed.
+   */
+  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y,
+      String type, double size, int health, Image blockImage) {
     this(gameManager, scoreManager, currentLevel, x, y, type, size, health);
     ImageView imageView = new ImageView(blockImage);
     imageView.setFitHeight(size - BLOCK_IMAGE_OFFSET);
@@ -39,7 +64,25 @@ public class Block extends Group {
     this.getChildren().add(imageView);
   }
 
-  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health) {
+  /**
+   * A constructor class for a block object. This constructor will create a block with a color fill
+   * instead of an image. A health text will be displayed in the center of the block if the type is
+   * set to default. Otherwise, only the block will display. The blocks fill color is defined by
+   * GameConfig.BLOCK_COLOR
+   *
+   * @param gameManager:  The game manager object, which is used to control game variables
+   * @param scoreManager: The score manager object, which is used to update the score on block hits
+   * @param currentLevel: The current level that the block is part of
+   * @param x:            The blocks x coordinate location
+   * @param y:            The blocks y coordinate location
+   * @param type:         The block type string. For example: a normal block would have type
+   *                      "default"
+   * @param size:         The size (width and height) of a block. All blocks are represented as size
+   *                      X size.
+   * @param health:       The blocks health or number of hit-points
+   */
+  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y,
+      String type, double size, int health) {
     this.gameManager = gameManager;
     this.scoreManager = scoreManager;
     this.currentLevel = currentLevel;
@@ -51,16 +94,16 @@ public class Block extends Group {
 
     this.health = health;
     healthText = new Text(String.valueOf(health));
-    healthText.setFont(Font.font(boldFont.getFamily(), size / 6));
-    healthText.setFill(getCurrentColor());
-
-    // I asked ChatGPT to help center text within a JavaFX rectangle
-    double textWidth = healthText.getBoundsInLocal().getWidth();
-    double textHeight = healthText.getBoundsInLocal().getHeight();
-    healthText.setX((size - textWidth) / 2);
-    healthText.setY((size + textHeight) / 2); // Adjust for baseline alignment
 
     if (type.equals("default")) {
+      healthText.setFont(Font.font(boldFont.getFamily(), size / 6));
+      healthText.setFill(getCurrentColor());
+
+      // I asked ChatGPT to help center text within a JavaFX rectangle
+      double textWidth = healthText.getBoundsInLocal().getWidth();
+      double textHeight = healthText.getBoundsInLocal().getHeight();
+      healthText.setX((size - textWidth) / 2);
+      healthText.setY((size + textHeight) / 2); // Adjust for baseline alignment
       rectangle.setFill(GameConfig.BLOCK_COLOR);
       rectangle.setStroke(GameConfig.BLOCK_BORDER_COLOR);
       rectangle.setStrokeWidth(3);
@@ -74,12 +117,57 @@ public class Block extends Group {
 
   }
 
+  /**
+   * Get the current block type
+   *
+   * @return A string representation of the block type. (i.e. 'default', 'mystery', 'addBall')
+   */
   public String getBlockType() {
     return BLOCK_TYPE;
   }
 
+  /**
+   * Get the current block health
+   *
+   * @return returns the number of hits remaining for a given block
+   */
   public int getHealth() {
     return health;
+  }
+
+  /**
+   * Change the current block's health and health text indicator.
+   *
+   * @param health: The new health of the block
+   */
+  public void updateHealth(int health) {
+    this.health = health;
+    healthText.setText(String.valueOf(health));
+    double textWidth = healthText.getBoundsInLocal().getWidth();
+    double textHeight = healthText.getBoundsInLocal().getHeight();
+    healthText.setX((TEXT_SIZE - textWidth) / 2);
+    healthText.setY((TEXT_SIZE + textHeight) / 2);
+
+    healthText.setFill(getCurrentColor());
+  }
+
+  /**
+   * Handle a block hit from a ball. This will handle all the impacts of a ball hit, including
+   * updating its help, removing it from a level if it is out of health, updating the game score,
+   * and handling any power up effects that occur.
+   */
+  public void hit() {
+    updateHealth(getHealth() - 1);
+    String blockType = getBlockType();
+    scoreManager.incrementScore(
+        blockType.equals("default") ? GameConfig.BLOCK_SCORE : GameConfig.POWERUP_SCORE);
+    if (blockType.equals("mystery")) {
+      handleMysteryBlock();
+    }
+    handlePowerUpEffect(blockType);
+    if (getHealth() <= 0) {
+      currentLevel.removeBlock(this);
+    }
   }
 
   private Color getCurrentColor() {
@@ -97,31 +185,7 @@ public class Block extends Group {
     return Color.rgb(red, green, blue);
   }
 
-  public void updateHealth(int health) {
-    this.health = health;
-    healthText.setText(String.valueOf(health));
-    double textWidth = healthText.getBoundsInLocal().getWidth();
-    double textHeight = healthText.getBoundsInLocal().getHeight();
-    healthText.setX((TEXT_SIZE - textWidth) / 2);
-    healthText.setY((TEXT_SIZE + textHeight) / 2);
-
-    healthText.setFill(getCurrentColor());
-  }
-
-  public void hit() {
-    updateHealth(getHealth() - 1);
-    String blockType = getBlockType();
-    scoreManager.incrementScore(blockType.equals("default") ? GameConfig.BLOCK_SCORE : GameConfig.POWERUP_SCORE);
-    if (blockType.equals("mystery")) {
-      handleMysteryBlock();
-    }
-    handlePowerUpEffect(blockType);
-    if (getHealth() <= 0) {
-      currentLevel.removeBlock(this);
-    }
-  }
-
-  public void handlePowerUpEffect(String blockType) {
+  private void handlePowerUpEffect(String blockType) {
     switch (blockType) {
       case "addBall" -> gameManager.increaseGameBallCount();
       case "subtractBall" -> gameManager.decreaseGameBallCount();
@@ -155,8 +219,8 @@ public class Block extends Group {
     removeMysteryBlockDisplayText.play();
   }
 
-  /*
-  The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
+  /**
+   * The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
    */
   private void handleScoreMultiplier() {
     scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() * 2);

@@ -1,7 +1,6 @@
 package breakout;
 
 import static breakout.GameConfig.HEIGHT;
-import static breakout.GameConfig.WIDTH;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -105,8 +104,8 @@ public class GameManager {
     gamePaddle = new Paddle(this, GameConfig.MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET-1),
         paddleWidth, 5,
         GameConfig.PADDLE_SPEED, GameConfig.PADDLE_COLOR);
-    gameShooter = new Shooter(this, GameConfig.SHOOTER_LENGTH, Math.PI / 2, GameConfig.BALL_COLOR);
     currentLevel = new Level(this, scoreManager, GameConfig.BLOCK_SIZE);
+    gameShooter = new Shooter(this, GameConfig.SHOOTER_LENGTH, Math.PI / 2, GameConfig.BALL_COLOR, currentLevel);
     gameRoot.getChildren().add(gameText);
   }
 
@@ -192,13 +191,10 @@ public class GameManager {
     Iterator<Ball> ballIterator = getGameBallIterator();
     while (ballIterator.hasNext()) {
       Ball ball = ballIterator.next();
-      ball.handleBlockCollisions(currentLevel);
-      ball.bounceOffWall(WIDTH, HEIGHT);
-      ball.move(GameConfig.SECOND_DELAY);
-      ball.increaseSpeed(0.1);
+      ball.bounceAndHandleCollisions(GameConfig.SECOND_DELAY);
       gamePaddle.handleBallCollision(ball);
       // Remove balls that have reached the floor
-      if (ball.isIntersectingFloor(HEIGHT)) {
+      if (ball.isIntersectingFloor()) {
         ballIterator.remove();
         removeChildFromGameRoot(ball);
         setBallsInPlay(getBallsInPlay() - 1);
