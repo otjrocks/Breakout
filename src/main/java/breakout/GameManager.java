@@ -10,6 +10,12 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 
+/**
+ * A class to handle all the global game logic and initialization, such as lives, balls in play and
+ * different transitions. Additionally, contains content for the starting and ending screens.
+ *
+ * @author Owen Jennings
+ */
 public class GameManager {
 
   private final Group gameRoot;
@@ -29,67 +35,127 @@ public class GameManager {
   private final HashSet<KeyCode> activeKeys = new HashSet<>();
   private ScoreManager scoreManager;
 
+  /**
+   * Create a new Game Manager with the main scene and root objects
+   *
+   * @param scene: the main scene of the program
+   * @param root:  the main root of the program
+   */
   public GameManager(Scene scene, Group root) {
     this.gameScene = scene;
     this.gameRoot = root;
     setupScene();
   }
 
+  /**
+   * Get the current game's score manager object
+   *
+   * @return Current game's score manager object
+   */
+  public ScoreManager getScoreManager() {
+    return scoreManager;
+  }
+
+  /**
+   * Get the current level manager object
+   *
+   * @return Level object for the current level
+   */
+  public Level getCurrentLevel() {
+    return currentLevel;
+  }
+
+  /**
+   * Get the number of balls that the user has
+   *
+   * @return The game ball count
+   */
   public int getGameBallCount() {
     return gameBallCount;
   }
 
+  /**
+   * Increase the number of balls a player has by 1. This will not spawn any balls, but will allow
+   * them to have more balls for the next "point"
+   */
   public void increaseGameBallCount() {
     gameBallCount++;
   }
 
+  /**
+   * Decrease the number of balls a player has by 1. This does not de-spawn any balls but removes 1
+   * from a players current ball count
+   */
   public void decreaseGameBallCount() {
-    gameBallCount--;
+    if (gameBallCount > 0) {
+      gameBallCount--;
+    }
   }
 
+  /**
+   * Get the number of balls that are currently in motion
+   *
+   * @return The total number of balls in play
+   */
   public int getBallsInPlay() {
     return ballsInPlay;
   }
 
+  /**
+   * Update the number of balls that are current in motion/play
+   *
+   * @param count the amount of balls to set in play
+   */
   public void setBallsInPlay(int count) {
     ballsInPlay = count;
   }
 
-  public int getLives() {
-    return livesLeft;
-  }
-
-  public void setLives(int newLives) {
-    livesLeft = newLives;
-  }
-
+  /**
+   * Decrement the number of lives remaining by 1.
+   */
   public void decrementLives() {
     livesLeft--;
   }
 
-  private Iterator<Ball> getGameBallIterator() {
-    return gameBalls.iterator();
-  }
-
-  public void removeGameBall(Ball ball) {
-    gameBalls.remove(ball);
-  }
-
+  /**
+   * Add a ball to the game ball list, which stores all balls currently in motion
+   *
+   * @param ball: the ball object to add
+   */
   public void addGameBall(Ball ball) {
     gameBalls.add(ball);
   }
 
+  /**
+   * Add an object to the main game root
+   *
+   * @param child: the Node you wish to add
+   */
   public void addChildToGameRoot(Node child) {
     gameRoot.getChildren().add(child);
   }
 
+  /**
+   * Remove an object from the main game root
+   *
+   * @param child: the Node you wish to remove from the game root.
+   */
   public void removeChildFromGameRoot(Node child) {
     gameRoot.getChildren().remove(child);
   }
 
+  /**
+   * Take an animation step in the game. This should be called by the main file's animation
+   *
+   * @throws Exception: Any exception that occurs while the animation is running.
+   */
   public void step() throws Exception {
     handleLevelTransitions();
     handleInGameLogic();
+  }
+
+  private Iterator<Ball> getGameBallIterator() {
+    return gameBalls.iterator();
   }
 
   private void setupScene() {
@@ -101,11 +167,12 @@ public class GameManager {
 
   private void initializeGame() {
     scoreManager = new ScoreManager();
-    gamePaddle = new Paddle(this, GameConfig.MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET-1),
+    gamePaddle = new Paddle(this, GameConfig.MIDDLE_WIDTH - paddleWidth / 2,
+        HEIGHT - GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET - 1),
         paddleWidth, 5,
         GameConfig.PADDLE_SPEED, GameConfig.PADDLE_COLOR);
     currentLevel = new Level(this, scoreManager, GameConfig.BLOCK_SIZE);
-    gameShooter = new Shooter(this, GameConfig.SHOOTER_LENGTH, Math.PI / 2, GameConfig.BALL_COLOR, currentLevel);
+    gameShooter = new Shooter(this, GameConfig.SHOOTER_LENGTH, Math.PI / 2, GameConfig.BALL_COLOR);
     gameRoot.getChildren().add(gameText);
   }
 
@@ -146,8 +213,9 @@ public class GameManager {
       }
       if (currentLevelNumber
           > GameConfig.NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
-        showEndScreen(true, "You have won the game!\nYour final score was: " + scoreManager.getScore()
-            + "\nGame's High Score: " + scoreManager.getHighScore() + "\nThanks for playing!");
+        showEndScreen(true,
+            "You have won the game!\nYour final score was: " + scoreManager.getScore()
+                + "\nGame's High Score: " + scoreManager.getHighScore() + "\nThanks for playing!");
         isPlaying = false;
       }
       if (currentLevelNumber <= GameConfig.NUM_LEVELS) {  // Start next level for player
@@ -160,7 +228,8 @@ public class GameManager {
         == 0) {  // Player has run out of lives and all balls have fallen OR player has run out of balls
       currentLevel.removeAllBlocks();  // clear remaining blocks off screen
       showEndScreen(false, "You ran out of lives or balls and lost!\nYour final score was: "
-          + scoreManager.getScore() + "\nHigh Score: " + scoreManager.getHighScore());  // show failure screen
+          + scoreManager.getScore() + "\nHigh Score: "
+          + scoreManager.getHighScore());  // show failure screen
       isPlaying = false;
     }
   }
@@ -176,11 +245,13 @@ public class GameManager {
               + scoreManager.getHighScore(), 16, GameConfig.TEXT_COLOR, false);
       if (gameBallCount > 0 && ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
-        if (!isFirstRound && !currentLevel.checkCanDropOneRowAndAttemptDrop()) {  // end game if the row drops below the game area
+        if (!isFirstRound
+            && !currentLevel.checkCanDropOneRowAndAttemptDrop()) {  // end game if the row drops below the game area
           ballsInPlay = 0;
           currentLevel.removeAllBlocks();  // clear remaining blocks off screen
           showEndScreen(false, "The blocks reached the bottom of the level!\nYour final score was: "
-              + scoreManager.getScore() + "\nHigh Score: " + scoreManager.getHighScore());  // show failure screen
+              + scoreManager.getScore() + "\nHigh Score: "
+              + scoreManager.getHighScore());  // show failure screen
           isPlaying = false;
         }
       }

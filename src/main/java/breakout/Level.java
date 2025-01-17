@@ -87,7 +87,7 @@ public class Level extends Group {
         if (scanner.hasNextInt()) {
           int nextInt = scanner.nextInt();
           if (nextInt > 0) {
-            Block block = new Block(gameManager, scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE,
+            Block block = new Block(gameManager, i * BLOCK_SIZE, j * BLOCK_SIZE,
                 "default", BLOCK_SIZE, nextInt);
             blocks.add(block);
           } else {
@@ -110,7 +110,7 @@ public class Level extends Group {
       } else {
         specialBlockType = POWER_UP_TYPES[powerUpIndex];
       }
-      Block block = new Block(gameManager, scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE,
+      Block block = new Block(gameManager, i * BLOCK_SIZE, j * BLOCK_SIZE,
           specialBlockType, BLOCK_SIZE, 1,
           SPECIAL_BLOCK_IMAGES[powerUpIndex]); // for now all powerups have 1 health
       blocks.add(block);

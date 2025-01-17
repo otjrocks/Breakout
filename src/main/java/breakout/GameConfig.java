@@ -3,6 +3,11 @@ package breakout;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * A collection of all the major game constant values
+ *
+ * @author Owen Jennings
+ */
 public class GameConfig {
 
   public static final String TITLE = "Breakout Game";

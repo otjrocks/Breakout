@@ -33,8 +33,6 @@ public class Block extends Group {
   private final Text healthText;
   private final GameManager gameManager;
   private int health;
-  private final ScoreManager scoreManager;
-  private final Level currentLevel;
   private final Random random;
 
   /**
@@ -42,8 +40,6 @@ public class Block extends Group {
    * based on the image file provided in the constructor.
    *
    * @param gameManager:  The game manager object, which is used to control game variables
-   * @param scoreManager: The score manager object, which is used to update the score on block hits
-   * @param currentLevel: The current level that the block is part of
    * @param x:            The blocks x coordinate location
    * @param y:            The blocks y coordinate location
    * @param type:         The block type string. For example: a normal block would have type
@@ -53,9 +49,9 @@ public class Block extends Group {
    * @param health:       The blocks health or number of hit-points
    * @param blockImage:   An Image which is used when block is displayed.
    */
-  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y,
+  public Block(GameManager gameManager, int x, int y,
       String type, double size, int health, Image blockImage) {
-    this(gameManager, scoreManager, currentLevel, x, y, type, size, health);
+    this(gameManager, x, y, type, size, health);
     ImageView imageView = new ImageView(blockImage);
     imageView.setFitHeight(size - BLOCK_IMAGE_OFFSET);
     imageView.setFitWidth(size - BLOCK_IMAGE_OFFSET);
@@ -71,8 +67,6 @@ public class Block extends Group {
    * GameConfig.BLOCK_COLOR
    *
    * @param gameManager:  The game manager object, which is used to control game variables
-   * @param scoreManager: The score manager object, which is used to update the score on block hits
-   * @param currentLevel: The current level that the block is part of
    * @param x:            The blocks x coordinate location
    * @param y:            The blocks y coordinate location
    * @param type:         The block type string. For example: a normal block would have type
@@ -81,11 +75,9 @@ public class Block extends Group {
    *                      X size.
    * @param health:       The blocks health or number of hit-points
    */
-  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y,
+  public Block(GameManager gameManager, int x, int y,
       String type, double size, int health) {
     this.gameManager = gameManager;
-    this.scoreManager = scoreManager;
-    this.currentLevel = currentLevel;
     this.random = new Random();
     TEXT_SIZE = size;
     BLOCK_TYPE = type;
@@ -159,14 +151,14 @@ public class Block extends Group {
   public void hit() {
     updateHealth(getHealth() - 1);
     String blockType = getBlockType();
-    scoreManager.incrementScore(
+    gameManager.getScoreManager().incrementScore(
         blockType.equals("default") ? GameConfig.BLOCK_SCORE : GameConfig.POWERUP_SCORE);
     if (blockType.equals("mystery")) {
       handleMysteryBlock();
     }
     handlePowerUpEffect(blockType);
     if (getHealth() <= 0) {
-      currentLevel.removeBlock(this);
+      gameManager.getCurrentLevel().removeBlock(this);
     }
   }
 
@@ -190,7 +182,7 @@ public class Block extends Group {
       case "addBall" -> gameManager.increaseGameBallCount();
       case "subtractBall" -> gameManager.decreaseGameBallCount();
       case "scoreMultiplier" -> handleScoreMultiplier();
-      case "blockDestroyer" -> currentLevel.hitAllDefaultBlocks();
+      case "blockDestroyer" -> gameManager.getCurrentLevel().hitAllDefaultBlocks();
     }
   }
 
@@ -223,6 +215,7 @@ public class Block extends Group {
    * The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
    */
   private void handleScoreMultiplier() {
+    ScoreManager scoreManager = gameManager.getScoreManager();
     scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() * 2);
     Timeline removeScoreMultiplierEffect = new Timeline();
     removeScoreMultiplierEffect.getKeyFrames().add(

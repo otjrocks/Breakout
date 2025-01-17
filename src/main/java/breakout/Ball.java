@@ -18,7 +18,7 @@ public class Ball extends Circle {
   private double ballDirectionX;
   private double ballDirectionY;
   private final Random random = new Random();
-  private final Level currentLevel;
+  private final GameManager gameManager;
 
   /**
    * Creates a game ball.
@@ -31,15 +31,15 @@ public class Ball extends Circle {
    * @param directionX: The ball's initial X direction
    * @param directionY: The ball's initial Y direction
    */
-  public Ball(double x, double y, Color color, double radius, double speed,
+  public Ball(GameManager gameManager, double x, double y, Color color, double radius, double speed,
       double directionX,
-      double directionY, Level currentLevel) {
+      double directionY) {
     super(x, y, radius);
     BALL_SPEED = speed;
     ballDirectionX = directionX;
     ballDirectionY = directionY;
     this.setFill(color);
-    this.currentLevel = currentLevel;
+    this.gameManager = gameManager;
   }
 
   /**
@@ -136,6 +136,7 @@ public class Ball extends Circle {
   }
 
   private void handleBlockCollisions() {
+    Level currentLevel = gameManager.getCurrentLevel();
     for (Block block : currentLevel.getBlocks()) {
       if (isIntersectingBlock(block)) {
         block.hit();
