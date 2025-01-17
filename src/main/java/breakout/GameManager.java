@@ -134,7 +134,7 @@ public class GameManager {
     gamePaddle = new Paddle(this, MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
         PADDLE_SPEED, PADDLE_COLOR);
     gameShooter = new Shooter( this, SHOOTER_LENGTH, Math.PI / 2, BALL_COLOR);
-    currentLevel = new Level(scoreManager, BLOCK_SIZE);
+    currentLevel = new Level(this, scoreManager, BLOCK_SIZE);
     gameRoot.getChildren().add(gameText);
   }
 
@@ -192,14 +192,13 @@ public class GameManager {
   }
 
   private void handleInteractions() {
-    handlePaddleInteractions();
-    handlePowerupEffects();
     Iterator<Ball> ballIterator = getGameBallIterator();
     while (ballIterator.hasNext()) {
       Ball ball = ballIterator.next();
       ball.handleBlockCollisions(currentLevel);
       ball.bounceOffWall(WIDTH, HEIGHT);
       ball.move(Main.SECOND_DELAY);
+      gamePaddle.handleBallCollision(ball);
       // Remove balls that have reached the floor
       if (ball.isIntersectingFloor(HEIGHT)) {
         ballIterator.remove();
@@ -209,47 +208,6 @@ public class GameManager {
     }
   }
 
-  private void handlePowerupEffects() {
-    for (Ball ball : gameBalls) {
-      ArrayList<Block> gameBlocks = currentLevel.getBlocks();
-      for (Block block : gameBlocks) {
-        if (ball.isIntersectingBlock(block)) {
-          String blockType = block.getBlockType();
-          if (!blockType.equals("default")) {
-            switch (blockType) {
-              case "addBall" -> gameBallCount++;
-              case "subtractBall" -> gameBallCount--;
-              case "scoreMultiplier" -> handleScoreMultiplier();
-              case "blockDestroyer" -> currentLevel.hitAllDefaultBlocks();
-            }
-            scoreManager.incrementScore(POWERUP_SCORE);
-            currentLevel.removeBlock(block);
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  /*
-  The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
-   */
-  private void handleScoreMultiplier() {
-    scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() * 2);
-    Timeline removeScoreMultiplierEffect = new Timeline();
-    removeScoreMultiplierEffect.getKeyFrames().add(
-        new KeyFrame(Duration.seconds(SCORE_MULTIPLIER_TIMEOUT),
-            e -> scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() / 2)));
-    removeScoreMultiplierEffect.play();
-  }
-
-
-
-  private void handlePaddleInteractions() {
-    for (Ball ball : gameBalls) {
-      gamePaddle.handleBallCollision(ball);
-    }
-  }
 
   // What to do each time a key is pressed
   private void handleKeyInput(KeyCode code) throws Exception {

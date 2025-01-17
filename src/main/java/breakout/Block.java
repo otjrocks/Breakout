@@ -1,5 +1,10 @@
 package breakout;
 
+import static breakout.GameManager.SCORE_MULTIPLIER_TIMEOUT;
+
+import java.util.ArrayList;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -7,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class Block extends Group {
 
@@ -17,12 +23,13 @@ public class Block extends Group {
   private final double TEXT_SIZE;
   private final String BLOCK_TYPE;
   private final Text healthText;
+  private final GameManager gameManager;
   private int health;
   private final ScoreManager scoreManager;
   private final Level currentLevel;
 
-  public Block(ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health, Image blockImage) {
-    this(scoreManager, currentLevel, x, y, type, size, health);
+  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health, Image blockImage) {
+    this(gameManager, scoreManager, currentLevel, x, y, type, size, health);
     ImageView imageView = new ImageView(blockImage);
     imageView.setFitHeight(size - BLOCK_IMAGE_OFFSET);
     imageView.setFitWidth(size - BLOCK_IMAGE_OFFSET);
@@ -31,7 +38,8 @@ public class Block extends Group {
     this.getChildren().add(imageView);
   }
 
-  public Block(ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health) {
+  public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health) {
+    this.gameManager = gameManager;
     this.scoreManager = scoreManager;
     this.currentLevel = currentLevel;
     TEXT_SIZE = size;
@@ -100,11 +108,33 @@ public class Block extends Group {
 
   public void hit() {
     updateHealth(getHealth() - 1);
-    scoreManager.incrementScore(GameManager.BLOCK_SCORE);
+    String blockType = getBlockType();
+    scoreManager.incrementScore(blockType.equals("default") ? GameManager.BLOCK_SCORE : GameManager.POWERUP_SCORE);
+    handlePowerUpEffect(blockType);
     if (getHealth() <= 0) {
       currentLevel.removeBlock(this);
     }
   }
 
+  public void handlePowerUpEffect(String blockType) {
+    switch (blockType) {
+      case "addBall" -> gameManager.increaseGameBallCount();
+      case "subtractBall" -> gameManager.decreaseGameBallCount();
+      case "scoreMultiplier" -> handleScoreMultiplier();
+      case "blockDestroyer" -> currentLevel.hitAllDefaultBlocks();
+    }
+  }
+
+  /*
+  The score multiplier multiplies all points received by brick collisions by 2 for 5 seconds
+   */
+  private void handleScoreMultiplier() {
+    scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() * 2);
+    Timeline removeScoreMultiplierEffect = new Timeline();
+    removeScoreMultiplierEffect.getKeyFrames().add(
+        new KeyFrame(Duration.seconds(SCORE_MULTIPLIER_TIMEOUT),
+            e -> scoreManager.setScoreMultiplier(scoreManager.getScoreMultiplier() / 2)));
+    removeScoreMultiplierEffect.play();
+  }
 
 }

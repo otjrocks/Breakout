@@ -120,10 +120,11 @@ public class Ball extends Circle {
     for (Block block : level.getBlocks()) {
       if (isIntersectingBlock(block)) {
         block.hit();
-        if (isIntersectingLeftOrRight(block)) {
+        // only update ball direction if a default block is hit and not any powerups
+        if (block.getBlockType().equals("default") && isIntersectingLeftOrRight(block)) {
           updateDirectionX(getDirectionX() * -1);
         }
-        if (isIntersectingTopOrBottom(block)) {
+        if (block.getBlockType().equals("default") && isIntersectingTopOrBottom(block)) {
           updateDirectionY(getDirectionY() * -1);
         }
         break; // break so that ball can't hit two blocks at once

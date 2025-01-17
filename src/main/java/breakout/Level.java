@@ -29,8 +29,10 @@ public class Level extends Group {
   private final ArrayList<Block> blocks;
   private final Random random;
   private final ScoreManager scoreManager;
+  private final GameManager gameManager;
 
-  public Level(ScoreManager scoreManager, int blockSize) {
+  public Level(GameManager gameManager, ScoreManager scoreManager, int blockSize) {
+    this.gameManager = gameManager;
     this.scoreManager = scoreManager;
     BLOCK_SIZE = blockSize;
     blocks = new ArrayList<>();
@@ -74,7 +76,7 @@ public class Level extends Group {
         if (scanner.hasNextInt()) {
           int nextInt = scanner.nextInt();
           if (nextInt > 0) {
-            Block block = new Block(scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, "default", BLOCK_SIZE, nextInt);
+            Block block = new Block(gameManager, scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, "default", BLOCK_SIZE, nextInt);
             blocks.add(block);
           } else {
             createPowerups(i, j);
@@ -91,7 +93,7 @@ public class Level extends Group {
     if (shouldAddPowerup) {
       int powerUpIndex = random.nextInt(POWER_UP_TYPES.length);
       String powerUpType = POWER_UP_TYPES[powerUpIndex];
-      Block block = new Block(scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, powerUpType, BLOCK_SIZE, 1, POWER_UP_IMAGES[powerUpIndex]); // for now all powerups have 1 health
+      Block block = new Block(gameManager, scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, powerUpType, BLOCK_SIZE, 1, POWER_UP_IMAGES[powerUpIndex]); // for now all powerups have 1 health
       blocks.add(block);
     }
   }
