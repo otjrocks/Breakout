@@ -10,13 +10,14 @@ import javafx.scene.text.Text;
 
 public class Block extends Group {
 
-  private final String GAME_FONT_PATH = "/fonts/";
+  private static final String GAME_FONT_PATH = "/fonts/";
+  private static final Font boldFont = Font.loadFont(TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), 12);
   public static final double BLOCK_IMAGE_OFFSET = 20;
-  private int health;
   private final int INITIAL_HEALTH;
-  private final Text HEALTH_TEXT;
   private final double TEXT_SIZE;
   private final String BLOCK_TYPE;
+  private final Text healthText;
+  private int health;
 
   public Block(int x, int y, String type, double size, int health, Image blockImage) {
     this(x, y, type, size, health);
@@ -35,23 +36,21 @@ public class Block extends Group {
     Rectangle rectangle = new Rectangle(size, size);
 
     this.health = health;
-    HEALTH_TEXT = new Text(String.valueOf(health));
-    Font customFont = Font.loadFont(Block.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"),
-        size / 6);
-    HEALTH_TEXT.setFont(customFont);
-    HEALTH_TEXT.setFill(getCurrentColor());
+    healthText = new Text(String.valueOf(health));
+    healthText.setFont(Font.font(boldFont.getFamily(), size / 6));
+    healthText.setFill(getCurrentColor());
 
     // I asked ChatGPT to help center text within a JavaFX rectangle
-    double textWidth = HEALTH_TEXT.getBoundsInLocal().getWidth();
-    double textHeight = HEALTH_TEXT.getBoundsInLocal().getHeight();
-    HEALTH_TEXT.setX((size - textWidth) / 2);
-    HEALTH_TEXT.setY((size + textHeight) / 2); // Adjust for baseline alignment
+    double textWidth = healthText.getBoundsInLocal().getWidth();
+    double textHeight = healthText.getBoundsInLocal().getHeight();
+    healthText.setX((size - textWidth) / 2);
+    healthText.setY((size + textHeight) / 2); // Adjust for baseline alignment
 
     if (type.equals("default")) {
       rectangle.setFill(Main.BLOCK_COLOR);
       rectangle.setStroke(Main.BLOCK_BORDER_COLOR);
       rectangle.setStrokeWidth(3);
-      this.getChildren().addAll(rectangle, HEALTH_TEXT);
+      this.getChildren().addAll(rectangle, healthText);
     } else {
       rectangle.setFill(Color.rgb(0, 0, 0, 0));
       this.getChildren().addAll(rectangle);
@@ -86,13 +85,13 @@ public class Block extends Group {
 
   public void updateHealth(int health) {
     this.health = health;
-    HEALTH_TEXT.setText(String.valueOf(health));
-    double textWidth = HEALTH_TEXT.getBoundsInLocal().getWidth();
-    double textHeight = HEALTH_TEXT.getBoundsInLocal().getHeight();
-    HEALTH_TEXT.setX((TEXT_SIZE - textWidth) / 2);
-    HEALTH_TEXT.setY((TEXT_SIZE + textHeight) / 2);
+    healthText.setText(String.valueOf(health));
+    double textWidth = healthText.getBoundsInLocal().getWidth();
+    double textHeight = healthText.getBoundsInLocal().getHeight();
+    healthText.setX((TEXT_SIZE - textWidth) / 2);
+    healthText.setY((TEXT_SIZE + textHeight) / 2);
 
-    HEALTH_TEXT.setFill(getCurrentColor());
+    healthText.setFill(getCurrentColor());
   }
 
 

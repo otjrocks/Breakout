@@ -20,7 +20,7 @@ This project implements the game of Breakout with multiple levels.
 ### Attributions
 
  * Color Scheme from [ColorHunt.](https://colorhunt.co/palettes/pastel)
- * Font via https://fonts.google.com/specimen/Play
+ * Fonts via https://fonts.google.com/
  * Icons via https://flaticon.com/
  
  * Resources used directly (including AI assistance)
