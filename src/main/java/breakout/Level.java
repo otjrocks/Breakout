@@ -212,7 +212,10 @@ public class Level extends Group {
    * @return true if the drop occurred, false if the drop cannot happen
    */
   public boolean checkCanDropOneRowAndAttemptDrop() {
-    if (!canDropOneLevel() || !hasGravity()) {
+    if (!hasGravity()) { // if the level does not have gravity, we will just return true, so that the player can continue
+      return true;
+    }
+    if (!canDropOneLevel()) {
       return false;
     }
     Iterator<Block> iterator = blocks.iterator();

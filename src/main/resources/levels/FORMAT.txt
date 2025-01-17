@@ -1,0 +1,25 @@
+Game File Format:
+  X.txt - Level Number X
+  Number of Balls (int)
+  Gravity/Block falling Enabled (boolean true/false)
+  Block configuration (12x14 grid) with numbers indicating block health/hitpoints.
+  Place a 0 if you do not want a block in a given position. Note, empty spaces will be filled with power ups/mystery blocks randomly.
+
+
+Example:
+10                              -> Start game with 10 balls.
+false                           -> Gravity/Block falling is not enabled.
+1 5 0 0 0 0 0 0 0 0 0 0         -> A completely empty level except for the top left corner with a brick with 1 health and a brick with 5 health.
+0 0 0 0 0 0 0 0 0 0 0 0         -> The 0 placeholders can be an empty space or a power up/mystery block based on when the level is generated.
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0

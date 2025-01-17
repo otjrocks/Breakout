@@ -124,7 +124,7 @@ public class GameManager {
   }
 
   private void startGame() throws Exception {
-    currentLevelNumber = 2;
+    currentLevelNumber = 1;
     livesLeft = 5;
     scoreManager.resetScore();
     gameText.clearText();
