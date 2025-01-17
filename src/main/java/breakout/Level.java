@@ -106,7 +106,12 @@ public class Level extends Group {
   }
 
   public boolean isComplete() {
-    return blocks.isEmpty();
+    for (Block block : blocks) {
+      if (block.getBlockType().equals("default")) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public ArrayList<Block> getBlocks() {

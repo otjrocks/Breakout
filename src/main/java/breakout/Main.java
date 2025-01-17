@@ -108,7 +108,7 @@ public class Main extends Application {
   }
 
   private void startGame() throws Exception {
-    currentLevelNumber = 1;
+    currentLevelNumber = 2;
     livesLeft = 5;
     gameBallCount = INITIAL_NUM_BALLS;
     scoreManager.resetScore();
