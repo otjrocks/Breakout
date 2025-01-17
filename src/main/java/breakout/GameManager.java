@@ -171,7 +171,7 @@ public class GameManager {
         HEIGHT - GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET - 1),
         paddleWidth, 5,
         GameConfig.PADDLE_SPEED, GameConfig.PADDLE_COLOR);
-    currentLevel = new Level(this, scoreManager, GameConfig.BLOCK_SIZE);
+    currentLevel = new Level(this, GameConfig.BLOCK_SIZE);
     gameShooter = new Shooter(this, GameConfig.SHOOTER_LENGTH, Math.PI / 2, GameConfig.BALL_COLOR);
     gameRoot.getChildren().add(gameText);
   }
@@ -204,8 +204,7 @@ public class GameManager {
   }
 
   private void handleLevelTransitions() throws Exception {
-    if (isPlaying && ballsInPlay == 0
-        && currentLevel.isComplete()) {  // Player has successfully completed the current level
+    if (isPlaying && currentLevel.isComplete()) {  // Player has successfully completed the current level
       livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
