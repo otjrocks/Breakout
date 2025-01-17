@@ -1,15 +1,25 @@
 package breakout;
 
+import static breakout.GameManager.BALL_COLOR;
+import static breakout.GameManager.BALL_RADIUS;
+import static breakout.GameManager.BALL_RELEASE_DELAY;
+import static breakout.GameManager.BALL_SPEED;
+import static breakout.GameManager.MIDDLE_WIDTH;
 import static breakout.Main.HEIGHT;
 import static breakout.Main.WIDTH;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 public class Shooter extends Group {
   public static final int SHOOTER_HEIGHT_OFFSET = 50;
 
+  private final GameManager gameManager;
   private final double SHOOTER_LENGTH;
   private final Color SHOOTER_COLOR;
   private double shooterAngle;
@@ -18,7 +28,8 @@ public class Shooter extends Group {
   private boolean isEnabled;
 
 
-  public Shooter(double shooterLength, double startingAngle, Color shooterColor) {
+  public Shooter(GameManager gameManager, double shooterLength, double startingAngle, Color shooterColor) {
+    this.gameManager = gameManager;
     SHOOTER_LENGTH = shooterLength;
     shooterAngle = startingAngle;
     SHOOTER_COLOR = shooterColor;
@@ -60,6 +71,37 @@ public class Shooter extends Group {
     shooterAngle = angle;
     shooterAim.setEndX((double) WIDTH / 2 + SHOOTER_LENGTH * Math.cos(shooterAngle));
     shooterAim.setEndY(HEIGHT - SHOOTER_HEIGHT_OFFSET - 10 - SHOOTER_LENGTH * Math.sin(shooterAngle));
+  }
+
+  public void handleShooterActions(KeyCode code) {
+    if (code == KeyCode.SPACE) {
+      gameManager.decrementLives();
+      launchBalls();
+      gameManager.setBallsInPlay(gameManager.getGameBallCount());
+      disable();
+    }
+    if (code == KeyCode.RIGHT) {
+      setAngle(getAngle() - Math.PI / 80);
+    }
+    if (code == KeyCode.LEFT) {
+      setAngle(getAngle() + Math.PI / 80);
+    }
+  }
+
+  private void launchBalls() {
+    Timeline addBallsTimeline = new Timeline();
+    addBallsTimeline.setCycleCount(gameManager.getGameBallCount());
+    addBallsTimeline.getKeyFrames()
+        .add(new KeyFrame(Duration.seconds(BALL_RELEASE_DELAY), e -> spawnBall()));
+    addBallsTimeline.play();
+  }
+
+  private void spawnBall() {
+    double startAngle = getAngle();
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, BALL_RADIUS, BALL_SPEED,
+        Math.cos(startAngle), -Math.sin(startAngle));
+    gameManager.addGameBall(ball);
+    gameManager.addChildToGameRoot(ball);
   }
 
 }

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -56,6 +57,54 @@ public class GameManager {
     setupScene();
   }
 
+  public int getGameBallCount() {
+    return gameBallCount;
+  }
+
+  public void increaseGameBallCount() {
+    gameBallCount++;
+  }
+
+  public void decreaseGameBallCount() {
+    gameBallCount--;
+  }
+
+  public int getBallsInPlay() {
+    return ballsInPlay;
+  }
+
+  public void setBallsInPlay(int count) {
+    ballsInPlay = count;
+  }
+
+  public int getLives() {
+    return livesLeft;
+  }
+
+  public void setLives(int newLives) {
+    livesLeft = newLives;
+  }
+
+  public void decrementLives() {
+    livesLeft--;
+  }
+
+  public Iterator<Ball> getGameBallIterator() {
+    return gameBalls.iterator();
+  }
+
+  public void addGameBall(Ball ball) {
+    gameBalls.add(ball);
+  }
+
+  public void addChildToGameRoot(Node child) {
+    gameRoot.getChildren().add(child);
+  }
+
+  public void removeChildFromGameRoot(Node child) {
+    gameRoot.getChildren().remove(child);
+  }
+
   public void step() throws Exception {
     handleLevelTransitions();
     handleGameLogic();
@@ -80,7 +129,7 @@ public class GameManager {
     scoreManager = new ScoreManager();
     gamePaddle = new Paddle(MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
         PADDLE_SPEED, PADDLE_COLOR);
-    gameShooter = new Shooter( SHOOTER_LENGTH, Math.PI / 2, BALL_COLOR);
+    gameShooter = new Shooter( this, SHOOTER_LENGTH, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(scoreManager, BLOCK_SIZE);
     gameRoot.getChildren().add(gameText);
   }
@@ -220,7 +269,7 @@ public class GameManager {
     if (!isPlaying && code == KeyCode.SPACE || !isPlaying && code == KeyCode.R) {
       startGame();
     } else if (isPlaying && ballsInPlay == 0) {
-      handleShooterActions(code);
+      gameShooter.handleShooterActions(code);
     }
   }
 
@@ -239,37 +288,6 @@ public class GameManager {
       paddleWidth -= 5;
       gamePaddle.collapse(5);
     }
-  }
-
-  private void handleShooterActions(KeyCode code) {
-    if (code == KeyCode.SPACE) {
-      livesLeft--;
-      launchBalls();
-      ballsInPlay = gameBallCount;
-      gameShooter.disable();
-    }
-    if (code == KeyCode.RIGHT) {
-      gameShooter.setAngle(gameShooter.getAngle() - Math.PI / 80);
-    }
-    if (code == KeyCode.LEFT) {
-      gameShooter.setAngle(gameShooter.getAngle() + Math.PI / 80);
-    }
-  }
-
-  private void launchBalls() {
-    Timeline addBallsTimeline = new Timeline();
-    addBallsTimeline.setCycleCount(gameBallCount);
-    addBallsTimeline.getKeyFrames()
-        .add(new KeyFrame(Duration.seconds(BALL_RELEASE_DELAY), e -> spawnBall()));
-    addBallsTimeline.play();
-  }
-
-  private void spawnBall() {
-    double startAngle = gameShooter.getAngle();
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, BALL_RADIUS, BALL_SPEED,
-        Math.cos(startAngle), -Math.sin(startAngle));
-    gameBalls.add(ball);
-    gameRoot.getChildren().add(ball);
   }
 
   private void showStartScreen() {
