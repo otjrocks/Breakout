@@ -1,5 +1,8 @@
 package breakout;
 
+import static breakout.Main.HEIGHT;
+import static breakout.Main.WIDTH;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
@@ -19,18 +22,14 @@ public class Level extends Group {
   public static final String IMAGE_PATH = "/images/";
   public static Image[] POWER_UP_IMAGES;
   public static final int POWER_UP_PROBABILITY = 7;  // with probability 1/X place a power-up in an empty space
-  private final int SCREEN_WIDTH;
-  private final int SCREEN_HEIGHT;
   private final int BOTTOM_OFFSET = 2;
   private final int BLOCK_SIZE;
   private final ArrayList<Block> blocks;
   private final Random random;
-  private ScoreManager scoreManager;
+  private final ScoreManager scoreManager;
 
-  public Level(ScoreManager scoreManager, int screenWidth, int screenHeight, int blockSize) {
+  public Level(ScoreManager scoreManager, int blockSize) {
     this.scoreManager = scoreManager;
-    SCREEN_WIDTH = screenWidth;
-    SCREEN_HEIGHT = screenHeight;
     BLOCK_SIZE = blockSize;
     blocks = new ArrayList<>();
     random = new Random();
@@ -68,8 +67,8 @@ public class Level extends Group {
   private void createLevel(int levelNumber) throws Exception {
     blocks.clear();
     Scanner scanner = getScanner(levelNumber);
-    for (int j = 0; j < SCREEN_HEIGHT / BLOCK_SIZE - BOTTOM_OFFSET; j++) {
-      for (int i = 0; i < SCREEN_WIDTH / BLOCK_SIZE; i++) {
+    for (int j = 0; j < HEIGHT / BLOCK_SIZE - BOTTOM_OFFSET; j++) {
+      for (int i = 0; i < WIDTH / BLOCK_SIZE; i++) {
         if (scanner.hasNextInt()) {
           int nextInt = scanner.nextInt();
           if (nextInt > 0) {

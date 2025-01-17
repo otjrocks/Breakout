@@ -27,10 +27,12 @@ public class GameManager {
   public static final int SCORE_MULTIPLIER_TIMEOUT = 5;
   public static final int BLOCK_SCORE = 10;
   public static final int POWERUP_SCORE = 50;
+  public static final int BLOCK_SIZE = 50;
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
   public static final int INITIAL_NUM_BALLS = 3;
   public static final int PADDLE_SPEED = 5;
+  public static final int SHOOTER_LENGTH = 100;
 
   private final Group gameRoot;
   private final Scene gameScene;
@@ -44,7 +46,7 @@ public class GameManager {
   private int currentLevelNumber;
   private int livesLeft = 5;
   private boolean isPlaying = false;
-  private final TextElement gameText = new TextElement(WIDTH, HEIGHT);
+  private final TextElement gameText = new TextElement();
   private final HashSet<KeyCode> activeKeys = new HashSet<>();
   private ScoreManager scoreManager;
 
@@ -78,13 +80,13 @@ public class GameManager {
     scoreManager = new ScoreManager();
     gamePaddle = new Paddle(MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
         PADDLE_SPEED, PADDLE_COLOR);
-    gameShooter = new Shooter(WIDTH, HEIGHT - 50, 100, Math.PI / 2, BALL_COLOR);
-    currentLevel = new Level(scoreManager, WIDTH, HEIGHT, 50);
+    gameShooter = new Shooter( SHOOTER_LENGTH, Math.PI / 2, BALL_COLOR);
+    currentLevel = new Level(scoreManager, BLOCK_SIZE);
     gameRoot.getChildren().add(gameText);
   }
 
   private void startGame() throws Exception {
-    currentLevelNumber = 2;
+    currentLevelNumber = 1;
     livesLeft = 5;
     gameBallCount = INITIAL_NUM_BALLS;
     scoreManager.resetScore();

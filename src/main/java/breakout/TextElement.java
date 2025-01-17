@@ -1,5 +1,8 @@
 package breakout;
 
+import static breakout.Main.HEIGHT;
+import static breakout.Main.WIDTH;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -16,8 +19,8 @@ public class TextElement extends StackPane {
   public static final int BOTTOM_MARGIN = 5;
   private final Text[] texts = new Text[3];  // Store text for top, middle, and bottom
 
-  public TextElement(double screenWidth, double screenHeight) {
-    this.setPrefSize(screenWidth, screenHeight);
+  public TextElement() {
+    this.setPrefSize(WIDTH, HEIGHT);
   }
 
   private Text createText(String message, int size, Color color, boolean bold) {
