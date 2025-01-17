@@ -1,5 +1,6 @@
 package breakout;
 
+import java.util.Iterator;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -115,4 +116,22 @@ public class Ball extends Circle {
     return intersectsLeft || intersectsRight;
   }
 
+  public void handleBlockCollisions(Iterator<Block> blocks) {
+    while (blocks.hasNext()) {
+      Block block = blocks.next();
+      if (isIntersectingBlock(block)) {
+        block.hit();
+        if (isIntersectingLeftOrRight(block)) {
+          updateDirectionX(getDirectionX() * -1);
+        }
+        if (isIntersectingTopOrBottom(block)) {
+          updateDirectionY(getDirectionY() * -1);
+        }
+        break; // break so that ball can't hit two blocks at once
+        // TODO: fix interaction logic
+      }
+    }
+  }
+
 }
+

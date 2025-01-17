@@ -25,8 +25,10 @@ public class Level extends Group {
   private final int BLOCK_SIZE;
   private final ArrayList<Block> blocks;
   private final Random random;
+  private ScoreManager scoreManager;
 
-  public Level(int screenWidth, int screenHeight, int blockSize) {
+  public Level(ScoreManager scoreManager, int screenWidth, int screenHeight, int blockSize) {
+    this.scoreManager = scoreManager;
     SCREEN_WIDTH = screenWidth;
     SCREEN_HEIGHT = screenHeight;
     BLOCK_SIZE = blockSize;
@@ -88,7 +90,7 @@ public class Level extends Group {
     if (shouldAddPowerup) {
       int powerUpIndex = random.nextInt(POWER_UP_TYPES.length);
       String powerUpType = POWER_UP_TYPES[powerUpIndex];
-      Block block = new Block(i * BLOCK_SIZE, j * BLOCK_SIZE, powerUpType, BLOCK_SIZE, 1, POWER_UP_IMAGES[powerUpIndex]); // for now all powerups have 1 health
+      Block block = new Block(scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, powerUpType, BLOCK_SIZE, 1, POWER_UP_IMAGES[powerUpIndex]); // for now all powerups have 1 health
       blocks.add(block);
     }
   }

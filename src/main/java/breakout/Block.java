@@ -18,9 +18,13 @@ public class Block extends Group {
   private final String BLOCK_TYPE;
   private final Text healthText;
   private int health;
+  private ScoreManager scoreManager;
+  private Level currentLevel;
 
-  public Block(int x, int y, String type, double size, int health, Image blockImage) {
+  public Block(ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health, Image blockImage) {
     this(x, y, type, size, health);
+    this.scoreManager = scoreManager;
+    this.currentLevel = currentLevel;
     ImageView imageView = new ImageView(blockImage);
     imageView.setFitHeight(size - BLOCK_IMAGE_OFFSET);
     imageView.setFitWidth(size - BLOCK_IMAGE_OFFSET);
@@ -47,8 +51,8 @@ public class Block extends Group {
     healthText.setY((size + textHeight) / 2); // Adjust for baseline alignment
 
     if (type.equals("default")) {
-      rectangle.setFill(Main.BLOCK_COLOR);
-      rectangle.setStroke(Main.BLOCK_BORDER_COLOR);
+      rectangle.setFill(GameManager.BLOCK_COLOR);
+      rectangle.setStroke(GameManager.BLOCK_BORDER_COLOR);
       rectangle.setStrokeWidth(3);
       this.getChildren().addAll(rectangle, healthText);
     } else {
@@ -92,6 +96,14 @@ public class Block extends Group {
     healthText.setY((TEXT_SIZE + textHeight) / 2);
 
     healthText.setFill(getCurrentColor());
+  }
+
+  public void hit() {
+    updateHealth(getHealth() - 1);
+    scoreManager.incrementScore(GameManager.BLOCK_SCORE);
+    if (getHealth() <= 0) {
+      currentLevel.removeBlock(this);
+    }
   }
 
 
