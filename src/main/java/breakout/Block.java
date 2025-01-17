@@ -2,6 +2,7 @@ package breakout;
 
 import static breakout.GameConfig.SCORE_MULTIPLIER_TIMEOUT;
 
+import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -26,6 +27,7 @@ public class Block extends Group {
   private int health;
   private final ScoreManager scoreManager;
   private final Level currentLevel;
+  private final Random random;
 
   public Block(GameManager gameManager, ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health, Image blockImage) {
     this(gameManager, scoreManager, currentLevel, x, y, type, size, health);
@@ -41,6 +43,7 @@ public class Block extends Group {
     this.gameManager = gameManager;
     this.scoreManager = scoreManager;
     this.currentLevel = currentLevel;
+    this.random = new Random();
     TEXT_SIZE = size;
     BLOCK_TYPE = type;
     INITIAL_HEALTH = health;
@@ -109,6 +112,9 @@ public class Block extends Group {
     updateHealth(getHealth() - 1);
     String blockType = getBlockType();
     scoreManager.incrementScore(blockType.equals("default") ? GameConfig.BLOCK_SCORE : GameConfig.POWERUP_SCORE);
+    if (blockType.equals("mystery")) {
+      handleMysteryBlock();
+    }
     handlePowerUpEffect(blockType);
     if (getHealth() <= 0) {
       currentLevel.removeBlock(this);
@@ -122,6 +128,31 @@ public class Block extends Group {
       case "scoreMultiplier" -> handleScoreMultiplier();
       case "blockDestroyer" -> currentLevel.hitAllDefaultBlocks();
     }
+  }
+
+  private void handleMysteryBlock() {
+    String[] powerUpTypes = Level.POWER_UP_TYPES;
+    int powerUpIndex = random.nextInt(powerUpTypes.length);
+    String powerUpType = powerUpTypes[powerUpIndex];
+    handlePowerUpEffect(powerUpType);
+    setMysteryBlockTextDisplay(powerUpIndex);
+  }
+
+  private void setMysteryBlockTextDisplay(int powerUpIndex) {
+    Text mysteryPowerUpText = new Text(String.valueOf(Level.POWER_UP_DISPLAY_TEXT[powerUpIndex]));
+    mysteryPowerUpText.setFont(Font.font(boldFont.getFamily(), TEXT_SIZE / 10));
+    mysteryPowerUpText.setFill(GameConfig.MYSTERY_BLOCK_DISPLAY_TEXT_COLOR);
+    // I asked ChatGPT for assistance with centering this text based on the block's rectangle dimensions.
+    double textWidth = mysteryPowerUpText.getBoundsInLocal().getWidth();
+    double textHeight = mysteryPowerUpText.getBoundsInLocal().getHeight();
+    mysteryPowerUpText.setX(this.getLayoutX() + (TEXT_SIZE - textWidth) / 2);
+    mysteryPowerUpText.setY(this.getLayoutY() + (TEXT_SIZE + textHeight) / 2);
+    gameManager.addChildToGameRoot(mysteryPowerUpText);
+    Timeline removeMysteryBlockDisplayText = new Timeline();
+    removeMysteryBlockDisplayText.getKeyFrames().add(
+        new KeyFrame(Duration.seconds(GameConfig.MYSTERY_BLOCK_DISPLAY_TIME),
+            e -> gameManager.removeChildFromGameRoot(mysteryPowerUpText)));
+    removeMysteryBlockDisplayText.play();
   }
 
   /*

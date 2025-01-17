@@ -21,8 +21,9 @@ public class Level extends Group {
 
   public static final String LEVEL_FILE_PATH = "levels/";
   public static final String[] POWER_UP_TYPES = new String[]{"addBall", "subtractBall", "scoreMultiplier", "blockDestroyer"};
+  public static final String[] POWER_UP_DISPLAY_TEXT = new String[]{"+1 Ball!", "-1 Ball!", "x2 Score!", "Boom!"};
   public static final String IMAGE_PATH = "/images/";
-  public static Image[] POWER_UP_IMAGES;
+  public static Image[] SPECIAL_BLOCK_IMAGES;
   public static final int POWER_UP_PROBABILITY = 7;  // with probability 1/X place a power-up in an empty space
   private final int BOTTOM_OFFSET = 2;
   private final int BLOCK_SIZE;
@@ -37,11 +38,12 @@ public class Level extends Group {
     BLOCK_SIZE = blockSize;
     blocks = new ArrayList<>();
     random = new Random();
-    POWER_UP_IMAGES = new Image[]{
+    SPECIAL_BLOCK_IMAGES = new Image[]{
         new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "plus.png"))),
         new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "minus.png"))),
         new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "star.png"))),
         new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "tnt.png"))),
+        new Image(Objects.requireNonNull(getClass().getResourceAsStream(IMAGE_PATH + "mystery.png"))),
     };
   }
 
@@ -91,9 +93,14 @@ public class Level extends Group {
   private void createPowerups(int i, int j ) {
     boolean shouldAddPowerup = (random.nextInt(POWER_UP_PROBABILITY) == 0);
     if (shouldAddPowerup) {
-      int powerUpIndex = random.nextInt(POWER_UP_TYPES.length);
-      String powerUpType = POWER_UP_TYPES[powerUpIndex];
-      Block block = new Block(gameManager, scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, powerUpType, BLOCK_SIZE, 1, POWER_UP_IMAGES[powerUpIndex]); // for now all powerups have 1 health
+      int powerUpIndex = random.nextInt(POWER_UP_TYPES.length+1);
+      String specialBlockType;
+      if (powerUpIndex == POWER_UP_TYPES.length) {
+        specialBlockType = "mystery";
+      } else {
+        specialBlockType = POWER_UP_TYPES[powerUpIndex];
+      }
+      Block block = new Block(gameManager, scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, specialBlockType, BLOCK_SIZE, 1, SPECIAL_BLOCK_IMAGES[powerUpIndex]); // for now all powerups have 1 health
       blocks.add(block);
     }
   }
