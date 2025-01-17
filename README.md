@@ -23,9 +23,7 @@ This project implements the game of Breakout with multiple levels.
  * Fonts via https://fonts.google.com/
  * Icons via https://flaticon.com/
  
- * Resources used directly (including AI assistance)
-   * El Capitan spinning beachball GIF by madebyjw.com -- https://gfycat.com/rapidathleticilladopsis
-
+ * I used ChatGPT for certain short code snippets (as commented in my code). Additionally, I used ChatGPT for some level inspiration and designs.
 
 ### Running the Program
 

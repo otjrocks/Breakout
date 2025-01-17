@@ -1,4 +1,4 @@
-# Breakout Plan
+  # Breakout Plan
 ### By: Owen Jennings
 
 ## Interesting Breakout Variants

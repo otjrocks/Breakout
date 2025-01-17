@@ -17,7 +17,7 @@ import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 public class Shooter extends Group {
-  public static final int SHOOTER_HEIGHT_OFFSET = 50;
+  public static final int SHOOTER_HEIGHT_OFFSET = GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET - 1);
 
   private final GameManager gameManager;
   private final double SHOOTER_LENGTH;
@@ -37,7 +37,7 @@ public class Shooter extends Group {
   }
 
   private void initialize() {
-    displayBall = new Ball((double) WIDTH / 2, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, SHOOTER_COLOR, 5, 0, 0, 0);
+    displayBall = new Ball((double) WIDTH / 2, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, SHOOTER_COLOR, BALL_RADIUS, 0, 0, 0);
     shooterAim = new Line(
         (double) WIDTH / 2,
         HEIGHT - SHOOTER_HEIGHT_OFFSET - 10,
@@ -98,7 +98,7 @@ public class Shooter extends Group {
 
   private void spawnBall() {
     double startAngle = getAngle();
-    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - 60, BALL_COLOR, BALL_RADIUS, BALL_SPEED,
+    Ball ball = new Ball(MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, BALL_COLOR, BALL_RADIUS, BALL_SPEED,
         Math.cos(startAngle), -Math.sin(startAngle));
     gameManager.addGameBall(ball);
     gameManager.addChildToGameRoot(ball);
