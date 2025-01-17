@@ -172,7 +172,7 @@ public class GameManager {
               case "addBall" -> gameBallCount++;
               case "subtractBall" -> gameBallCount--;
               case "scoreMultiplier" -> handleScoreMultiplier();
-              case "blockDestroyer" -> handleBlockDestroyer();
+              case "blockDestroyer" -> currentLevel.hitAllDefaultBlocks();
             }
             scoreManager.incrementScore(POWERUP_SCORE);
             currentLevel.removeBlock(block);
@@ -195,20 +195,7 @@ public class GameManager {
     removeScoreMultiplierEffect.play();
   }
 
-  private void handleBlockDestroyer() {
-    Iterator<Block> iterator = currentLevel.getBlocks().iterator();
-    while (iterator.hasNext()) {
-      Block block = iterator.next();
-      if (block.getBlockType().equals("default")) {
-        block.updateHealth(block.getHealth() - 1);
-        scoreManager.incrementScore(BLOCK_SCORE);
-        if (block.getHealth() <= 0) {
-          iterator.remove();
-          currentLevel.removeBlock(block);
-        }
-      }
-    }
-  }
+
 
   private void handlePaddleInteractions() {
     for (Ball ball : gameBalls) {

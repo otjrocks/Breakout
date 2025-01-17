@@ -1,5 +1,6 @@
 package breakout;
 
+import static breakout.GameManager.BLOCK_SCORE;
 import static breakout.Main.HEIGHT;
 import static breakout.Main.WIDTH;
 
@@ -9,6 +10,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
@@ -127,6 +129,21 @@ public class Level extends Group {
   public void removeAllBlocks() {
     this.getChildren().clear();
     blocks.clear();
+  }
+
+  public void hitAllDefaultBlocks() {
+    Iterator<Block> iterator = blocks.iterator();
+    while (iterator.hasNext()) {
+      Block block = iterator.next();
+      if (block.getBlockType().equals("default")) {
+        block.updateHealth(block.getHealth() - 1);
+        scoreManager.incrementScore(BLOCK_SCORE);
+        if (block.getHealth() <= 0) {
+          iterator.remove();
+          removeBlock(block);
+        }
+      }
+    }
   }
 
 
