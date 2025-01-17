@@ -116,9 +116,8 @@ public class Ball extends Circle {
     return intersectsLeft || intersectsRight;
   }
 
-  public void handleBlockCollisions(Iterator<Block> blocks) {
-    while (blocks.hasNext()) {
-      Block block = blocks.next();
+  public void handleBlockCollisions(Level level) {
+    for (Block block : level.getBlocks()) {
       if (isIntersectingBlock(block)) {
         block.hit();
         if (isIntersectingLeftOrRight(block)) {

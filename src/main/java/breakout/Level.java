@@ -72,7 +72,7 @@ public class Level extends Group {
         if (scanner.hasNextInt()) {
           int nextInt = scanner.nextInt();
           if (nextInt > 0) {
-            Block block = new Block(i * BLOCK_SIZE, j * BLOCK_SIZE, "default", BLOCK_SIZE, nextInt);
+            Block block = new Block(scoreManager, this, i * BLOCK_SIZE, j * BLOCK_SIZE, "default", BLOCK_SIZE, nextInt);
             blocks.add(block);
           } else {
             createPowerups(i, j);

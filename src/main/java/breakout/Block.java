@@ -22,9 +22,7 @@ public class Block extends Group {
   private Level currentLevel;
 
   public Block(ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health, Image blockImage) {
-    this(x, y, type, size, health);
-    this.scoreManager = scoreManager;
-    this.currentLevel = currentLevel;
+    this(scoreManager, currentLevel, x, y, type, size, health);
     ImageView imageView = new ImageView(blockImage);
     imageView.setFitHeight(size - BLOCK_IMAGE_OFFSET);
     imageView.setFitWidth(size - BLOCK_IMAGE_OFFSET);
@@ -33,7 +31,9 @@ public class Block extends Group {
     this.getChildren().add(imageView);
   }
 
-  public Block(int x, int y, String type, double size, int health) {
+  public Block(ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health) {
+    this.scoreManager = scoreManager;
+    this.currentLevel = currentLevel;
     TEXT_SIZE = size;
     BLOCK_TYPE = type;
     INITIAL_HEALTH = health;

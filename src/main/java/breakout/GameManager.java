@@ -149,36 +149,15 @@ public class GameManager {
     updateBallPositions();
     handlePaddleInteractions();
     handlePowerupEffects();
-    handleBlockCollisions();
+    for (Ball ball: gameBalls) {
+      ball.handleBlockCollisions(currentLevel);
+    }
   }
 
   private void updateBallPositions() {
     for (Ball ball : gameBalls) {
       ball.bounceOffWall(WIDTH, HEIGHT);
       ball.move(Main.SECOND_DELAY);
-    }
-  }
-
-  private void handleBlockCollisions() {
-    for (Ball ball : gameBalls) {
-      ArrayList<Block> gameBlocks = currentLevel.getBlocks();
-      for (Block block : gameBlocks) {
-        if (ball.isIntersectingBlock(block)) {
-          block.updateHealth(block.getHealth() - 1);
-          scoreManager.incrementScore(BLOCK_SCORE);
-          if (block.getHealth() <= 0) {
-            currentLevel.removeBlock(block);
-          }
-          if (ball.isIntersectingLeftOrRight(block)) {
-            ball.updateDirectionX(ball.getDirectionX() * -1);
-          }
-          if (ball.isIntersectingTopOrBottom(block)) {
-            ball.updateDirectionY(ball.getDirectionY() * -1);
-          }
-          break; // break so that ball can't hit two blocks at once
-          // TODO: fix interaction logic
-        }
-      }
     }
   }
 
