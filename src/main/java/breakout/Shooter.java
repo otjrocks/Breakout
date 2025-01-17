@@ -68,7 +68,13 @@ public class Shooter extends Group {
   }
 
   public void setAngle(double angle) {
-    shooterAngle = angle;
+    if (angle < Math.PI / 30) {
+      shooterAngle = Math.PI / 30;
+    } else if (angle > Math.PI - Math.PI / 30) {
+      shooterAngle = Math.PI - Math.PI / 30;
+    } else {
+      shooterAngle = angle;
+    }
     shooterAim.setEndX((double) WIDTH / 2 + SHOOTER_LENGTH * Math.cos(shooterAngle));
     shooterAim.setEndY(HEIGHT - SHOOTER_HEIGHT_OFFSET - 10 - SHOOTER_LENGTH * Math.sin(shooterAngle));
   }

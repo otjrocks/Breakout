@@ -1,5 +1,6 @@
 package breakout;
 
+import java.util.Random;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -10,10 +11,12 @@ import javafx.scene.shape.Circle;
  */
 public class Ball extends Circle {
 
+  public static final double BALL_COLLISION_ENTROPY_STRENGTH = 0.01;
   private final double BALL_SIZE;
   private double BALL_SPEED;
   private double ballDirectionX;
   private double ballDirectionY;
+  private final Random random = new Random();
 
   public Ball(double x, double y, Color color, double radius, double speed,
       double directionX,
@@ -46,8 +49,8 @@ public class Ball extends Circle {
     ballDirectionY = directionY;
   }
 
-  public void updateSpeed(double speed) {
-    BALL_SPEED = speed;
+  public void increaseSpeed(double amount) {
+    BALL_SPEED += amount;
   }
 
   private void moveX(double elapsedTime) {
@@ -79,9 +82,11 @@ public class Ball extends Circle {
   public void bounceOffWall(int windowWidth, int windowHeight) {
     if (isIntersectingBoundaryX(windowWidth)) {
       updateDirectionX(getDirectionX() * -1);
+      addEntropy();
     }
     if (isIntersectingBoundaryY(windowHeight)) {
       updateDirectionY(getDirectionY() * -1);
+      addEntropy();
     }
   }
 
@@ -131,6 +136,12 @@ public class Ball extends Circle {
         // TODO: fix interaction logic
       }
     }
+  }
+
+  private void addEntropy() {
+    // I asked ChatGPT for assistance in writing this code, which adds entropy to the balls movement, whenever called
+    double randomDeltaY = (random.nextDouble()) * BALL_COLLISION_ENTROPY_STRENGTH; // only add entropy to Y value
+    ballDirectionY += randomDeltaY;
   }
 
 }

@@ -195,6 +195,7 @@ public class GameManager {
       ball.handleBlockCollisions(currentLevel);
       ball.bounceOffWall(WIDTH, HEIGHT);
       ball.move(GameConfig.SECOND_DELAY);
+      ball.increaseSpeed(0.1);
       gamePaddle.handleBallCollision(ball);
       // Remove balls that have reached the floor
       if (ball.isIntersectingFloor(HEIGHT)) {
