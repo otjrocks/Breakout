@@ -1,7 +1,7 @@
 package breakout;
 
-import static breakout.Main.HEIGHT;
-import static breakout.Main.WIDTH;
+import static breakout.GameConfig.HEIGHT;
+import static breakout.GameConfig.WIDTH;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;

@@ -1,7 +1,7 @@
 package breakout;
 
-import static breakout.Main.HEIGHT;
-import static breakout.Main.WIDTH;
+import static breakout.GameConfig.HEIGHT;
+import static breakout.GameConfig.WIDTH;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,32 +10,12 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 
 public class GameManager {
-  public static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
-  public static final Color BLOCK_COLOR = new Color(0.2151, 0.2422, 0.2734, 1);
-  public static final Color BLOCK_BORDER_COLOR = new Color(0.1151, 0.1422, 0.1734, 1);
-  public static final Color PADDLE_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
-  public static final Color TEXT_COLOR = new Color(0, 0.6758, 0.7070, 1);
-
-  public static final double BALL_RELEASE_DELAY = 1.0 / 10;
-  public static final int MIDDLE_WIDTH = WIDTH / 2;
-  public static final int NUM_LEVELS = 2;
-  public static final int SCORE_MULTIPLIER_TIMEOUT = 5;
-  public static final int BLOCK_SCORE = 10;
-  public static final int POWERUP_SCORE = 50;
-  public static final int BLOCK_SIZE = 50;
-  public static final int BALL_RADIUS = 5;
-  public static final int BALL_SPEED = 300;
-  public static final int INITIAL_NUM_BALLS = 3;
-  public static final int PADDLE_SPEED = 5;
-  public static final int SHOOTER_LENGTH = 100;
-
   private final Group gameRoot;
   private final Scene gameScene;
   private final ArrayList<Ball> gameBalls = new ArrayList<>();
-  private int gameBallCount = INITIAL_NUM_BALLS;
+  private int gameBallCount = GameConfig.INITIAL_NUM_BALLS;
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
   private double paddleWidth = 120;
@@ -112,33 +92,37 @@ public class GameManager {
   }
 
   private void setupScene() {
-    initializeGame();
     showStartScreen();
-    gameScene.setOnKeyPressed(e -> {
-      try {
-        activeKeys.add(e.getCode());
-        handleKeyInput(e.getCode());
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
-    });
-    gameScene.setOnKeyReleased(e -> activeKeys.remove(e.getCode()));
+    initializeGame();
+    initializeKeyEventHandlers();
   }
 
 
   private void initializeGame() {
     scoreManager = new ScoreManager();
-    gamePaddle = new Paddle(this, MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
-        PADDLE_SPEED, PADDLE_COLOR);
-    gameShooter = new Shooter( this, SHOOTER_LENGTH, Math.PI / 2, BALL_COLOR);
-    currentLevel = new Level(this, scoreManager, BLOCK_SIZE);
+    gamePaddle = new Paddle(this, GameConfig.MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5 ,
+        GameConfig.PADDLE_SPEED, GameConfig.PADDLE_COLOR);
+    gameShooter = new Shooter( this, GameConfig.SHOOTER_LENGTH, Math.PI / 2, GameConfig.BALL_COLOR);
+    currentLevel = new Level(this, scoreManager, GameConfig.BLOCK_SIZE);
     gameRoot.getChildren().add(gameText);
+  }
+
+  private void initializeKeyEventHandlers() {
+    gameScene.setOnKeyPressed(e -> {
+      try {
+        activeKeys.add(e.getCode());  // store currently held down keys
+        handleKeyInput(e.getCode());
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    });
+    gameScene.setOnKeyReleased(e -> activeKeys.remove(e.getCode()));  // remove keys as they are released
   }
 
   private void startGame() throws Exception {
     currentLevelNumber = 1;
     livesLeft = 5;
-    gameBallCount = INITIAL_NUM_BALLS;
+    gameBallCount = GameConfig.INITIAL_NUM_BALLS;
     scoreManager.resetScore();
     gameText.clearText();
     currentLevel.startLevel(currentLevelNumber);
@@ -156,11 +140,11 @@ public class GameManager {
       if (currentLevelNumber > 1) {
         scoreManager.incrementScore(1000);
       }
-      if (currentLevelNumber > NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
+      if (currentLevelNumber > GameConfig.NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
         showEndScreen(true);
         isPlaying = false;
       }
-      if (currentLevelNumber <= NUM_LEVELS) {  // Start next level for player
+      if (currentLevelNumber <= GameConfig.NUM_LEVELS) {  // Start next level for player
         currentLevel.startLevel(currentLevelNumber);
       }
     }
@@ -181,7 +165,7 @@ public class GameManager {
           "Level: " + currentLevelNumber + " - Balls: " + gameBallCount + " - Lives Remaining: "
               + livesLeft + "\nScore Multiplier: " + scoreManager.getScoreMultiplier()
               + " - Score: " + scoreManager.getScore() + " - High Score: "
-              + scoreManager.getHighScore(), 16, TEXT_COLOR, false);
+              + scoreManager.getHighScore(), 16, GameConfig.TEXT_COLOR, false);
       if (gameBallCount > 0 && ballsInPlay == 0 && !gameShooter.isEnabled()) {
         gameShooter.enable();
       }
@@ -194,7 +178,7 @@ public class GameManager {
       Ball ball = ballIterator.next();
       ball.handleBlockCollisions(currentLevel);
       ball.bounceOffWall(WIDTH, HEIGHT);
-      ball.move(Main.SECOND_DELAY);
+      ball.move(GameConfig.SECOND_DELAY);
       gamePaddle.handleBallCollision(ball);
       // Remove balls that have reached the floor
       if (ball.isIntersectingFloor(HEIGHT)) {
@@ -236,24 +220,24 @@ public class GameManager {
   }
 
   private void showStartScreen() {
-    gameText.setTopText("Brick Breaker", 30, TEXT_COLOR, true);
-    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, BALL_COLOR, false);
-    gameText.setBottomText("Press SPACE to START", 25, TEXT_COLOR, false);
+    gameText.setTopText("Brick Breaker", 30, GameConfig.TEXT_COLOR, true);
+    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, GameConfig.BALL_COLOR, false);
+    gameText.setBottomText("Press SPACE to START", 25, GameConfig.TEXT_COLOR, false);
   }
 
   private void showEndScreen(boolean isWinner) {
     if (isWinner) {
-      gameText.setTopText("Congrats!", 30, TEXT_COLOR, true);
+      gameText.setTopText("Congrats!", 30, GameConfig.TEXT_COLOR, true);
       gameText.setCenterText("You have won the game!\nYour final score was: " + scoreManager.getScore()
               + "\nGame's High Score: " + scoreManager.getHighScore() + "\nThanks for playing!", 20,
-          BALL_COLOR, false);
+          GameConfig.BALL_COLOR, false);
     } else {
-      gameText.setTopText("Oh No!", 30, TEXT_COLOR, true);
+      gameText.setTopText("Oh No!", 30, GameConfig.TEXT_COLOR, true);
       gameText.setCenterText("You ran out of lives or balls and lost!\nYour final score was: "
               + scoreManager.getScore() + "\nHigh Score: " + scoreManager.getHighScore(), 20,
-          BALL_COLOR, false);
+          GameConfig.BALL_COLOR, false);
     }
-    gameText.setBottomText("Press (R) to play again!", 25, TEXT_COLOR, false);
+    gameText.setBottomText("Press (R) to play again!", 25, GameConfig.TEXT_COLOR, false);
     gameRoot.getChildren().remove(gamePaddle);
     gameRoot.getChildren().remove(gameShooter);
     gameRoot.getChildren().remove(currentLevel);

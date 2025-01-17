@@ -1,8 +1,8 @@
 package breakout;
 
-import static breakout.GameManager.BLOCK_SCORE;
-import static breakout.Main.HEIGHT;
-import static breakout.Main.WIDTH;
+import static breakout.GameConfig.BLOCK_SCORE;
+import static breakout.GameConfig.HEIGHT;
+import static breakout.GameConfig.WIDTH;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,8 +1,7 @@
 package breakout;
 
-import static breakout.GameManager.SCORE_MULTIPLIER_TIMEOUT;
+import static breakout.GameConfig.SCORE_MULTIPLIER_TIMEOUT;
 
-import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -59,8 +58,8 @@ public class Block extends Group {
     healthText.setY((size + textHeight) / 2); // Adjust for baseline alignment
 
     if (type.equals("default")) {
-      rectangle.setFill(GameManager.BLOCK_COLOR);
-      rectangle.setStroke(GameManager.BLOCK_BORDER_COLOR);
+      rectangle.setFill(GameConfig.BLOCK_COLOR);
+      rectangle.setStroke(GameConfig.BLOCK_BORDER_COLOR);
       rectangle.setStrokeWidth(3);
       this.getChildren().addAll(rectangle, healthText);
     } else {
@@ -109,7 +108,7 @@ public class Block extends Group {
   public void hit() {
     updateHealth(getHealth() - 1);
     String blockType = getBlockType();
-    scoreManager.incrementScore(blockType.equals("default") ? GameManager.BLOCK_SCORE : GameManager.POWERUP_SCORE);
+    scoreManager.incrementScore(blockType.equals("default") ? GameConfig.BLOCK_SCORE : GameConfig.POWERUP_SCORE);
     handlePowerUpEffect(blockType);
     if (getHealth() <= 0) {
       currentLevel.removeBlock(this);

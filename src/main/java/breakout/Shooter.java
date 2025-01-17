@@ -1,12 +1,12 @@
 package breakout;
 
-import static breakout.GameManager.BALL_COLOR;
-import static breakout.GameManager.BALL_RADIUS;
-import static breakout.GameManager.BALL_RELEASE_DELAY;
-import static breakout.GameManager.BALL_SPEED;
-import static breakout.GameManager.MIDDLE_WIDTH;
-import static breakout.Main.HEIGHT;
-import static breakout.Main.WIDTH;
+import static breakout.GameConfig.BALL_COLOR;
+import static breakout.GameConfig.BALL_RADIUS;
+import static breakout.GameConfig.BALL_RELEASE_DELAY;
+import static breakout.GameConfig.BALL_SPEED;
+import static breakout.GameConfig.MIDDLE_WIDTH;
+import static breakout.GameConfig.HEIGHT;
+import static breakout.GameConfig.WIDTH;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
