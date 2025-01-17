@@ -18,8 +18,8 @@ public class Block extends Group {
   private final String BLOCK_TYPE;
   private final Text healthText;
   private int health;
-  private ScoreManager scoreManager;
-  private Level currentLevel;
+  private final ScoreManager scoreManager;
+  private final Level currentLevel;
 
   public Block(ScoreManager scoreManager, Level currentLevel, int x, int y, String type, double size, int health, Image blockImage) {
     this(scoreManager, currentLevel, x, y, type, size, health);

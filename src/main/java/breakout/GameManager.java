@@ -93,6 +93,10 @@ public class GameManager {
     return gameBalls.iterator();
   }
 
+  public void removeGameBall(Ball ball) {
+    gameBalls.remove(ball);
+  }
+
   public void addGameBall(Ball ball) {
     gameBalls.add(ball);
   }
@@ -127,7 +131,7 @@ public class GameManager {
 
   private void initializeGame() {
     scoreManager = new ScoreManager();
-    gamePaddle = new Paddle(MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
+    gamePaddle = new Paddle(this, MIDDLE_WIDTH - paddleWidth / 2, HEIGHT - 50, paddleWidth, 5,
         PADDLE_SPEED, PADDLE_COLOR);
     gameShooter = new Shooter( this, SHOOTER_LENGTH, Math.PI / 2, BALL_COLOR);
     currentLevel = new Level(scoreManager, BLOCK_SIZE);
@@ -175,7 +179,7 @@ public class GameManager {
   private void handleGameLogic() {
     if (isPlaying) {
       handleInteractions();
-      handlePaddleMovement();
+      gamePaddle.move(activeKeys);
       gameText.setBottomText(
           "Level: " + currentLevelNumber + " - Balls: " + gameBallCount + " - Lives Remaining: "
               + livesLeft + "\nScore Multiplier: " + scoreManager.getScoreMultiplier()
@@ -187,26 +191,21 @@ public class GameManager {
     }
   }
 
-  private void handlePaddleMovement() {
-    if (ballsInPlay > 0) {
-      gamePaddle.move(activeKeys);
-    }
-  }
-
   private void handleInteractions() {
-    removeFallenBalls();
-    updateBallPositions();
     handlePaddleInteractions();
     handlePowerupEffects();
-    for (Ball ball: gameBalls) {
+    Iterator<Ball> ballIterator = getGameBallIterator();
+    while (ballIterator.hasNext()) {
+      Ball ball = ballIterator.next();
       ball.handleBlockCollisions(currentLevel);
-    }
-  }
-
-  private void updateBallPositions() {
-    for (Ball ball : gameBalls) {
       ball.bounceOffWall(WIDTH, HEIGHT);
       ball.move(Main.SECOND_DELAY);
+      // Remove balls that have reached the floor
+      if (ball.isIntersectingFloor(HEIGHT)) {
+        ballIterator.remove();
+        removeChildFromGameRoot(ball);
+        setBallsInPlay(getBallsInPlay() - 1);
+      }
     }
   }
 
@@ -249,17 +248,6 @@ public class GameManager {
   private void handlePaddleInteractions() {
     for (Ball ball : gameBalls) {
       gamePaddle.handleBallCollision(ball);
-    }
-  }
-
-  private void removeFallenBalls() {
-    for (int i = 0; i < gameBalls.size(); i++) {
-      Ball ball = gameBalls.get(i);
-      if (ball.isIntersectingFloor(HEIGHT)) {
-        gameBalls.remove(ball);
-        gameRoot.getChildren().remove(ball);
-        ballsInPlay--;
-      }
     }
   }
 

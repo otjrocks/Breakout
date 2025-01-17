@@ -9,9 +9,11 @@ public class Paddle extends Rectangle {
 
   private final double PADDLE_SPEED;
   private static final double MIN_PADDLE_WIDTH = 50;
+  private final GameManager gameManager;
 
-  public Paddle(double x, double y, double width, double height, double speed, Color color) {
+  public Paddle(GameManager gameManager, double x, double y, double width, double height, double speed, Color color) {
     super(x, y, width, height);
+    this.gameManager = gameManager;
     PADDLE_SPEED = speed;
     this.setFill(color);
     this.setArcHeight(height);
@@ -19,28 +21,26 @@ public class Paddle extends Rectangle {
   }
 
   public void move(Set<KeyCode> activeKeys) {
-    if (activeKeys.contains(KeyCode.RIGHT)) {
-      if (canMoveRight(Main.WIDTH)) {
+    if (gameManager.getBallsInPlay() > 0) {
+      if (activeKeys.contains(KeyCode.RIGHT) && canMoveRight()) {
         move(1);
       }
-    }
-    if (activeKeys.contains(KeyCode.LEFT)) {
-      if (canMoveLeft()) {
+      if (activeKeys.contains(KeyCode.LEFT) && canMoveLeft()) {
         move(-1);
       }
     }
   }
 
-  public void move(double direction) {
+  private void move(double direction) {
     this.setX(this.getX() + PADDLE_SPEED * direction);
   }
 
-  public boolean canMoveLeft() {
+  private boolean canMoveLeft() {
     return (this.getX() - PADDLE_SPEED >= 0);
   }
 
-  public boolean canMoveRight(double width) {
-    return (this.getX() + this.getWidth() + PADDLE_SPEED <= width);
+  private boolean canMoveRight() {
+    return (this.getX() + this.getWidth() + PADDLE_SPEED <= (double) Main.WIDTH);
   }
 
   public boolean isIntersecting(Ball ball) {

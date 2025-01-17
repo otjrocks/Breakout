@@ -1,6 +1,5 @@
 package breakout;
 
-import java.util.Iterator;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -16,7 +15,8 @@ public class Ball extends Circle {
   private double ballDirectionX;
   private double ballDirectionY;
 
-  public Ball(double x, double y, Color color, double radius, double speed, double directionX,
+  public Ball(double x, double y, Color color, double radius, double speed,
+      double directionX,
       double directionY) {
     super(x, y, radius);
     BALL_SIZE = radius;
