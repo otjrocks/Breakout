@@ -24,7 +24,6 @@ public class GameManager {
   private int gameBallCount = 1;
   private int ballsInPlay = 0;
   private Paddle gamePaddle;
-  private double paddleWidth = GameConfig.INITIAL_PADDLE_WIDTH;
   private Shooter gameShooter;
   private Level currentLevel;
   private int currentLevelNumber;
@@ -167,6 +166,7 @@ public class GameManager {
 
   private void initializeGame() {
     scoreManager = new ScoreManager();
+    double paddleWidth = GameConfig.INITIAL_PADDLE_WIDTH;
     gamePaddle = new Paddle(this, GameConfig.MIDDLE_WIDTH - paddleWidth / 2,
         HEIGHT - GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET - 1),
         paddleWidth, 5,
@@ -204,7 +204,8 @@ public class GameManager {
   }
 
   private void handleLevelTransitions() throws Exception {
-    if (isPlaying && currentLevel.isComplete()) {  // Player has successfully completed the current level
+    if (isPlaying
+        && currentLevel.isComplete()) {  // Player has successfully completed the current level
       livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
@@ -236,7 +237,7 @@ public class GameManager {
   private void handleInGameLogic() {
     if (isPlaying) {
       handleBallInteractions();
-      gamePaddle.move(activeKeys);
+      gamePaddle.moveAndHandleExpandAndCollapse(activeKeys);
       gameText.setBottomText(
           "Level: " + currentLevelNumber + " - Balls: " + gameBallCount + " - Lives Remaining: "
               + livesLeft + "\nScore Multiplier: " + scoreManager.getScoreMultiplier()
@@ -290,16 +291,6 @@ public class GameManager {
     }
     if (code == KeyCode.B) {
       gameBallCount++;
-    }
-    if (code == KeyCode.X) {
-      if (gamePaddle.canExpand(10)) {
-        paddleWidth += 10;
-        gamePaddle.expand(10);
-      }
-    }
-    if (code == KeyCode.C) {
-      paddleWidth -= 10;
-      gamePaddle.collapse(10);
     }
   }
 

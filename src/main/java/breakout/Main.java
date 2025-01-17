@@ -33,7 +33,7 @@ public class Main extends Application {
     animation.getKeyFrames()
         .add(new KeyFrame(Duration.seconds(GameConfig.SECOND_DELAY), e -> {
           try {
-            gameManager.step();
+            gameManager.step();  // The main step function for the game, from the game manager
           } catch (Exception ex) {
             throw new RuntimeException(ex);
           }
