@@ -16,7 +16,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
+/**
+ * A class that extends Group and acts as a visualization for where the player will shoot balls on
+ * the screen to start a round in the game
+ */
 public class Shooter extends Group {
+
   public static final int SHOOTER_HEIGHT_OFFSET = GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET - 1);
 
   private final GameManager gameManager;
@@ -27,7 +32,16 @@ public class Shooter extends Group {
   private Line shooterAim;
   private boolean isEnabled;
 
-  public Shooter(GameManager gameManager, double shooterLength, double startingAngle, Color shooterColor) {
+  /**
+   * Create a new shooter
+   *
+   * @param gameManager:   the current game manager
+   * @param shooterLength: the length of the shooter's aim
+   * @param startingAngle: the starting angle for the shooter's aim
+   * @param shooterColor:  the color of the shooter's aim and display ball
+   */
+  public Shooter(GameManager gameManager, double shooterLength, double startingAngle,
+      Color shooterColor) {
     this.gameManager = gameManager;
     SHOOTER_LENGTH = shooterLength;
     shooterAngle = startingAngle;
@@ -35,8 +49,73 @@ public class Shooter extends Group {
     isEnabled = false;
   }
 
+  /**
+   * Enables the shooter, allowing it to be seen and allowing the player to shoot balls
+   */
+  public void enable() {
+    initialize();
+    isEnabled = true;
+  }
+
+  /**
+   * Disables the shooter, removing it from the view and preventing shooting
+   */
+  public void disable() {
+    this.getChildren().removeAll(displayBall, shooterAim);
+    isEnabled = false;
+  }
+
+  /**
+   * Returns if the shooter is enabled
+   *
+   * @return true if enabled, false if disabled
+   */
+  public boolean isEnabled() {
+    return isEnabled;
+  }
+
+  /**
+   * Handle all the shooter actions: shoot, move aim left and move aim right
+   *
+   * @param code: key that is currently pressed
+   */
+  public void handleShooterActions(KeyCode code) {
+    if (isEnabled) {
+      if (code == KeyCode.SPACE) {
+        gameManager.decrementLives();
+        launchBalls();
+        gameManager.setBallsInPlay(gameManager.getGameBallCount());
+        disable();
+      }
+      if (code == KeyCode.RIGHT) {
+        setAngle(getAngle() - Math.PI / 80);
+      }
+      if (code == KeyCode.LEFT) {
+        setAngle(getAngle() + Math.PI / 80);
+      }
+    }
+  }
+
+  private double getAngle() {
+    return shooterAngle;
+  }
+
+  private void setAngle(double angle) {
+    if (angle < Math.PI / 20) {
+      shooterAngle = Math.PI / 20;
+    } else if (angle > Math.PI - Math.PI / 20) {
+      shooterAngle = Math.PI - Math.PI / 20;
+    } else {
+      shooterAngle = angle;
+    }
+    shooterAim.setEndX((double) WIDTH / 2 + SHOOTER_LENGTH * Math.cos(shooterAngle));
+    shooterAim.setEndY(
+        HEIGHT - SHOOTER_HEIGHT_OFFSET - 10 - SHOOTER_LENGTH * Math.sin(shooterAngle));
+  }
+
   private void initialize() {
-    displayBall = new Ball(gameManager, (double) WIDTH / 2, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, SHOOTER_COLOR, BALL_RADIUS, 0, 0, 0);
+    displayBall = new Ball(gameManager, (double) WIDTH / 2, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10,
+        SHOOTER_COLOR, BALL_RADIUS, 0, 0, 0);
     shooterAim = new Line(
         (double) WIDTH / 2,
         HEIGHT - SHOOTER_HEIGHT_OFFSET - 10,
@@ -46,51 +125,6 @@ public class Shooter extends Group {
     displayBall.setFill(SHOOTER_COLOR);
     shooterAim.setStroke(SHOOTER_COLOR);
     this.getChildren().addAll(displayBall, shooterAim);
-  }
-
-  public void enable() {
-    initialize();
-    isEnabled = true;
-  }
-
-  public void disable() {
-    this.getChildren().removeAll(displayBall, shooterAim);
-    isEnabled = false;
-  }
-
-  public boolean isEnabled() {
-    return isEnabled;
-  }
-
-  public double getAngle() {
-    return shooterAngle;
-  }
-
-  public void setAngle(double angle) {
-    if (angle < Math.PI / 20) {
-      shooterAngle = Math.PI / 20;
-    } else if (angle > Math.PI - Math.PI / 20) {
-      shooterAngle = Math.PI - Math.PI / 20;
-    } else {
-      shooterAngle = angle;
-    }
-    shooterAim.setEndX((double) WIDTH / 2 + SHOOTER_LENGTH * Math.cos(shooterAngle));
-    shooterAim.setEndY(HEIGHT - SHOOTER_HEIGHT_OFFSET - 10 - SHOOTER_LENGTH * Math.sin(shooterAngle));
-  }
-
-  public void handleShooterActions(KeyCode code) {
-    if (code == KeyCode.SPACE) {
-      gameManager.decrementLives();
-      launchBalls();
-      gameManager.setBallsInPlay(gameManager.getGameBallCount());
-      disable();
-    }
-    if (code == KeyCode.RIGHT) {
-      setAngle(getAngle() - Math.PI / 80);
-    }
-    if (code == KeyCode.LEFT) {
-      setAngle(getAngle() + Math.PI / 80);
-    }
   }
 
   private void launchBalls() {
@@ -103,7 +137,8 @@ public class Shooter extends Group {
 
   private void spawnBall() {
     double startAngle = getAngle();
-    Ball ball = new Ball(gameManager, MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, BALL_COLOR, BALL_RADIUS, BALL_SPEED,
+    Ball ball = new Ball(gameManager, MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, BALL_COLOR,
+        BALL_RADIUS, BALL_SPEED,
         Math.cos(startAngle), -Math.sin(startAngle));
     gameManager.addGameBall(ball);
     gameManager.addChildToGameRoot(ball);
