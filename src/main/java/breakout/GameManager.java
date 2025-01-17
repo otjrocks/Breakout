@@ -6,14 +6,11 @@ import static breakout.Main.WIDTH;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 public class GameManager {
   public static final Color BALL_COLOR = new Color(0.9297, 0.9297, 0.9297, 1);
@@ -153,32 +150,32 @@ public class GameManager {
 
   private void handleLevelTransitions() throws Exception {
     if (isPlaying && ballsInPlay == 0
-        && currentLevel.isComplete()) {  // Current level completed with lives remaining
+        && currentLevel.isComplete()) {  // Player has successfully completed the current level
       livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
         scoreManager.incrementScore(1000);
       }
-      if (currentLevelNumber > NUM_LEVELS && isPlaying) {
+      if (currentLevelNumber > NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
         showEndScreen(true);
         isPlaying = false;
       }
-      if (currentLevelNumber <= NUM_LEVELS) {
+      if (currentLevelNumber <= NUM_LEVELS) {  // Start next level for player
         currentLevel.startLevel(currentLevelNumber);
       }
     }
 
     if (ballsInPlay == 0 && livesLeft <= 0 || ballsInPlay == 0 && gameBallCount
-        == 0) {  // Player ran out of lives and all balls have fallen or player has run out of balls
-      currentLevel.removeAllBlocks();
-      showEndScreen(false);
+        == 0) {  // Player has run out of lives and all balls have fallen OR player has run out of balls
+      currentLevel.removeAllBlocks();  // clear remaining blocks off screen
+      showEndScreen(false);  // show failure screen
       isPlaying = false;
     }
   }
 
   private void handleGameLogic() {
     if (isPlaying) {
-      handleInteractions();
+      handleBallInteractions();
       gamePaddle.move(activeKeys);
       gameText.setBottomText(
           "Level: " + currentLevelNumber + " - Balls: " + gameBallCount + " - Lives Remaining: "
@@ -191,7 +188,7 @@ public class GameManager {
     }
   }
 
-  private void handleInteractions() {
+  private void handleBallInteractions() {
     Iterator<Ball> ballIterator = getGameBallIterator();
     while (ballIterator.hasNext()) {
       Ball ball = ballIterator.next();
@@ -227,12 +224,14 @@ public class GameManager {
       gameBallCount++;
     }
     if (code == KeyCode.X) {
-      paddleWidth += 5;
-      gamePaddle.expand(5);
+      if (gamePaddle.canExpand(10)) {
+        paddleWidth += 10;
+        gamePaddle.expand(10);
+      }
     }
     if (code == KeyCode.C) {
-      paddleWidth -= 5;
-      gamePaddle.collapse(5);
+      paddleWidth -= 10;
+      gamePaddle.collapse(10);
     }
   }
 

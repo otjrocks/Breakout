@@ -106,6 +106,7 @@ public class Level extends Group {
   }
 
   public void startLevel(int levelNumber) throws Exception {
+    removeAllBlocks();
     createLevel(levelNumber);
     initialize();
   }

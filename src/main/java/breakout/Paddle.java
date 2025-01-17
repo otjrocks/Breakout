@@ -61,10 +61,15 @@ public class Paddle extends Rectangle {
     }
   }
 
-  public void expand(double x) {
-    double expandAmount = Math.min(x, Main.WIDTH);
-    this.setWidth(this.getWidth() + expandAmount);
-    this.setX(this.getX() - expandAmount / 2);
+  public void expand(double changeAmount) {
+    if (canExpand(changeAmount)) {
+      this.setWidth(this.getWidth() + changeAmount);
+      this.setX(this.getX() - changeAmount / 2);
+    }
+  }
+
+  public boolean canExpand(double changeAmount) {
+    return (this.getWidth() + changeAmount < Main.WIDTH);
   }
 
   public void collapse(double x) {
