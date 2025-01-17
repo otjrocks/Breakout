@@ -25,6 +25,8 @@ public class GameConfig {
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 300;
   public static final int INITIAL_NUM_BALLS = 3;
+  public static final int INITIAL_NUM_LIVES = 5;
+  public static final double INITIAL_PADDLE_WIDTH = 120;
   public static final int PADDLE_SPEED = 5;
   public static final int SHOOTER_LENGTH = 100;
 }
