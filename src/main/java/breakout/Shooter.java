@@ -8,6 +8,8 @@ import static breakout.GameConfig.MIDDLE_WIDTH;
 import static breakout.GameConfig.HEIGHT;
 import static breakout.GameConfig.WIDTH;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -31,6 +33,8 @@ public class Shooter extends Group {
   private Ball displayBall;
   private Line shooterAim;
   private boolean isEnabled;
+  private final List<Ball> balls = new ArrayList<>();
+  private final Timeline launchBallsTimeline = new Timeline();
 
   /**
    * Create a new shooter
@@ -83,7 +87,7 @@ public class Shooter extends Group {
     if (isEnabled) {
       if (code == KeyCode.SPACE) {
         gameManager.decrementLives();
-        launchBalls();
+        spawnBallsAndStartLaunchTimeline();
         gameManager.setBallsInPlay(gameManager.getGameBallCount());
         disable();
       }
@@ -127,21 +131,43 @@ public class Shooter extends Group {
     this.getChildren().addAll(displayBall, shooterAim);
   }
 
-  private void launchBalls() {
-    Timeline addBallsTimeline = new Timeline();
-    addBallsTimeline.setCycleCount(gameManager.getGameBallCount());
-    addBallsTimeline.getKeyFrames()
-        .add(new KeyFrame(Duration.seconds(BALL_RELEASE_DELAY), e -> spawnBall()));
-    addBallsTimeline.play();
+
+  private void spawnBallsAndStartLaunchTimeline() {
+    clearBallLaunchingTimeline();
+    addBallsForNextRound();
+    // Timeline to set the direction balls based on the cannon angle when shot.
+    launchBallsTimeline.setCycleCount(gameManager.getGameBallCount());
+    launchBallsTimeline.getKeyFrames().add(
+        new KeyFrame(Duration.seconds(BALL_RELEASE_DELAY), e -> setCurrentBallIntoMotion()));
+    launchBallsTimeline.play();
   }
 
-  private void spawnBall() {
-    double startAngle = getAngle();
-    Ball ball = new Ball(gameManager, MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, BALL_COLOR,
-        BALL_RADIUS, BALL_SPEED,
-        Math.cos(startAngle), -Math.sin(startAngle));
-    gameManager.addGameBall(ball);
-    gameManager.addChildToGameRoot(ball);
+  private void clearBallLaunchingTimeline() {
+    // ensure removal of any previous balls and keyframes that
+    // did not fire in case shooter was stopped in the middle of ball launching.
+    balls.clear();
+    launchBallsTimeline.getKeyFrames().clear();  // clear all existing keyframes
+    launchBallsTimeline.stop();
+  }
+
+  private void addBallsForNextRound() {
+    balls.clear();
+    for (int i = 0; i < gameManager.getGameBallCount(); i++) {
+      Ball ball = new Ball(gameManager, MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, BALL_COLOR,
+          BALL_RADIUS, BALL_SPEED, 0, 0);
+      gameManager.addGameBall(ball);
+      gameManager.addChildToGameRoot(ball);
+      balls.add(ball); // Add the ball to the list
+    }
+  }
+
+  private void setCurrentBallIntoMotion() {
+    if (!balls.isEmpty()) {
+      Ball ball = balls.removeFirst();
+      double startAngle = getAngle();
+      ball.updateDirectionX(Math.cos(startAngle));
+      ball.updateDirectionY(-Math.sin(startAngle));
+    }
   }
 
 }

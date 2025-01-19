@@ -228,7 +228,8 @@ public class GameManager {
 
   private void checkPlayerHasCompletedLevel() throws Exception {
     if (isPlaying
-        && currentLevel.isComplete()) {  // Player has successfully completed the current level
+        && currentLevel.isComplete()) { // Player has successfully completed the current level
+      removeAllBallsFromPlay(getGameBallIterator()); // remove all remaining balls from previous level
       livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
@@ -275,12 +276,16 @@ public class GameManager {
       Ball ball = ballIterator.next();
       ball.bounceAndHandleCollisions(GameConfig.SECOND_DELAY);
       gamePaddle.handleBallCollision(ball);
-      // Remove balls that have reached the floor
-      if (ball.isIntersectingFloor()) {
-        ballIterator.remove();
-        removeChildFromGameRoot(ball);
-        setBallsInPlay(getBallsInPlay() - 1);
-      }
+      removeBallIfIntersectingFloor(ball, ballIterator);
+    }
+  }
+
+  private void removeBallIfIntersectingFloor(Ball ball, Iterator<Ball> ballIterator) {
+    // Remove balls that have reached the floor
+    if (ball.isIntersectingFloor()) {
+      ballIterator.remove();
+      removeChildFromGameRoot(ball);
+      setBallsInPlay(getBallsInPlay() - 1);
     }
   }
 
@@ -302,6 +307,17 @@ public class GameManager {
     }
     if (code == KeyCode.B) {
       gameBallCount++;
+    }
+    if (code == KeyCode.S) {
+      removeAllBallsFromPlay(getGameBallIterator());
+    }
+  }
+
+  private void removeAllBallsFromPlay(Iterator<Ball> ballIterator) {
+    ballsInPlay = 0;
+    while (ballIterator.hasNext()) {
+      removeChildFromGameRoot(ballIterator.next());
+      ballIterator.remove();
     }
   }
 
