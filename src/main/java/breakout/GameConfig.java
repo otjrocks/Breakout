@@ -36,4 +36,24 @@ public class GameConfig {
   public static final int PADDLE_SPEED = 8;
   public static final int SHOOTER_LENGTH = 100;
   public static final double MYSTERY_BLOCK_DISPLAY_TEXT_TIME = 3;
+
+  public static final String gameRulesString = """
+      How to Play: You begin each level with a certain number of balls and lives. To start one of your lives, use the left and right arrow keys to move the ball shooter's aim. When you have your aim in the desired position, press the space bar to start your current life. The shooter will shoot balls until you run out of balls. While your balls are in motion, you can use the arrow keys to move your paddle. The paddle allows you to bounce your balls back into the game area. Everytime a ball hits a block its health will decrease by 1. A mystery block will randomly give you a power up. You can receive power ups through randomly placed mystery or power up blocks.\n 
+      The power ups have the following effects:
+      - Add 1 ball to your next life's shooter.
+      - Remove 1 ball from your next life's shooter.
+      - Temporarily multiply all points gained by 2.
+      - Destroy 1 hit from all blocks in the level.\n
+      You lose the game when your run out of lives or balls in a level, or the blocks reach the ground before you destroy them (in levels with falling blocks).\n
+      You can using these cheat codes if you are struggling with the game:
+      - 0: Return to the this home screen.
+      - 1-9: Switch from your current level to the level specified.
+      - X: Expand the length of your paddle.
+      - C: Contract the size of your paddle.
+      - L: Give +1 life, allowing you to use the shooter an additional time.
+      - B: Give +1 ball, which can be used if you have a life remaining.
+      - V: Take a ball away from your shooter. 
+      - S: Clear all the balls currently in play. If you have a life and balls remaining, you can reshoot with the shooter. This can be useful if the ball gets stuck somewhere in the level.\n
+      In game, view the level number, your current score, score multiplier, lives, and balls in your shooter on the bottom of the screen.
+      P.S: Be Careful! As time progresses in your life, the balls will begin to speed up. Balls will also slightly change their path as they hit walls.""";
 }

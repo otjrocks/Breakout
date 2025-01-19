@@ -1,6 +1,7 @@
 package breakout;
 
 import static breakout.GameConfig.HEIGHT;
+import static breakout.GameConfig.gameRulesString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -207,6 +208,7 @@ public class GameManager {
     gameText.clearText();
     currentLevel.startLevel(currentLevelNumber);
     gameBallCount = currentLevel.getStartingBalls();
+    gamePaddle.setX(GameConfig.MIDDLE_WIDTH - GameConfig.INITIAL_PADDLE_WIDTH / 2);
     gameRoot.getChildren().add(gamePaddle);
     gameRoot.getChildren().add(gameShooter);
     gameRoot.getChildren().add(currentLevel);
@@ -221,7 +223,7 @@ public class GameManager {
 
   private void checkPlayersOutOfLivesOrBalls() {
     if (ballsInPlay == 0 && livesLeft <= 0 || ballsInPlay == 0 && gameBallCount
-        == 0) {  // Player has run out of lives and all balls have fallen OR player has run out of balls
+        <= 0) {  // Player has run out of lives and all balls have fallen OR player has run out of balls
       endGameAndShowEndScreen(false, "You ran out of lives or balls and lost!");
     }
   }
@@ -241,8 +243,7 @@ public class GameManager {
     if (!isPlaying) {
       startGame();
     }
-    removeAllBallsFromPlay(getGameBallIterator()); // remove all remaining balls from previous level
-    livesLeft = 5;
+    removeAllBallsFromPlay(); // remove all remaining balls from previous level
     if (levelNumber
         > GameConfig.NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
       endGameAndShowEndScreen(true, "You have won the game!");
@@ -258,7 +259,7 @@ public class GameManager {
       handleBallInteractions();
       gamePaddle.moveAndHandleExpandAndCollapse(activeKeys);
       gameText.setBottomText(
-          "Level: " + currentLevelNumber + " - Balls: " + gameBallCount + " - Lives Remaining: "
+          "Level: " + currentLevelNumber + " - Balls in Shooter: " + gameBallCount + " - Lives Remaining: "
               + livesLeft + "\nScore Multiplier: " + scoreManager.getScoreMultiplier()
               + " - Score: " + scoreManager.getScore() + " - High Score: "
               + scoreManager.getHighScore(), 16, GameConfig.TEXT_COLOR, false);
@@ -312,8 +313,8 @@ public class GameManager {
     switch (code) {
       case L -> livesLeft++;
       case B -> gameBallCount++;
-      case V -> gameBallCount--;
-      case S -> removeAllBallsFromPlay(getGameBallIterator());
+      case V -> decreaseGameBallCount();
+      case S -> removeAllBallsFromPlay();
     }
     handleLevelTransitionCheatCodes(code);
   }
@@ -322,6 +323,11 @@ public class GameManager {
     // reset score whenever the cheat code is used to skip to a new level
     // this prevents level transition cheat code from being used to "farm" high score
     switch (code) {
+      case DIGIT0 -> {
+        removeGameElementsFromRoot();
+        showStartScreen();
+        isPlaying = false;
+      }
       case DIGIT1 -> transitionLevelAndResetScore(1);
       case DIGIT2 -> transitionLevelAndResetScore(2);
       case DIGIT3 -> transitionLevelAndResetScore(3);
@@ -339,7 +345,8 @@ public class GameManager {
     startNewLevelOrShowWinScreen(levelNumber);
   }
 
-  private void removeAllBallsFromPlay(Iterator<Ball> ballIterator) {
+  private void removeAllBallsFromPlay() {
+    Iterator<Ball> ballIterator = getGameBallIterator();
     ballsInPlay = 0;
     while (ballIterator.hasNext()) {
       removeChildFromGameRoot(ballIterator.next());
@@ -357,24 +364,24 @@ public class GameManager {
 
 
   private void showStartScreen() {
-    gameText.setTopText("Brick Breaker", 30, GameConfig.TEXT_COLOR, true);
-    gameText.setCenterText("RULES...\nRules continues\nTODO: add rules", 20, GameConfig.BALL_COLOR,
-        false);
-    gameText.setBottomText("Press SPACE to START", 25, GameConfig.TEXT_COLOR, false);
+    gameText.setTopText("BREAKOUT GAME\nBy: Owen Jennings", 24, GameConfig.TEXT_COLOR, true);
+    gameText.setCenterText(gameRulesString, 16, GameConfig.BALL_COLOR, false);
+    gameText.setBottomText("Press SPACE to START", 22, GameConfig.TEXT_COLOR, false);
   }
 
   private void showEndScreen(boolean isWinner, String message) {
     if (isWinner) {
-      gameText.setTopText("Congrats!", 30, GameConfig.TEXT_COLOR, true);
-      gameText.setCenterText(
-          message, 20,
-          GameConfig.BALL_COLOR, false);
+      gameText.setTopText("Congrats!\nYou won!", 30, GameConfig.TEXT_COLOR, true);
     } else {
-      gameText.setTopText("Oh No!", 30, GameConfig.TEXT_COLOR, true);
-      gameText.setCenterText(message, 20,
-          GameConfig.BALL_COLOR, false);
+      gameText.setTopText("Oh No!\nYou lost!", 30, GameConfig.TEXT_COLOR, true);
     }
+    gameText.setCenterText(message, 20, GameConfig.BALL_COLOR, false);
     gameText.setBottomText("Press (R) to play again!", 25, GameConfig.TEXT_COLOR, false);
+    removeGameElementsFromRoot();
+  }
+
+  private void removeGameElementsFromRoot() {
+    removeAllBallsFromPlay();
     gameRoot.getChildren().remove(gamePaddle);
     gameRoot.getChildren().remove(gameShooter);
     gameRoot.getChildren().remove(currentLevel);
