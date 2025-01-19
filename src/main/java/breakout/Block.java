@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -22,7 +23,6 @@ import javafx.util.Duration;
  * @author Owen Jennings
  */
 public class Block extends Group {
-
   private static final String GAME_FONT_PATH = "/fonts/";
   private static final Font boldFont = Font.loadFont(
       TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), 12);
@@ -98,7 +98,8 @@ public class Block extends Group {
       healthText.setY((size + textHeight) / 2); // Adjust for baseline alignment
       rectangle.setFill(GameConfig.BLOCK_COLOR);
       rectangle.setStroke(GameConfig.BLOCK_BORDER_COLOR);
-      rectangle.setStrokeWidth(3);
+      rectangle.setStrokeType(StrokeType.INSIDE);
+      rectangle.setStrokeWidth(2);
       this.getChildren().addAll(rectangle, healthText);
     } else {
       rectangle.setFill(Color.rgb(0, 0, 0, 0));

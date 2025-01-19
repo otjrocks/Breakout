@@ -33,7 +33,7 @@ public class Level extends Group {
   public static final String[] POWER_UP_DISPLAY_TEXT = new String[]{"+1 Ball!", "-1 Ball!",
       "x2 Score!", "Boom!"}; // Display text corresponding to each power up
   public static final String IMAGE_PATH = "/images/";
-  public static final int POWER_UP_PROBABILITY = 7;  // with probability 1/X place a power-up in an empty space
+  public static final int POWER_UP_PROBABILITY = 6;  // with probability 1/X place a power-up in an empty space
   public static final int BOTTOM_OFFSET = 2; // number of block heights on the bottom of screen that are not part of the level
   public static Image[] SPECIAL_BLOCK_IMAGES;
   private final int BLOCK_SIZE;
