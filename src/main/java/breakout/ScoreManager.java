@@ -58,12 +58,12 @@ public class ScoreManager {
   }
 
   /**
-   * Set the score multiplier value
+   * Set the score multiplier value. Ensures that score multiplier >= 1
    *
    * @param scoreMultiplier: new score multiplier value
    */
   public void setScoreMultiplier(int scoreMultiplier) {
-    this.scoreMultiplier = scoreMultiplier;
+    this.scoreMultiplier = Math.max(1, scoreMultiplier);
   }
 
   /**

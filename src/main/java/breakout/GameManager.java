@@ -222,8 +222,9 @@ public class GameManager {
   }
 
   private void checkPlayersOutOfLivesOrBalls() {
-    if (ballsInPlay == 0 && livesLeft <= 0 || ballsInPlay == 0 && gameBallCount
-        <= 0) {  // Player has run out of lives and all balls have fallen OR player has run out of balls
+    if ((ballsInPlay == 0 && livesLeft <= 0) || (ballsInPlay == 0 && gameBallCount
+        <= 0)) {
+      // Player has run out of lives and all balls have fallen OR player has run out of balls
       endGameAndShowEndScreen(false, "You ran out of lives or balls and lost!");
     }
   }
@@ -243,6 +244,7 @@ public class GameManager {
     if (!isPlaying) {
       startGame();
     }
+    livesLeft = 5;
     removeAllBallsFromPlay(); // remove all remaining balls from previous level
     if (levelNumber
         > GameConfig.NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
@@ -342,6 +344,7 @@ public class GameManager {
 
   private void transitionLevelAndResetScore(int levelNumber) throws Exception {
     scoreManager.resetScore();
+    currentLevelNumber = levelNumber;
     startNewLevelOrShowWinScreen(levelNumber);
   }
 
@@ -365,8 +368,8 @@ public class GameManager {
 
   private void showStartScreen() {
     gameText.setTopText("BREAKOUT GAME\nBy: Owen Jennings", 24, GameConfig.TEXT_COLOR, true);
-    gameText.setCenterText(gameRulesString, 16, GameConfig.BALL_COLOR, false);
-    gameText.setBottomText("Press SPACE to START", 22, GameConfig.TEXT_COLOR, false);
+    gameText.setCenterText(gameRulesString, 15, GameConfig.BALL_COLOR, false);
+    gameText.setBottomText("Press SPACE to START", 18, GameConfig.TEXT_COLOR, false);
   }
 
   private void showEndScreen(boolean isWinner, String message) {
