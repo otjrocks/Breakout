@@ -30,7 +30,7 @@ public class GameManager {
   private int livesLeft = GameConfig.INITIAL_NUM_LIVES;
   private boolean isPlaying = false;
   private boolean isFirstRound = true;
-  private TextElement gameText = new TextElement();
+  private final TextElement gameText = new TextElement();
   private final HashSet<KeyCode> activeKeys = new HashSet<>();
   private ScoreManager scoreManager;
 
@@ -229,20 +229,27 @@ public class GameManager {
   private void checkPlayerHasCompletedLevel() throws Exception {
     if (isPlaying
         && currentLevel.isComplete()) { // Player has successfully completed the current level
-      removeAllBallsFromPlay(getGameBallIterator()); // remove all remaining balls from previous level
-      livesLeft = 5;
       currentLevelNumber++;
       if (currentLevelNumber > 1) {
         scoreManager.incrementScore(1000);
       }
-      if (currentLevelNumber
-          > GameConfig.NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
-        endGameAndShowEndScreen(true, "You have won the game!");
-      }
-      if (currentLevelNumber <= GameConfig.NUM_LEVELS) {  // Start next level for player
-        currentLevel.startLevel(currentLevelNumber);
-        gameBallCount = currentLevel.getStartingBalls();
-      }
+      startNewLevelOrShowWinScreen(currentLevelNumber);
+    }
+  }
+
+  private void startNewLevelOrShowWinScreen(int levelNumber) throws Exception {
+    if (!isPlaying) {
+      startGame();
+    }
+    removeAllBallsFromPlay(getGameBallIterator()); // remove all remaining balls from previous level
+    livesLeft = 5;
+    if (levelNumber
+        > GameConfig.NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
+      endGameAndShowEndScreen(true, "You have won the game!");
+    }
+    if (levelNumber <= GameConfig.NUM_LEVELS) {  // Start next level for player
+      currentLevel.startLevel(levelNumber);
+      gameBallCount = currentLevel.getStartingBalls();
     }
   }
 
@@ -301,16 +308,35 @@ public class GameManager {
     }
   }
 
-  private void handleCheatCodes(KeyCode code) {
-    if (code == KeyCode.L) {
-      livesLeft++;
+  private void handleCheatCodes(KeyCode code) throws Exception {
+    switch (code) {
+      case L -> livesLeft++;
+      case B -> gameBallCount++;
+      case V -> gameBallCount--;
+      case S -> removeAllBallsFromPlay(getGameBallIterator());
     }
-    if (code == KeyCode.B) {
-      gameBallCount++;
+    handleLevelTransitionCheatCodes(code);
+  }
+
+  private void handleLevelTransitionCheatCodes(KeyCode code) throws Exception {
+    // reset score whenever the cheat code is used to skip to a new level
+    // this prevents level transition cheat code from being used to "farm" high score
+    switch (code) {
+      case DIGIT1 -> transitionLevelAndResetScore(1);
+      case DIGIT2 -> transitionLevelAndResetScore(2);
+      case DIGIT3 -> transitionLevelAndResetScore(3);
+      case DIGIT4 -> transitionLevelAndResetScore(4);
+      case DIGIT5 -> transitionLevelAndResetScore(5);
+      case DIGIT6 -> transitionLevelAndResetScore(6);
+      case DIGIT7 -> transitionLevelAndResetScore(7);
+      case DIGIT8 -> transitionLevelAndResetScore(8);
+      case DIGIT9 -> transitionLevelAndResetScore(9);
     }
-    if (code == KeyCode.S) {
-      removeAllBallsFromPlay(getGameBallIterator());
-    }
+  }
+
+  private void transitionLevelAndResetScore(int levelNumber) throws Exception {
+    scoreManager.resetScore();
+    startNewLevelOrShowWinScreen(levelNumber);
   }
 
   private void removeAllBallsFromPlay(Iterator<Ball> ballIterator) {
@@ -322,7 +348,6 @@ public class GameManager {
   }
 
   private void endGameAndShowEndScreen(boolean isWinner, String message) {
-    currentLevel.removeAllBlocks();
     showEndScreen(isWinner, message +
         "\nYour final score was: "
         + scoreManager.getScore() + "\nHigh Score: "
