@@ -2,7 +2,7 @@ Game File Format:
   X.txt - Level Number X
   Number of Balls (int)
   Gravity/Block falling Enabled (boolean true/false)
-  Block configuration (12x14 grid) with numbers indicating block health/hitpoints.
+  Block configuration (12x16 grid) with numbers indicating block health/hitpoints.
   Place a 0 if you do not want a block in a given position. Note, empty spaces will be filled with power ups/mystery blocks randomly.
 
 

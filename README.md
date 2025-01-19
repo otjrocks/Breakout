@@ -1,10 +1,6 @@
 # breakout
 ## By: Owen Jennings
 
-
-DO NO FORK THIS REPOSITORY, clone it directly to your computer.
-
-
 This project implements the game of Breakout with multiple levels.
 
 ### Timeline
@@ -27,7 +23,7 @@ This project implements the game of Breakout with multiple levels.
 
 ### Running the Program
 
- * Main class:
+ * Main class: Main
 
  * Data files needed: 
 
