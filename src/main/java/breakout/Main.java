@@ -15,6 +15,7 @@ import javafx.util.Duration;
  * @author Owen Jennings
  */
 public class Main extends Application {
+
   private final Group root = new Group();
 
   /**

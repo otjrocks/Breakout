@@ -46,9 +46,10 @@ public class Level extends Group {
 
   /**
    * Create a level and initialize all block image files
+   *
    * @param gameManager: the Game Manager object containing all the game information and variables
-   * @param blockSize: the size of blocks to be created within a level. Blocks are squares with dimensions
-   *                 blockSize X blockSize
+   * @param blockSize:   the size of blocks to be created within a level. Blocks are squares with
+   *                     dimensions blockSize X blockSize
    */
   public Level(GameManager gameManager, int blockSize) {
     this.gameManager = gameManager;
@@ -69,9 +70,10 @@ public class Level extends Group {
   }
 
   /**
-   * Start the level with the index levelNumber.
-   * Remove all blocks from previously loaded level, if it exists
-   * Initializes all newly created blocks from level file and adds them to the group object
+   * Start the level with the index levelNumber. Remove all blocks from previously loaded level, if
+   * it exists Initializes all newly created blocks from level file and adds them to the group
+   * object
+   *
    * @param levelNumber: The level you wish to load
    * @throws Exception: any exceptions thrown while opening or loading the level's text file
    */
@@ -83,8 +85,9 @@ public class Level extends Group {
 
   /**
    * Check if all the default blocks have been removed from a level
-   * @return true if all default blocks are destroyed (even if some powerups still exist)
-   * and false if any default blocks remain on a level
+   *
+   * @return true if all default blocks are destroyed (even if some powerups still exist) and false
+   * if any default blocks remain on a level
    */
   public boolean isComplete() {
     for (Block block : blocks) {
@@ -97,6 +100,7 @@ public class Level extends Group {
 
   /**
    * Get blocks remaining in a level.
+   *
    * @return a List of all blocks remaining in a level
    */
   public List<Block> getBlocks() {
@@ -105,6 +109,7 @@ public class Level extends Group {
 
   /**
    * Remove a block from a level
+   *
    * @param block: The block you wish to remove from the current level
    */
   public void removeBlock(Block block) {
@@ -121,8 +126,8 @@ public class Level extends Group {
   }
 
   /**
-   * Hit all default blocks one time (used for block destroyer power up)
-   * Handle score updates and removal of blocks that have been destroyed completely
+   * Hit all default blocks one time (used for block destroyer power up) Handle score updates and
+   * removal of blocks that have been destroyed completely
    */
   public void hitAllDefaultBlocks() {
     Iterator<Block> iterator = blocks.iterator();
@@ -141,6 +146,7 @@ public class Level extends Group {
 
   /**
    * Get the total number of starting blocks for a level
+   *
    * @return the starting block count
    */
   public int getStartingBalls() {

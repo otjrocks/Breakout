@@ -260,7 +260,8 @@ public class GameManager {
       handleBallInteractions();
       gamePaddle.moveAndHandleExpandAndCollapse(activeKeys);
       gameText.setBottomText(
-          "Level: " + currentLevelNumber + " - Balls in Shooter: " + gameBallCount + " - Lives Remaining: "
+          "Level: " + currentLevelNumber + " - Balls in Shooter: " + gameBallCount
+              + " - Lives Remaining: "
               + livesLeft + "\nScore Multiplier: " + scoreManager.getScoreMultiplier()
               + " - Score: " + scoreManager.getScore() + " - High Score: "
               + scoreManager.getHighScore(), 16, GameConfig.TEXT_COLOR, false);

@@ -16,9 +16,12 @@ import javafx.scene.text.TextAlignment;
  * @author Owen Jennings
  */
 public class TextElement extends StackPane {
+
   private static final String GAME_FONT_PATH = "/fonts/";
-  private static final Font regularFont = Font.loadFont(TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf"), 12);
-  private static final Font boldFont = Font.loadFont(TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), 12);
+  private static final Font regularFont = Font.loadFont(
+      TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Regular.ttf"), 12);
+  private static final Font boldFont = Font.loadFont(
+      TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), 12);
   public static final double WRAPPING_WIDTH = 500;
   public static final int TOP_MARGIN = 20;
   public static final int BOTTOM_MARGIN = 5;
@@ -34,10 +37,11 @@ public class TextElement extends StackPane {
 
   /**
    * Create text for the top middle of the text element
+   *
    * @param message: Message to display
-   * @param size: Text size
-   * @param color: Color of text
-   * @param bold: Whether the text is bold
+   * @param size:    Text size
+   * @param color:   Color of text
+   * @param bold:    Whether the text is bold
    */
   public void setTopText(String message, int size, Color color, boolean bold) {
     removeText(texts[0]);
@@ -50,10 +54,11 @@ public class TextElement extends StackPane {
 
   /**
    * Text to display in the center of the text element
+   *
    * @param message: Message to display
-   * @param size: Text size
-   * @param color: Color of text
-   * @param bold: Whether the text is bold
+   * @param size:    Text size
+   * @param color:   Color of text
+   * @param bold:    Whether the text is bold
    */
 
   public void setCenterText(String message, int size, Color color, boolean bold) {
@@ -67,10 +72,11 @@ public class TextElement extends StackPane {
 
   /**
    * Text to display in the bottom center of the text element
+   *
    * @param message: Message to display
-   * @param size: Text size
-   * @param color: Color of text
-   * @param bold: Whether the text is bold
+   * @param size:    Text size
+   * @param color:   Color of text
+   * @param bold:    Whether the text is bold
    */
   public void setBottomText(String message, int size, Color color, boolean bold) {
     removeText(texts[2]);

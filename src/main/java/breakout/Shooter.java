@@ -157,7 +157,8 @@ public class Shooter extends Group {
   private void addBallsForNextRound() {
     balls.clear();
     for (int i = 0; i < gameManager.getGameBallCount(); i++) {
-      Ball ball = new Ball(gameManager, MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10, BALL_COLOR,
+      Ball ball = new Ball(gameManager, MIDDLE_WIDTH, HEIGHT - SHOOTER_HEIGHT_OFFSET - 10,
+          BALL_COLOR,
           BALL_RADIUS, BALL_SPEED, 0, 0);
       gameManager.addGameBall(ball);
       gameManager.addChildToGameRoot(ball);

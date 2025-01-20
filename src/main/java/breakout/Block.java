@@ -23,6 +23,7 @@ import javafx.util.Duration;
  * @author Owen Jennings
  */
 public class Block extends Group {
+
   private static final String GAME_FONT_PATH = "/fonts/";
   private static final Font boldFont = Font.loadFont(
       TextElement.class.getResourceAsStream(GAME_FONT_PATH + "Bold.ttf"), 12);
@@ -39,15 +40,15 @@ public class Block extends Group {
    * A constructor to create a block object. This constructor will create a block and display it
    * based on the image file provided in the constructor.
    *
-   * @param gameManager:  The game manager object, which is used to control game variables
-   * @param x:            The blocks x coordinate location
-   * @param y:            The blocks y coordinate location
-   * @param type:         The block type string. For example: a normal block would have type
-   *                      "default"
-   * @param size:         The size (width and height) of a block. All blocks are represented as size
-   *                      X size.
-   * @param health:       The blocks health or number of hit-points
-   * @param blockImage:   An Image which is used when block is displayed.
+   * @param gameManager: The game manager object, which is used to control game variables
+   * @param x:           The blocks x coordinate location
+   * @param y:           The blocks y coordinate location
+   * @param type:        The block type string. For example: a normal block would have type
+   *                     "default"
+   * @param size:        The size (width and height) of a block. All blocks are represented as size
+   *                     X size.
+   * @param health:      The blocks health or number of hit-points
+   * @param blockImage:  An Image which is used when block is displayed.
    */
   public Block(GameManager gameManager, int x, int y,
       String type, double size, int health, Image blockImage) {
@@ -66,14 +67,14 @@ public class Block extends Group {
    * set to default. Otherwise, only the block will display. The blocks fill color is defined by
    * GameConfig.BLOCK_COLOR
    *
-   * @param gameManager:  The game manager object, which is used to control game variables
-   * @param x:            The blocks x coordinate location
-   * @param y:            The blocks y coordinate location
-   * @param type:         The block type string. For example: a normal block would have type
-   *                      "default"
-   * @param size:         The size (width and height) of a block. All blocks are represented as size
-   *                      X size.
-   * @param health:       The blocks health or number of hit-points
+   * @param gameManager: The game manager object, which is used to control game variables
+   * @param x:           The blocks x coordinate location
+   * @param y:           The blocks y coordinate location
+   * @param type:        The block type string. For example: a normal block would have type
+   *                     "default"
+   * @param size:        The size (width and height) of a block. All blocks are represented as size
+   *                     X size.
+   * @param health:      The blocks health or number of hit-points
    */
   public Block(GameManager gameManager, int x, int y,
       String type, double size, int health) {
