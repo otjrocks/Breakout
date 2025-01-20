@@ -1,6 +1,7 @@
 package breakout;
 
 import static breakout.GameConfig.HEIGHT;
+import static breakout.GameConfig.INITIAL_NUM_LIVES;
 import static breakout.GameConfig.gameRulesString;
 
 import java.util.ArrayList;
@@ -203,15 +204,13 @@ public class GameManager {
 
   private void startGame() throws Exception {
     currentLevelNumber = 1;
-    livesLeft = 5;
+    livesLeft = INITIAL_NUM_LIVES;
     scoreManager.resetScore();
     gameText.clearText();
     currentLevel.startLevel(currentLevelNumber);
     gameBallCount = currentLevel.getStartingBalls();
     gamePaddle.setX(GameConfig.MIDDLE_WIDTH - GameConfig.INITIAL_PADDLE_WIDTH / 2);
-    gameRoot.getChildren().add(gamePaddle);
-    gameRoot.getChildren().add(gameShooter);
-    gameRoot.getChildren().add(currentLevel);
+    addGameElementsToRoot();
     isPlaying = true;
     isFirstRound = true;
   }
@@ -244,7 +243,7 @@ public class GameManager {
     if (!isPlaying) {
       startGame();
     }
-    livesLeft = 5;
+    livesLeft = INITIAL_NUM_LIVES;
     removeAllBallsFromPlay(); // remove all remaining balls from previous level
     if (levelNumber
         > GameConfig.NUM_LEVELS) {  // The player has finished the last level, show congratulations/final screen.
@@ -383,11 +382,17 @@ public class GameManager {
     removeGameElementsFromRoot();
   }
 
+  private void addGameElementsToRoot() {
+    addChildToGameRoot(gamePaddle);
+    addChildToGameRoot(gameShooter);
+    addChildToGameRoot(currentLevel);
+  }
+
   private void removeGameElementsFromRoot() {
     removeAllBallsFromPlay();
-    gameRoot.getChildren().remove(gamePaddle);
-    gameRoot.getChildren().remove(gameShooter);
-    gameRoot.getChildren().remove(currentLevel);
+    removeChildFromGameRoot(gamePaddle);
+    removeChildFromGameRoot(gameShooter);
+    removeChildFromGameRoot(currentLevel);
   }
 
 }
