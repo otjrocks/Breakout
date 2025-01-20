@@ -4,7 +4,6 @@ import static breakout.GameConfig.HEIGHT;
 import static breakout.GameConfig.WIDTH;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

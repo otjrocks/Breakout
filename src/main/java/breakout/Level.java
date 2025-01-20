@@ -176,6 +176,11 @@ public class Level extends Group {
     if (!canDropOneLevel()) {
       return false;
     }
+    dropBlocksOneRow();
+    return true;
+  }
+
+  private void dropBlocksOneRow() {
     Iterator<Block> iterator = blocks.iterator();
     while (iterator.hasNext()) {
       Block block = iterator.next();
@@ -186,7 +191,6 @@ public class Level extends Group {
         this.removeBlock(block);
       }
     }
-    return true;
   }
 
   private void setStartingBalls(int count) {
@@ -208,6 +212,21 @@ public class Level extends Group {
 
   private Scanner getScanner(int levelNumber) throws Exception {
     String levelPath = LEVEL_FILE_PATH + levelNumber + ".txt";
+    File levelFile = getLevelFile(levelPath);
+    return getScannerFromFile(levelFile);
+  }
+
+  private static Scanner getScannerFromFile(File levelFile) throws Exception {
+    Scanner scanner;
+    try {
+      scanner = new Scanner(levelFile);
+    } catch (FileNotFoundException e) {
+      throw new Exception(e.getMessage());
+    }
+    return scanner;
+  }
+
+  private File getLevelFile(String levelPath) {
     URL res;
     try {
       res = getClass().getClassLoader().getResource(levelPath);
@@ -220,13 +239,7 @@ public class Level extends Group {
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
-    Scanner scanner;
-    try {
-      scanner = new Scanner(levelFile);
-    } catch (FileNotFoundException e) {
-      throw new Exception(e.getMessage());
-    }
-    return scanner;
+    return levelFile;
   }
 
   private void createLevel(int levelNumber) throws Exception {
@@ -234,6 +247,10 @@ public class Level extends Group {
     Scanner scanner = getScanner(levelNumber);
     setStartingBalls(scanner.nextInt());
     setHasGravity(scanner.nextBoolean());
+    createLevelBlocksFromFile(scanner);
+  }
+
+  private void createLevelBlocksFromFile(Scanner scanner) throws Exception {
     for (int j = 0; j < (HEIGHT / BLOCK_SIZE) - BOTTOM_OFFSET; j++) {
       for (int i = 0; i < WIDTH / BLOCK_SIZE; i++) {
         if (scanner.hasNextInt()) {

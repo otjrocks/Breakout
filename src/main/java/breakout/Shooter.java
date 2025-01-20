@@ -25,7 +25,7 @@ import javafx.util.Duration;
 public class Shooter extends Group {
 
   public static final int SHOOTER_HEIGHT_OFFSET = GameConfig.BLOCK_SIZE * (Level.BOTTOM_OFFSET - 1);
-
+  public static final double SHOOTER_MOVEMENT_INTERVAL = Math.PI / 60;
   private final GameManager gameManager;
   private final double SHOOTER_LENGTH;
   private final Color SHOOTER_COLOR;
@@ -91,12 +91,16 @@ public class Shooter extends Group {
         gameManager.setBallsInPlay(gameManager.getGameBallCount());
         disable();
       }
-      if (code == KeyCode.RIGHT) {
-        setAngle(getAngle() - Math.PI / 80);
-      }
-      if (code == KeyCode.LEFT) {
-        setAngle(getAngle() + Math.PI / 80);
-      }
+      moveShooterAim(code);
+    }
+  }
+
+  private void moveShooterAim(KeyCode code) {
+    if (code == KeyCode.RIGHT) {
+      setAngle(getAngle() - SHOOTER_MOVEMENT_INTERVAL);
+    }
+    if (code == KeyCode.LEFT) {
+      setAngle(getAngle() + SHOOTER_MOVEMENT_INTERVAL);
     }
   }
 
