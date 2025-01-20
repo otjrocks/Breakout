@@ -5,14 +5,14 @@
 
 
 ## Design Goals
-My main goals were to write clean code by having small methods that focus on solving a single issue. Additionally, I hope to properly name and use constants, so that the game setup and features could be quickly updated by simply changing constants in a config file. 
+My main goal was to write clean code by having small methods that focus on solving a single issue. Additionally, I hope to properly name and use constants, so that the game setup and features could be quickly updated by simply changing constants in a config file. 
 I hoped to provide meaningful comments and understandable code, so that someone who had not viewed the code before would have a good understanding of what was going on in my design.
-I also hoped to properly divide features in proper classes and objects. My hope was to create an enjoyable game with more lively gameplay. Instead of having a single ball with one hit blocks, I wanted to create a game similar to "Bricks n' Balls" that has a lot of balls and large hit point blocks, so that the game always felt exciting and fast-paced.
+I also hoped to properly divide features into proper classes and objects. My hope was to create an enjoyable game with more lively gameplay. Instead of having a single ball with one hit blocks, I wanted to create a game similar to "Bricks n' Balls" that has a lot of balls and large hit point blocks, so that the game always felt exciting and fast-paced.
 
 ## High-Level Design
 - The Main class of my program focuses on initializing the application window and creating an instance of the GameManager.
 - The GameConfig class stores all the constant values used by multiple classes.
-- The GameManager handles creating all the required objects for the game and the logic required when objects interact.
+- The GameManager handles creating all the required objects for the game and the logic required when objects interact. This class also handles level transitions and the start/end screens.
 - The Level class handles creating and loading levels from files. It also handles placing power up blocks and mystery blocks randomly in a level. The level class can clear all blocks, drop blocks down a row if gravity is enabled, and check if a level is complete.
 - The Paddle handles the creation, movement, and interactions that occur with the paddle. 
 - The ScoreManager maintains and updates the score accounting for the current score multiplier. It also maintains and updates the current high score.
@@ -25,7 +25,7 @@ Most objects have a reference to the GameManager, to allow them to read and upda
 
 ## Assumptions or Simplifications
 The game and design for the most part are self-explanatory. Most of the gameplay is summarized in the "How to Play" section on the home screen, which can be accessed at any time by pressing the zero key.
-Most methods are clearly named. Any methods or variables that are not self-explanatory are annotated with JavaDoc comments to allow someone new to the code base to understand what is happening.
+All methods are clearly named. Any methods or variables that have ambiguous meaning are annotated with JavaDoc comments to allow someone new to the code base to understand what is happening.
 
 
 ## Changes from the Plan

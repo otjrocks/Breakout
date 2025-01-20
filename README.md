@@ -1,7 +1,7 @@
-# breakout
+# Breakout
 ## By: Owen Jennings
 
-This project implements the game of Breakout with multiple levels.
+This project implements the game of Breakout with multiple levels. This project includes various changes to the original implementation, as highlighted below.
 
 ### Timeline
 
@@ -36,7 +36,7 @@ This project implements the game of Breakout with multiple levels.
    * This program does not utilize mouse inputs.
    * The left and right arrows are control both the ball shooter and paddle.
    * Various number and letter keys are used to control cheat keys. The space and R key are used to start the game, restart the game, and shoot balls into play from the shooter.
-   * For specific instructions on how to use key/mouse inputs, view the "How to Play" section on the home screen.
+   * For specific instructions on how to use key/mouse inputs, view the "How to Play" section on the home screen, which is shown when the application first launches.
  * Cheat keys:
    - 0: Return to the home screen.
    - 1-9: Switch from your current level to the level specified.
@@ -52,7 +52,7 @@ This project implements the game of Breakout with multiple levels.
 
  * Assumptions or Simplifications:
     * My version of breakout deviates from the original design in many ways, however I assume that most people will be able to pick up how to play quickly after reading the "How to Play" section.
-    * The mechanics for how lives is specifically different than the original game.
+    * The mechanics for how lives are handled is specifically different than the original game.
       * Unlike the original game, a life is not defined as receiving a single ball and ending when the ball reaches the floor.
       * In my game, a "life" starts with a shooter that is loaded with a predefined number of balls. You lose a life when you shoot the balls out of the  shooter and all the balls that are dispensed reach the bottom of the screen.
       * All power ups that add or remove balls do not actually impact the balls that are current in play, but rather add or decrease the number of balls that are in the shooter for your next life.
@@ -86,5 +86,5 @@ This project implements the game of Breakout with multiple levels.
 
 I really enjoyed this first assignment, because it allowed me to practice effective code design, while learning JavaFX and creating a cool variant of breakout. 
 I was surprised how quickly my original methods grew and the immense benefits of refactoring code when I needed to create new features or update old versions of my code. 
-This assignment took me longer than I expected, however a fair amount of the time I spent was devoted to additional features that I found interesting, so I was not upset with the amount of time I had to spend to complete the assignment.
+This assignment took me longer than I expected, however a fair amount of the time I spent was devoted to additional features that I found interesting, so I was not upset with the amount of time I had to spend.
 
