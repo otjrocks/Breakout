@@ -221,8 +221,8 @@ public class GameManager {
   }
 
   private void checkPlayersOutOfLivesOrBalls() {
-    if ((ballsInPlay == 0 && livesLeft <= 0) || (ballsInPlay == 0 && gameBallCount
-        <= 0)) {
+    if (isPlaying && ((ballsInPlay == 0 && livesLeft <= 0) || (ballsInPlay == 0 && gameBallCount
+        <= 0))) {
       // Player has run out of lives and all balls have fallen OR player has run out of balls
       endGameAndShowEndScreen(false, "You ran out of lives or balls and lost!");
     }

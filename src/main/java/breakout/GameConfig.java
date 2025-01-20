@@ -47,7 +47,7 @@ public class GameConfig {
       You lose the game when your run out of lives or balls in a level, or the blocks reach the ground before you destroy them (in levels with falling blocks).\n
       You can using these cheat codes if you are struggling with the game:
       - 0: Return to the home screen.
-      - 1-9: Switch from your current level to the level specified.
+      - 1-9: Switch from your current level to the level specified (if it exists).
       - X: Expand the length of your paddle.
       - C: Contract the size of your paddle.
       - L: Give +1 life, allowing you to use the shooter an additional time.
