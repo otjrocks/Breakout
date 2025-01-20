@@ -83,31 +83,31 @@ public class Block extends Group {
     BLOCK_TYPE = type;
     INITIAL_HEALTH = health;
     Rectangle rectangle = new Rectangle(size, size);
-
-    this.health = health;
     healthText = new Text(String.valueOf(health));
 
     if (type.equals("default")) {
-      healthText.setFont(Font.font(boldFont.getFamily(), size / 6));
-      healthText.setFill(getCurrentColor());
-
-      // I asked ChatGPT to help center text within a JavaFX rectangle
-      double textWidth = healthText.getBoundsInLocal().getWidth();
-      double textHeight = healthText.getBoundsInLocal().getHeight();
-      healthText.setX((size - textWidth) / 2);
-      healthText.setY((size + textHeight) / 2); // Adjust for baseline alignment
-      rectangle.setFill(GameConfig.BLOCK_COLOR);
-      rectangle.setStroke(GameConfig.BLOCK_BORDER_COLOR);
-      rectangle.setStrokeType(StrokeType.INSIDE);
-      rectangle.setStrokeWidth(2);
-      this.getChildren().addAll(rectangle, healthText);
+      initializeDefaultBlock(size, rectangle);
     } else {
-      rectangle.setFill(Color.rgb(0, 0, 0, 0));
-      this.getChildren().addAll(rectangle);
+      initializeOtherBlocks(rectangle);
     }
+    updateHealth(health);
     this.setLayoutX(x);
     this.setLayoutY(y);
 
+  }
+
+  private void initializeOtherBlocks(Rectangle rectangle) {
+    rectangle.setFill(Color.rgb(0, 0, 0, 0));
+    this.getChildren().addAll(rectangle);
+  }
+
+  private void initializeDefaultBlock(double size, Rectangle rectangle) {
+    healthText.setFont(Font.font(boldFont.getFamily(), size / 6));
+    rectangle.setFill(GameConfig.BLOCK_COLOR);
+    rectangle.setStroke(GameConfig.BLOCK_BORDER_COLOR);
+    rectangle.setStrokeType(StrokeType.INSIDE);
+    rectangle.setStrokeWidth(2);
+    this.getChildren().addAll(rectangle, healthText);
   }
 
   /**
@@ -134,13 +134,13 @@ public class Block extends Group {
    * @param health: The new health of the block
    */
   public void updateHealth(int health) {
+    // I asked ChatGPT to help center text within a JavaFX rectangle
     this.health = health;
     healthText.setText(String.valueOf(health));
     double textWidth = healthText.getBoundsInLocal().getWidth();
     double textHeight = healthText.getBoundsInLocal().getHeight();
     healthText.setX((TEXT_SIZE - textWidth) / 2);
     healthText.setY((TEXT_SIZE + textHeight) / 2);
-
     healthText.setFill(getCurrentColor());
   }
 

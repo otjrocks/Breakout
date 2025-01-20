@@ -88,8 +88,7 @@ public class Ball extends Circle {
   public void bounceAndHandleCollisions(double elapsedTime) {
     bounceOffWall();
     handleBlockCollisions();
-    this.moveX(elapsedTime);
-    this.moveY(elapsedTime);
+    move(elapsedTime);
     increaseSpeed(); // Increase speed as time elapses to make game move quicker
   }
 
@@ -104,6 +103,11 @@ public class Ball extends Circle {
 
   private void increaseSpeed() {
     BALL_SPEED = Math.min(BALL_MAX_SPEED, BALL_SPEED + BALL_SPEED_UP_CONSTANT);
+  }
+
+  private void move(double elapsedTime) {
+    moveX(elapsedTime);
+    moveY(elapsedTime);
   }
 
   private void moveX(double elapsedTime) {
@@ -140,15 +144,19 @@ public class Ball extends Circle {
     for (Block block : currentLevel.getBlocks()) {
       if (isIntersectingBlock(block)) {
         block.hit();
-        // only update ball direction if a default block is hit and not any powerups
-        if (block.getBlockType().equals("default") && isIntersectingLeftOrRight(block)) {
-          updateDirectionX(getDirectionX() * -1);
-        }
-        if (block.getBlockType().equals("default") && isIntersectingTopOrBottom(block)) {
-          updateDirectionY(getDirectionY() * -1);
-        }
+        bounceOnBlockHit(block);
         break; // break so that ball can't hit two blocks at once
       }
+    }
+  }
+
+  private void bounceOnBlockHit(Block block) {
+    // only update ball direction if a default block is hit and not any powerups
+    if (block.getBlockType().equals("default") && isIntersectingLeftOrRight(block)) {
+      updateDirectionX(getDirectionX() * -1);
+    }
+    if (block.getBlockType().equals("default") && isIntersectingTopOrBottom(block)) {
+      updateDirectionY(getDirectionY() * -1);
     }
   }
 
