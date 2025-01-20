@@ -32,7 +32,7 @@ public class GameConfig {
   public static final int BALL_RADIUS = 5;
   public static final int BALL_SPEED = 320;
   public static final int INITIAL_NUM_LIVES = 5;
-  public static final double INITIAL_PADDLE_WIDTH = 150;
+  public static final double INITIAL_PADDLE_WIDTH = 180;
   public static final int PADDLE_SPEED = 8;
   public static final int SHOOTER_LENGTH = 100;
   public static final double MYSTERY_BLOCK_DISPLAY_TEXT_TIME = 3;
