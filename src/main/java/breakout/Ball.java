@@ -13,7 +13,7 @@ public class Ball extends Circle {
 
   public static final double BALL_COLLISION_ENTROPY_STRENGTH = 0.01;
   public static final double BALL_SPEED_UP_CONSTANT = 0.1;
-  public static final double BALL_MAX_SPEED = GameConfig.BALL_SPEED * 3;
+  public static final double BALL_MAX_SPEED = GameConfig.BALL_SPEED * 4;
   private double BALL_SPEED;
   private double ballDirectionX;
   private double ballDirectionY;
