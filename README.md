@@ -1,7 +1,7 @@
 ![Title ](/doc/breakoutTitle.png)
 
 # Breakout Game
-#### Java, JavaFX
+#### Java, JavaFX, Maven
 #### By: Owen Jennings
 
 ![Demo 1 ](/doc/breakout1.png)
