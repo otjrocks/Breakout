@@ -1,5 +1,14 @@
-# Breakout
-## By: Owen Jennings
+![Title ](/doc/breakoutTitle.png)
+
+# Breakout Game
+#### Java, JavaFX
+#### By: Owen Jennings
+
+![Demo 1 ](/doc/breakout1.png)
+
+![Demo 2 ](/doc/breakout2.png)
+
+![Demo 3 ](/doc/breakout3.png)
 
 This project implements the game of Breakout with multiple levels. This project includes various changes to the original implementation, as highlighted below.
 
