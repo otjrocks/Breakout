@@ -10,6 +10,9 @@ import javafx.scene.paint.Paint;
  */
 public class GameConfig {
 
+  // IMPORTANT: Update this when adding new levels.
+  public static final int NUM_LEVELS = 4;
+
   public static final String TITLE = "Breakout Game";
   public static final int WIDTH = 600;
   public static final int HEIGHT = 800;
@@ -24,7 +27,6 @@ public class GameConfig {
   public static final Paint MYSTERY_BLOCK_DISPLAY_TEXT_COLOR = Color.rgb(255, 193, 6);
   public static final double BALL_RELEASE_DELAY = 1.0 / 10;
   public static final int MIDDLE_WIDTH = WIDTH / 2;
-  public static final int NUM_LEVELS = 4;
   public static final int SCORE_MULTIPLIER_TIMEOUT = 5;
   public static final int BLOCK_SCORE = 10;
   public static final int POWERUP_SCORE = 50;

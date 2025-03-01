@@ -56,6 +56,9 @@ This project implements the game of Breakout with multiple levels. This project 
    - V: Take a ball away from your shooter.
    - S: Clear all the balls currently in play. If you have a life and balls remaining, you can reshoot with the shooter. This can be useful if the ball gets stuck somewhere in the level.
 
+### Create a New Level
+- To create a new level, see the `src/main/java/resources/levels/FORMAT.txt`. All levels are stored in .txt files. When adding a new level, please use the format provided in this text file and increment the constant value NUM_LEVELS in the GameConfig file.
+- Other aspects of the game can be modified by tweaking the constant values found in the GameConfig file.
 
 ### Notes/Assumptions
 
@@ -91,9 +94,6 @@ This project implements the game of Breakout with multiple levels. This project 
 
 
 
-### Assignment Impressions
-
-I really enjoyed this first assignment, because it allowed me to practice effective code design, while learning JavaFX and creating a cool variant of breakout. 
-I was surprised how quickly my original methods grew and the immense benefits of refactoring code when I needed to create new features or update old versions of my code. 
-This assignment took me longer than I expected, however a fair amount of the time I spent was devoted to additional features that I found interesting, so I was not upset with the amount of time I had to spend.
-
+### Credit
+This project was completed as a solo project for the class [CS308, Advanced Software Design and Implementation](https://courses.cs.duke.edu/spring25/compsci308/classwork/).
+For more information about the original Breakout game, see [Breakout (video game) - Wikipedia](https://en.wikipedia.org/wiki/Breakout_(video_game)).
